@@ -17,8 +17,12 @@ window.client =
     @socket.on 'connect', ->
     @socket.on 'message', (message) ->
 
-    @socket.send('some data')
-
+    @socket.send type: "movement", body: "errmmm"
+    # {
+    #   type: "movement"
+    #   body: { }
+    #   from: clientID
+    # }
 
 
 Crafty.c "player"

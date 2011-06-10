@@ -16,7 +16,7 @@ root.Game = class Game
 
   connect: (connection_id) ->
     @connection_ids.push connection_id
-    player =new Player({id: connection_id, coords: {x: 0, y: 0}})
+    player = new Player({id: connection_id, coords: {x: 0, y: 0}})
     @players[connection_id] = player
     @players[connection_id]
    

@@ -15,7 +15,10 @@
       this.socket.connect();
       this.socket.on('connect', function() {});
       this.socket.on('message', function(message) {});
-      return this.socket.send('some data');
+      return this.socket.send({
+        type: "movement",
+        body: "errmmm"
+      });
     }
   };
   Crafty.c("player", {
