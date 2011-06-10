@@ -3,6 +3,9 @@ Glove
 
 Gauntlet but better.
 
+The server
+----------
+
 Prerequisites
 
     npm install socket.io
@@ -11,3 +14,17 @@ Prerequisites
 To run the server:
 
     coffee server/server.coffee
+
+
+The client
+----------
+
+To compile the client first install guard
+
+    gem install guard
+    gem install guard-coffeescript
+
+Then run `guard` to compile the coffeescript
+
+To run a simple server you can use `alias serve="python -m SimpleHTTPServer"` and then `serve` from the client directory
+    
