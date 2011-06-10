@@ -41,6 +41,7 @@ window.client =
     @socket.send(message)
 
   receive: (message) ->
+    @log $.toJSON(message)
     @dir message
 
     switch message.type

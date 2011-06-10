@@ -48,6 +48,7 @@
       return this.socket.send(message);
     },
     receive: function(message) {
+      this.log($.toJSON(message));
       this.dir(message);
       switch (message.type) {
         case 'connection':

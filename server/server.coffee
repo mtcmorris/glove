@@ -7,7 +7,8 @@ glove   = require('../lib/glove')
 path    = require('path')
 sys     = require('sys')
 
-PORT    = 8080
+HOSTNAME    = 'enterprise-g.local'
+PORT    = 9000
 WEBROOT = path.join(path.dirname(__filename), '..')
 
 sys.puts WEBROOT
@@ -26,7 +27,7 @@ server = http.createServer (req, res) ->
   else
     send404(res)
 
-server.listen(9000, "127.0.0.1")
+server.listen(PORT, HOSTNAME)
 
 
 #socket.io, I choose you
@@ -47,7 +48,7 @@ socket.on 'connection', (client) ->
     
     #pass this on to all the clients
     try
-      sys.puts 'msg received, rebroadcasting: ' + message
+      sys.puts "msg received from #{id}, rebroadcasting: " + JSON.stringify(message)
       message.client = client.sessionId
       client.broadcast(message)
     catch error
