@@ -35,6 +35,7 @@ socket = io.listen(server)
 socket.on 'connection', (client) ->
   sys.puts 'client connected ' + client.sessionId
   game.connect(client.sessionId)
+  client.broadcast client: client.sessionId, type: "connection"
 
   client.on 'disconnect', ->
     sys.puts "disconnected"

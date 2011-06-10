@@ -27,4 +27,11 @@ To compile the client first install guard
 Then run `guard` to compile the coffeescript
 
 To run a simple server you can use `alias serve="python -m SimpleHTTPServer"` and then `serve` from the client directory
+
+Todo
+----
+
+* When a player connects notify other players so they can spawn a new player
+* A client needs to be able to receive a "player move" event for other players
+
     
