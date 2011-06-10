@@ -50,5 +50,6 @@ socket.on 'connection', (client) ->
     #parse the message back into a JS object and pass it on to the game to process
     try
       game.message(client.sessionId, message)
+      sys.puts JSON.stringify(game.messages)
     catch error
       log "Server couldn't parse message #{message} from client #{client}. Error: #{error}"
