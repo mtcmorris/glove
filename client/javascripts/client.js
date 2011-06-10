@@ -16,8 +16,8 @@
       this.socket.on('connect', function() {});
       this.socket.on('message', function(message) {});
       return this.socket.send({
-        type: "movement",
-        body: "errmmm"
+        type: "setName",
+        body: $("#player-name").innerHTML
       });
     }
   };

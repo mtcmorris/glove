@@ -5,16 +5,19 @@
   <script type="text/javascript" src="javascripts/vendor/underscore-1.1.3.min.js"></script> 
   <script type="text/javascript" src="javascripts/vendor/socket.io.min.js"></script> 
   <script type="text/javascript" src="javascripts/client.js"></script> 
+  <script type="text/javascript" src="javascripts/hud.js"></script> 
   <title>Test</title> 
   <style> 
     body, html { margin:0; padding: 0; overflow:hidden; font-family:Unibody8Regular, monospace; font-size:20px }
     
     #cr-stage { border:2px solid black; margin:5px auto; color:white }
-  </style> 
+  </style>
+  
+  <link rel="stylesheet" href="css/screen.css" type="text/css" media="screen" title="no title">
 </head> 
 <body> 
   <header>
-    <p>Your name is <span id="player-name">@mtcmorris</span></p>
+    <p>Your name is <a id="player-name">@mtcmorris</a></p>
     <p>Your health is <span id="health" class="good">100</span></p>
   </header>
 </body> 

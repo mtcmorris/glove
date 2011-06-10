@@ -17,7 +17,8 @@ window.client =
     @socket.on 'connect', ->
     @socket.on 'message', (message) ->
 
-    @socket.send type: "movement", body: "errmmm"
+    @socket.send type: "setName", body: $("#player-name").innerHTML
+
     # {
     #   type: "movement"
     #   body: { }

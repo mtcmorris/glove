@@ -1,3 +1,10 @@
+@import "reset";
+@import "constants";
+
 header {
-   
+   height: $baseline;
+   font-size: 0.8em;
+   p {
+     float: left;
+   }
 }
