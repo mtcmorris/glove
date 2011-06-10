@@ -18,9 +18,31 @@ window.client =
 
 
 
+
+Crafty.c "WASD",
+	_speed: 3,
+
+	init: ->
+		@requires("controls")
+
+	wasd: (speed) ->
+		@_speed = speed || _speed
+		
+		@bind "enterframe", ->
+			return if (this.disableControls)
+      @socket.send('right') if(this.isDown("RIGHT_ARROW") || this.isDown("D"))
+      @socket.send('left') if(this.isDown("LEFT_ARROW") || this.isDown("A"))
+      @socket.send('up') if(this.isDown("UP_ARROW") || this.isDown("W"))
+      @socket.send('down') if(this.isDown("DOWN_ARROW") || this.isDown("S"))
+
+		return this
+
+
+
 Crafty.c "player"
   init: ->
-    @addComponent("2D, DOM, Fourway, Collision")
+    @_queued_commands = @queued_commands || []
+    @addComponent("2D, DOM, WASD, Collision")
     @origin("center")
     @css
       border: '1px solid white'
@@ -29,8 +51,7 @@ Crafty.c "player"
       y: 100
       w: 40
       h: 40
-    @fourway(5)
-
+    @wasd(5)
 
 
 

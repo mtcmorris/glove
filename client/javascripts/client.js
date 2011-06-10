@@ -15,9 +15,36 @@
       return this.socket.send('some data');
     }
   };
+  Crafty.c("WASD", {
+    _speed: 3,
+    init: function() {
+      return this.requires("controls");
+    },
+    wasd: function(speed) {
+      this._speed = speed || _speed;
+      this.bind("enterframe", function() {
+        if (this.disableControls) {
+          if (this.isDown("RIGHT_ARROW") || this.isDown("D")) {
+            this.socket.send('right');
+          }
+          if (this.isDown("LEFT_ARROW") || this.isDown("A")) {
+            this.socket.send('left');
+          }
+          if (this.isDown("UP_ARROW") || this.isDown("W")) {
+            this.socket.send('up');
+          }
+          if (this.isDown("DOWN_ARROW") || this.isDown("S")) {
+            return this.socket.send('down');
+          }
+        }
+      });
+      return this;
+    }
+  });
   Crafty.c("player", {
     init: function() {
-      this.addComponent("2D, DOM, Fourway, Collision");
+      this._queued_commands = this.queued_commands || [];
+      this.addComponent("2D, DOM, WASD, Collision");
       this.origin("center");
       this.css({
         border: '1px solid white'
@@ -28,7 +55,7 @@
         w: 40,
         h: 40
       });
-      return this.fourway(5);
+      return this.wasd(5);
     }
   });
   $(function() {
