@@ -14,33 +14,61 @@
       });
       this.socket.connect();
       this.socket.on('connect', function() {});
-      this.socket.on('message', function(message) {});
+      this.socket.on('message', function(message) {
+        if (typeof (typeof console !== "undefined" && console !== null ? console.log : void 0) === 'function') {
+          return console.log(message);
+        }
+      });
       return this.socket.send({
         type: "setName",
         body: $("#player-name").innerHTML
       });
+    },
+    set_location_message: function(x, y) {
+      return {
+        type: 'set_location',
+        body: {
+          x: x,
+          y: y
+        }
+      };
+    },
+    send: function(message) {
+      console.log('sending: ' + message);
+      return this.socket.send(message);
     }
   };
   Crafty.c("WASD", {
-    _speed: 3,
     init: function() {
       return this.requires("controls");
     },
     wasd: function(speed) {
-      this._speed = speed || _speed;
+      this.speed || (this.speed = speed);
       this.bind("enterframe", function() {
+        var location_message, x, y;
         if (this.disableControls) {
-          if (this.isDown("RIGHT_ARROW") || this.isDown("D")) {
-            this.socket.send('right');
+          return;
+        }
+        if (this.isDown("RIGHT_ARROW") || this.isDown("D")) {
+          x = this.x + this.speed;
+        }
+        if (this.isDown("LEFT_ARROW") || this.isDown("A")) {
+          x = this.x - this.speed;
+        }
+        if (this.isDown("UP_ARROW") || this.isDown("W")) {
+          y = this.y - this.speed;
+        }
+        if (this.isDown("DOWN_ARROW") || this.isDown("S")) {
+          y = this.y + this.speed;
+        }
+        if ((typeof x !== 'undefined' || typeof y !== 'undefined') && (x !== this.x || y !== this.y)) {
+          location_message = client.set_location_message(this.x, this.y);
+          client.send(location_message);
+          if (x != null) {
+            this.x = x;
           }
-          if (this.isDown("LEFT_ARROW") || this.isDown("A")) {
-            this.socket.send('left');
-          }
-          if (this.isDown("UP_ARROW") || this.isDown("W")) {
-            this.socket.send('up');
-          }
-          if (this.isDown("DOWN_ARROW") || this.isDown("S")) {
-            return this.socket.send('down');
+          if (y != null) {
+            return this.y = y;
           }
         }
       });
@@ -61,7 +89,7 @@
         w: 40,
         h: 40
       });
-      return this.wasd(5);
+      return this.wasd(3);
     }
   });
   $(function() {
