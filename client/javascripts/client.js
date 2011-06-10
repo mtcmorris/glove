@@ -14,10 +14,14 @@
       });
       this.socket.connect();
       this.socket.on('connect', function() {});
-      return this.socket.on('message', function(message) {
+      this.socket.on('message', function(message) {
         if (typeof (typeof console !== "undefined" && console !== null ? console.log : void 0) === 'function') {
           return console.log(message);
         }
+      });
+      return this.socket.send({
+        type: "setName",
+        body: $("#player-name").innerHTML
       });
     },
     set_location_message: function(x, y) {
@@ -52,14 +56,20 @@
           x = this.x - this.speed;
         }
         if (this.isDown("UP_ARROW") || this.isDown("W")) {
-          y = this.y + this.speed;
+          y = this.y - this.speed;
         }
         if (this.isDown("DOWN_ARROW") || this.isDown("S")) {
-          y = this.y - this.speed;
+          y = this.y + this.speed;
         }
         if ((typeof x !== 'undefined' || typeof y !== 'undefined') && (x !== this.x || y !== this.y)) {
           location_message = client.set_location_message(this.x, this.y);
-          return client.send(location_message);
+          client.send(location_message);
+          if (x != null) {
+            this.x = x;
+          }
+          if (y != null) {
+            return this.y = y;
+          }
         }
       });
       return this;

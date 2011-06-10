@@ -18,7 +18,8 @@ window.client =
     @socket.on 'message', (message) ->
       console.log message if typeof console?.log == 'function'
 
-    #@socket.send type: "movement", body: "errmmm"
+    @socket.send type: "setName", body: $("#player-name").innerHTML
+
     # {
     #   type: "movement"
     #   body: { }
@@ -49,12 +50,14 @@ Crafty.c "WASD"
       return if (this.disableControls)
       x = @x + @speed if (this.isDown("RIGHT_ARROW") || this.isDown("D"))
       x = @x - @speed if (this.isDown("LEFT_ARROW") || this.isDown("A"))
-      y = @y + @speed if (this.isDown("UP_ARROW") || this.isDown("W"))
-      y = @y - @speed if (this.isDown("DOWN_ARROW") || this.isDown("S"))
+      y = @y - @speed if (this.isDown("UP_ARROW") || this.isDown("W"))
+      y = @y + @speed if (this.isDown("DOWN_ARROW") || this.isDown("S"))
 
       if ((typeof x != 'undefined' || typeof y != 'undefined') && (x != @x || y != @y))
         location_message = client.set_location_message(@x, @y)
         client.send(location_message)
+        @x = x if x?
+        @y = y if y?
 
     return this
 
