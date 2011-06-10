@@ -16,13 +16,15 @@
       this.socket.on('connect', function() {});
       this.socket.on('message', function(message) {
         if (typeof (typeof console !== "undefined" && console !== null ? console.log : void 0) === 'function') {
-          return console.log(message);
+          console.log(message);
         }
+        return this.receive(message);
       });
-      return this.socket.send({
+      this.socket.send({
         type: "setName",
         body: $("#player-name").innerHTML
       });
+      return this.game = new window.Game;
     },
     set_location_message: function(x, y) {
       return {
@@ -36,6 +38,14 @@
     send: function(message) {
       console.log('sending: ' + message);
       return this.socket.send(message);
+    },
+    receive: function(message_string) {
+      var message;
+      message = $.evalJSON(message_string);
+      switch (message.type) {
+        case 'movement':
+          return '';
+      }
     }
   };
   Crafty.c("WASD", {

@@ -12,30 +12,36 @@ window.client =
         port: 9000,
         rememberTransport: false
     })
+
     @socket.connect()
 
     @socket.on 'connect', ->
+
     @socket.on 'message', (message) ->
       console.log message if typeof console?.log == 'function'
+      @receive(message)
 
     @socket.send type: "setName", body: $("#player-name").innerHTML
 
-    # {
-    #   type: "movement"
-    #   body: { }
-    #   from: clientID
-    # }
+    @game = new window.Game
+
 
   set_location_message: (x, y) ->
     type: 'set_location'
     body: 
       x: x
       y: y
-    
+
 
   send: (message) ->
     console.log 'sending: ' + message #if typeof console?.log == 'function'
     @socket.send(message)
+
+  receive: (message_string) ->
+    message = $.evalJSON(message_string)
+    switch message.type
+      when 'movement'
+        ''
 
 
 
