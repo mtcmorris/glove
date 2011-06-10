@@ -15,7 +15,7 @@
       this.socket.connect();
       this.socket.on('connect', function() {});
       this.socket.on('message', function(message) {
-        if (typeof (typeof console !== "undefined" && console !== null ? console.log : void 0) === 'function') {
+        if (typeof (typeof console != "undefined" && console !== null ? console.log : void 0) === 'function') {
           return console.log(message);
         }
       });

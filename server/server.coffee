@@ -51,6 +51,8 @@ socket.on 'connection', (client) ->
     try
       sys.puts 'msg received: ' + message
       game.message(client.sessionId, message)
+      message.client = client.sessionId
+      client.broadcast(message)
       sys.puts JSON.stringify(game.messages)
     catch error
       log "Server couldn't parse message #{message} from client #{client}. Error: #{error}"
