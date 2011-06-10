@@ -12,6 +12,10 @@ WEBROOT = path.join(path.dirname(__filename), '..')
 
 sys.puts WEBROOT
 
+# We're using a custom logged method here:
+log = (data) ->
+  sys.log data.toString()
+
 game    = new glove.Game()
 
 server = http.createServer (req, res) ->
@@ -47,4 +51,4 @@ socket.on 'connection', (client) ->
       msg: JSON.parse(message)
       game.message(client.sessionId, msg)
     catch error
-      log "Server couldn't parse message $message from client $client. Error: $error"
+      log "Server couldn't parse message #{message} from client #{client}. Error: #{error}"

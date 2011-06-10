@@ -8,7 +8,10 @@ window.client =
 
     @player = Crafty.e("player, player_green")
 
-    @socket = new io.Socket('localhost')
+    @socket = new io.Socket(null, {
+        port: 9000,
+        rememberTransport: false
+    })
     @socket.connect()
 
     @socket.on 'connect', ->
