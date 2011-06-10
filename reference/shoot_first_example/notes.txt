@@ -1,0 +1,57 @@
+----------------
+May 26 2010
+
+The Second Week
+
+Once I noticed that I had a player.rb class and a player.js class, I got seduced by the siren song of having everything in js and decided to move to node.js for the server.  This last week I got up to speed with node and coffeescript and decided on a js testing framework by the folks at pivotal labs called jasmine.  
+
+Then I needed a way to auto-run my tests whenever my files change and I decided it'd be uber l33t if my whole stack was in javascript, so I tried writing a custom node script that works like stakeout or watchr and just runs my spec suite when files change.  It works, but it's not giving me the full error stack trace, which is annoying.  So, for the time being I've switched back to using stakeout.rb for simple filesystem watching and test triggering.  It's not js, but it works for now.
+
+However, I still need to handle dependancies in my js files.  For example, the Game class instantiates a World object in its constructor.  This means that the World class has to be defined before my Game class, since Game depends on World.  I asked Chris Lloyd how he handles this and he shared a Cakefile that does rudimentry inlining, which might work fine for me.  I'm going to give it a shot.
+
+
+
+----------------
+May 16 2010
+
+The First Week
+
+I've been wanting to learn RSpec_, play around with WebSockets_, and start doing some JavaScript unit testing for a while now.  And, I've wanted to try my hand at making a computer game.  So, this week I started making a game.  My goal is to have something released before I'm 30 (almost exactly 7 months from now).
+
+The Concept: Inspired by Monaco(igf)_, I want to make a top-down 2D game in the style of Counter-Strike.  It'll be a live, team-based multiplayer game.  And, it'll run in the browser, using HTML5.
+
+
+Current Goal: Be able to have a player load up a web page, connect to a server via websockets, and use the arrow keys to move around.  On the back end, have the websocket server keep track of connected players and their current positions in the world.
+
+This last week, I created some basic classes, tests to exercise the class interactions, and a simple web socket server that accepts connections.
+
+- Game: has players, a new_player method, and a move_player(player, diretion) method. The server will call new_player whenever a new player connects, and it will call move_player whenever a player sends a move message.
+- Player: has a position, and a move!(direction) method
+- Position: has x an y values
+
+None of this is very sexy, but hopefully I'll be able to get players actually moving around shortly.  
+----------------
+
+
+
+
+
+API Design
+
+Server
+  server.start
+  server.load_world('    ')
+
+  player = Player.new
+  player_2 = Player.new
+  server.add_player player, player_2
+
+  resolve_actions()
+  update_players()
+
+Player
+  move(:direction)
+  shoot!
+
+
+

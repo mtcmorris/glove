@@ -1,0 +1,132 @@
+sys: require 'sys'
+fs: require 'fs'
+path: require 'path'
+{spawn, exec}: require('child_process')
+Coffee: require './vendor/coffee-script-0.6.4/lib/coffee-script'
+
+run: (arg) ->
+  proc: process.createChildProcess 'vendor/coffee-script/bin/coffee', [arg]
+  proc.addListener 'error', (err) -> if err then puts err
+
+# task 'server', 'runs the Fuck server', ->
+#   run 'app/server.coffee'
+
+task 'build_and_test', 'build everything then run the test suite', ->
+  # cmd: 'sprocketize lib/shoot_first/js/*.js > lib/shoot_first/js/shoot_first.js'
+  # sys.print 'Invoking command: ' + cmd
+  # exec cmd, (err, stdout, stderr) -> 
+  #   sys.print stdout
+  #   if err then sys.puts 'Error: ' + err
+  #   sys.print 'Done.'
+  #   sys.print 'Invoking tests...'
+    # invoke 'build'
+    invoke 'test'
+
+
+task 'build', 'build everything', ->
+  invoke 'build:js'
+
+# task 'build:html', 'builds the client html', ->
+#   cmd: 'haml --format html5 app/client/index.haml public/index.html'
+#   sys.exec cmd, (err, stdout, stderr) -> if err then throw err
+# 
+# task 'build:css', 'builds the client css', ->
+#   cmd: 'sass --load-path app/client --style compressed --no-cache app/client/screen.sass public/screen.css'
+#   sys.exec cmd, (err, stdout, stderr) -> if err then throw err
+
+#TODO support require in addition to inline.  Only require modules once.
+# task 'build:js', 'builds the client jabberscript', ->
+#   inlineFileSync: (f) ->
+#     raw: fs.readFileSync f
+#     # Double compilation detects errors early for better errors
+#     Coffee.compile raw, {source: f}
+#     raw.replace /( *)inline(\s+|\()['"]([^']+)['"]\n/g, (_,indent,_,file) ->
+#       lib: path.join(path.dirname(f), "${file}.coffee")
+#       src: inlineFileSync lib
+#       ("$indent# Inlined from ${lib}\n\n${src}\n").replace /\n/g, "\n${indent}"
+# 
+#   inlined: inlineFileSync 'lib/shoot_first.coffee'
+#   js: Coffee.compile inlined, {source: '[inlined file]'}
+#   fs.writeFileSync 'lib/shoot_first.js', js
+
+# task 'build:js', 'parse js files with sprokets and output shoot_first.js', ->
+  # cmd: 'sprocketize lib/shoot_first/js/*.js > lib/shoot_first/js/shoot_first.js'
+  # exec cmd, (err, stdout, stderr) -> 
+  #   sys.print 'hello'
+  #   sys.print stdout
+  #   if err then sys.puts 'Error: ' + err
+
+task 'test', 'run the test suite', ->
+  cmd: 'node'
+  options: ['jspec/node.js']
+  spec: spawn(cmd, options)
+  spec.stdout.addListener 'data', (data) ->
+    sys.print('stdout: ' + data)
+
+  spec.stderr.addListener 'data', (data) ->
+    sys.print('stderr: ' + data)
+
+  spec.addListener 'exit', (code) ->
+    sys.print('exited. with code: ' + code)
+    spec2: spawn(cmd, options)
+    spec2.stdout.addListener 'data', (data) ->
+      sys.print('stdout: ' + data)
+
+    spec2.stderr.addListener 'data', (data) ->
+      sys.print('stderr: ' + data)
+
+
+
+# task 'clean', 'cleans up Fuck', ->
+#   files: ['public/js/fuck.js', 'public/index.html', 'public/screen.css']
+#   rmr: (f) ->
+#     path.exists f, (exists) ->
+#       fs.unlinkSync f if exists
+#       rmr files.pop() if files.length
+#   rmr files.pop()
+
+task 'watch', 'trigger a build and test whenever files change', ->
+  extensions_to_watch: {js: true, coffee: true}
+
+  watch_files: (to_watch) ->
+    path.exists to_watch, (exists) ->
+      throw new Error "File not found: $to_watch" unless exists
+      fs.stat to_watch, (err, stats) ->
+        if stats.isDirectory()
+          fs.readdir to_watch, (err, files) ->
+            for file in files
+              watch_files path.join(to_watch, file)
+        else 
+          watch to_watch if extensions_to_watch[path.extname(to_watch).substring(1)]?
+
+  watch: (file) ->
+    compile_coffee: (file) ->
+      write_js: (source, js) ->
+        filename: path.basename(source, path.extname(source)) + '.js'
+        src_dir:  path.dirname source
+        js_path:  path.join src_dir, '..', 'js', filename
+        fs.writeFileSync js_path, js
+
+      try
+        raw: fs.readFileSync file
+        js: Coffee.compile raw.toString()
+        write_js(file, js)
+        sys.puts "Compiled $file"
+      catch err
+        sys.puts err.message
+    
+    compile_coffee(file) if path.extname(file) is '.coffee'
+
+    sys.puts "Watching $file..."
+    fs.watchFile file, {persistent: true, interval: 500}, (curr, prev) ->
+      return if curr.mtime.getTime() is prev.mtime.getTime()
+      sys.puts "$file changed!"
+     
+      compile_coffee(file) if path.extname(file) is '.coffee'
+
+      sys.puts "Running tests..."
+      invoke 'test'
+
+  invoke 'build_and_test'
+  watch_files('lib/shoot_first/coffee')
+  watch_files('jspec/unit')
