@@ -12,7 +12,7 @@ WEBROOT = path.join(path.dirname(__filename), '..')
 
 sys.puts WEBROOT
 
-# game    = new glove.Game()
+game    = new glove.Game()
 
 server = http.createServer (req, res) ->
   if url.parse(req.url).pathname == '/'
@@ -36,4 +36,15 @@ socket.on 'connection', (client) ->
   
 
   client.on 'message', (message) ->
+    sys.puts "==================="
+    sys.puts JSON.stringify(message)
+    id = client.sessionId
+    
+    player = game.players[id]
 
+    #parse the message back into a JS object and pass it on to the game to process
+    try
+      msg: JSON.parse(message)
+      game.message(client.sessionId, msg)
+    catch error
+      log "Server couldn't parse message $message from client $client. Error: $error"
