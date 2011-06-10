@@ -16,33 +16,47 @@ window.client =
 
     @socket.on 'connect', ->
     @socket.on 'message', (message) ->
+      console.log message if typeof console?.log == 'function'
 
-    @socket.send type: "movement", body: "errmmm"
+    #@socket.send type: "movement", body: "errmmm"
     # {
     #   type: "movement"
     #   body: { }
     #   from: clientID
     # }
 
+  set_location_message: (x, y) ->
+    type: 'set_location'
+    body: 
+      x: x
+      y: y
+    
+
+  send: (message) ->
+    console.log 'sending: ' + message #if typeof console?.log == 'function'
+    @socket.send(message)
 
 
-Crafty.c "WASD",
-	_speed: 3,
 
-	init: ->
-		@requires("controls")
 
-	wasd: (speed) ->
-		@_speed = speed || _speed
-		
-		@bind "enterframe", ->
-			return if (this.disableControls)
-      @socket.send('right') if(this.isDown("RIGHT_ARROW") || this.isDown("D"))
-      @socket.send('left') if(this.isDown("LEFT_ARROW") || this.isDown("A"))
-      @socket.send('up') if(this.isDown("UP_ARROW") || this.isDown("W"))
-      @socket.send('down') if(this.isDown("DOWN_ARROW") || this.isDown("S"))
+Crafty.c "WASD"
+  init: ->
+    @requires("controls")
 
-		return this
+  wasd: (speed) ->
+    @speed ||= speed
+    @bind "enterframe", ->
+      return if (this.disableControls)
+      x = @x + @speed if (this.isDown("RIGHT_ARROW") || this.isDown("D"))
+      x = @x - @speed if (this.isDown("LEFT_ARROW") || this.isDown("A"))
+      y = @y + @speed if (this.isDown("UP_ARROW") || this.isDown("W"))
+      y = @y - @speed if (this.isDown("DOWN_ARROW") || this.isDown("S"))
+
+      if ((typeof x != 'undefined' || typeof y != 'undefined') && (x != @x || y != @y))
+        location_message = client.set_location_message(@x, @y)
+        client.send(location_message)
+
+    return this
 
 
 
@@ -58,7 +72,8 @@ Crafty.c "player"
       y: 100
       w: 40
       h: 40
-    @wasd(5)
+    @wasd(3)
+
 
 
 
