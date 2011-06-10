@@ -1,65 +1,5 @@
 (function() {
   var __bind = function(fn, me){ return function(){ return fn.apply(me, arguments); }; };
-  window.client = {
-    init: function() {
-      Crafty.init(600, 600);
-      Crafty.background("#000");
-      Crafty.sprite(40, "images/lofi_char.png", {
-        player_green: [0, 0],
-        player_gray: [0, 1]
-      });
-      this.player = Crafty.e("player, player_green");
-      this.socket = new io.Socket(null, {
-        port: 9000,
-        rememberTransport: false
-      });
-      this.socket.connect();
-      this.socket.on('connect', function() {});
-      this.socket.on('message', __bind(function(message) {
-        return this.receive(message);
-      }, this));
-      this.socket.send({
-        type: "setName",
-        body: $("#player-name").innerHTML
-      });
-      return this.game = new window.Game;
-    },
-    log: function(msg) {
-      if ((typeof console !== "undefined" && console !== null ? console.log : void 0) != null) {
-        return console.log(msg);
-      }
-    },
-    dir: function(msg) {
-      if ((typeof console !== "undefined" && console !== null ? console.dir : void 0) != null) {
-        return console.dir(msg);
-      }
-    },
-    set_location_message: function(x, y) {
-      return {
-        type: 'set_location',
-        body: {
-          x: x,
-          y: y
-        }
-      };
-    },
-    send: function(message) {
-      this.log('sending: ' + message);
-      return this.socket.send(message);
-    },
-    receive: function(message) {
-      this.log($.toJSON(message));
-      this.dir(message);
-      switch (message.type) {
-        case 'connection':
-          return this.game.connect(message.client);
-        case 'movement':
-          return '';
-        case 'setName':
-          return '';
-      }
-    }
-  };
   Crafty.c("WASD", {
     init: function() {
       return this.requires("controls");
@@ -99,8 +39,7 @@
   });
   Crafty.c("player", {
     init: function() {
-      this._queued_commands = this.queued_commands || [];
-      this.addComponent("2D, DOM, WASD, Collision");
+      this.addComponent("2D, DOM, Collision");
       this.origin("center");
       this.css({
         border: '1px solid white'
@@ -111,9 +50,83 @@
         w: 40,
         h: 40
       });
-      return this.wasd(3);
+      return console.log('Player inited!');
     }
   });
+  window.client = {
+    init: function() {
+      Crafty.init(600, 600);
+      Crafty.background("#000");
+      Crafty.sprite(40, "images/lofi_char.png", {
+        player_green: [0, 0],
+        player_gray: [0, 1]
+      });
+      this.player = window.Crafty.e("player, player_green, WASD").wasd(3);
+      this.socket = new io.Socket(null, {
+        port: 9000,
+        rememberTransport: false
+      });
+      this.socket.connect();
+      this.socket.on('connect', function() {});
+      this.socket.on('message', __bind(function(message) {
+        return this.receive(message);
+      }, this));
+      this.socket.send({
+        type: "setName",
+        body: $("#player-name").innerHTML
+      });
+      return this.game = new window.Game;
+    },
+    log: function(msg) {
+      if ((typeof console !== "undefined" && console !== null ? console.log : void 0) != null) {
+        return console.log(msg);
+      }
+    },
+    dir: function(msg) {
+      if ((typeof console !== "undefined" && console !== null ? console.dir : void 0) != null) {
+        return console.dir(msg);
+      }
+    },
+    set_location_message: function(x, y) {
+      return {
+        type: 'set_location',
+        body: {
+          x: x,
+          y: y
+        }
+      };
+    },
+    send: function(message) {
+      this.log('sending: ' + $.toJSON(message));
+      return this.socket.send(message);
+    },
+    receive: function(message) {
+      var player, _i, _len, _ref;
+      this.log('IN: ' + $.toJSON(message));
+      this.dir(message);
+      switch (message.type) {
+        case 'connection':
+          return this.game.connect(message.client);
+        case 'set_location':
+          _ref = Crafty('player');
+          for (_i = 0, _len = _ref.length; _i < _len; _i++) {
+            player = _ref[_i];
+            this.log(player);
+          }
+          for (player in this.game.players) {
+            this.log(player);
+          }
+          player = this.game.players[message.client];
+          player.attr({
+            x: message.body.x,
+            y: message.body.y
+          });
+          return this.log(message.client + ' ' + player.x + ' ' + player.y);
+        case 'setName':
+          return '';
+      }
+    }
+  };
   $(function() {
     return Crafty.load(["images/lofi_char.png"], function() {
       return window.client.init();

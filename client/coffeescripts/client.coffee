@@ -1,3 +1,41 @@
+Crafty.c "WASD"
+  init: ->
+    @requires("controls")
+
+  wasd: (speed) ->
+    @speed ||= speed
+    @bind "enterframe", ->
+      return if (this.disableControls)
+      x = @x + @speed if (this.isDown("RIGHT_ARROW") || this.isDown("D"))
+      x = @x - @speed if (this.isDown("LEFT_ARROW") || this.isDown("A"))
+      y = @y - @speed if (this.isDown("UP_ARROW") || this.isDown("W"))
+      y = @y + @speed if (this.isDown("DOWN_ARROW") || this.isDown("S"))
+
+      if ((typeof x != 'undefined' || typeof y != 'undefined') && (x != @x || y != @y))
+        location_message = client.set_location_message(@x, @y)
+        client.send(location_message)
+        @x = x if x?
+        @y = y if y?
+
+    return this
+
+
+
+Crafty.c "player"
+  init: ->
+    @addComponent("2D, DOM, Collision")
+    @origin("center")
+    @css
+      border: '1px solid white'
+    @attr
+      x: 100
+      y: 100
+      w: 40
+      h: 40
+    console.log 'Player inited!'
+
+
+
 window.client =
   init: ->
     Crafty.init(600, 600)
@@ -6,7 +44,7 @@ window.client =
       player_green: [0,0],
       player_gray: [0,1],
 
-    @player = Crafty.e("player, player_green")
+    @player = window.Crafty.e("player, player_green, WASD").wasd(3)
 
     @socket = new io.Socket(null, {
         port: 9000,
@@ -37,60 +75,30 @@ window.client =
 
 
   send: (message) ->
-    @log 'sending: ' + message
+    @log 'sending: ' + $.toJSON(message)
     @socket.send(message)
 
   receive: (message) ->
-    @log $.toJSON(message)
+    @log 'IN: ' + $.toJSON(message)
     @dir message
 
     switch message.type
       when 'connection'
+        # player = window.Crafty.e('player, player_green')
+        # player.clientid = message.client
         @game.connect(message.client)
-      when 'movement'
-        ''
+
+      when 'set_location'
+        @log player for player in Crafty('player')
+        @log player for player of @game.players
+        player = @game.players[message.client]
+        player.attr({x: message.body.x, y: message.body.y})
+        @log message.client + ' ' + player.x + ' ' + player.y
+
       when 'setName'
         ''
 
 
-
-
-Crafty.c "WASD"
-  init: ->
-    @requires("controls")
-
-  wasd: (speed) ->
-    @speed ||= speed
-    @bind "enterframe", ->
-      return if (this.disableControls)
-      x = @x + @speed if (this.isDown("RIGHT_ARROW") || this.isDown("D"))
-      x = @x - @speed if (this.isDown("LEFT_ARROW") || this.isDown("A"))
-      y = @y - @speed if (this.isDown("UP_ARROW") || this.isDown("W"))
-      y = @y + @speed if (this.isDown("DOWN_ARROW") || this.isDown("S"))
-
-      if ((typeof x != 'undefined' || typeof y != 'undefined') && (x != @x || y != @y))
-        location_message = client.set_location_message(@x, @y)
-        client.send(location_message)
-        @x = x if x?
-        @y = y if y?
-
-    return this
-
-
-
-Crafty.c "player"
-  init: ->
-    @_queued_commands = @queued_commands || []
-    @addComponent("2D, DOM, WASD, Collision")
-    @origin("center")
-    @css
-      border: '1px solid white'
-    @attr
-      x: 100
-      y: 100
-      w: 40
-      h: 40
-    @wasd(3)
 
 
 

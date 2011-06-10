@@ -30,8 +30,5 @@ To run a simple server you can use `alias serve="python -m SimpleHTTPServer"` an
 
 Todo
 ----
-**** Figure out why connections from other computers don't seem to work (when you change null to a hostname in the client's Socket.IO connection attempt)
 * When a player connects notify other players so they can spawn a new player
 * A client needs to be able to receive a "player move" event for other players
-
-    

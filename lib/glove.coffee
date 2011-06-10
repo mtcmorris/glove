@@ -7,10 +7,11 @@ root.Game = class Game
     @connection_ids = []
     @current_tick = 0
 
-  connect: (connection_id) ->
-    @log 'Client connected: ' + message.client
+  connect: (connection_id) =>
+    @log 'Client connected: ' + connection_id
     @connection_ids.push connection_id
-    player = Crafty.e('player player_gray')
+    player = Crafty.e('player, player_green')
+    player.attr(clientid: connection_id)
     @players[connection_id] = player
     @players[connection_id]
    
