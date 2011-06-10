@@ -1,0 +1,13 @@
+Glove
+=====
+
+Gauntlet but better.
+
+Prerequisites
+
+    npm install socket.io
+    npm install coffee-script
+
+To run the server:
+
+    coffee server/server.coffee
