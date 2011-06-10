@@ -17,13 +17,16 @@ window.client =
 
     @socket.on 'connect', ->
 
-    @socket.on 'message', (message) ->
-      console.log message if typeof console?.log == 'function'
+    @socket.on 'message', (message) =>
       @receive(message)
 
     @socket.send type: "setName", body: $("#player-name").innerHTML
 
     @game = new window.Game
+
+
+  log: (msg) -> console.log msg if console?.log?
+  dir: (msg) -> console.dir msg if console?.dir?
 
 
   set_location_message: (x, y) ->
@@ -34,13 +37,18 @@ window.client =
 
 
   send: (message) ->
-    console.log 'sending: ' + message #if typeof console?.log == 'function'
+    @log 'sending: ' + message
     @socket.send(message)
 
-  receive: (message_string) ->
-    message = $.evalJSON(message_string)
+  receive: (message) ->
+    @dir message
+
     switch message.type
+      when 'connection'
+        @game.connect(message.client)
       when 'movement'
+        ''
+      when 'setName'
         ''
 
 

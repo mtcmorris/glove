@@ -1,4 +1,5 @@
 (function() {
+  var __bind = function(fn, me){ return function(){ return fn.apply(me, arguments); }; };
   window.client = {
     init: function() {
       Crafty.init(600, 600);
@@ -14,17 +15,24 @@
       });
       this.socket.connect();
       this.socket.on('connect', function() {});
-      this.socket.on('message', function(message) {
-        if (typeof (typeof console !== "undefined" && console !== null ? console.log : void 0) === 'function') {
-          console.log(message);
-        }
+      this.socket.on('message', __bind(function(message) {
         return this.receive(message);
-      });
+      }, this));
       this.socket.send({
         type: "setName",
         body: $("#player-name").innerHTML
       });
       return this.game = new window.Game;
+    },
+    log: function(msg) {
+      if ((typeof console !== "undefined" && console !== null ? console.log : void 0) != null) {
+        return console.log(msg);
+      }
+    },
+    dir: function(msg) {
+      if ((typeof console !== "undefined" && console !== null ? console.dir : void 0) != null) {
+        return console.dir(msg);
+      }
     },
     set_location_message: function(x, y) {
       return {
@@ -36,14 +44,17 @@
       };
     },
     send: function(message) {
-      console.log('sending: ' + message);
+      this.log('sending: ' + message);
       return this.socket.send(message);
     },
-    receive: function(message_string) {
-      var message;
-      message = $.evalJSON(message_string);
+    receive: function(message) {
+      this.dir(message);
       switch (message.type) {
+        case 'connection':
+          return this.game.connect(message.client);
         case 'movement':
+          return '';
+        case 'setName':
           return '';
       }
     }

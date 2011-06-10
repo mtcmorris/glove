@@ -8,8 +8,9 @@ root.Game = class Game
     @current_tick = 0
 
   connect: (connection_id) ->
+    @log 'Client connected: ' + message.client
     @connection_ids.push connection_id
-    player = new Player({id: connection_id, coords: {x: 0, y: 0}})
+    player = Crafty.e('player player_gray')
     @players[connection_id] = player
     @players[connection_id]
    
@@ -41,3 +42,5 @@ root.Game = class Game
 
   # message: (connection_id, message) ->
   #   @messages.push { connection_id: connection_id, body: message }
+
+  log: (message) -> console.log(message) if console?.log?
