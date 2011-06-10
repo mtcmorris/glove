@@ -47,4 +47,4 @@ root.Game = class Game
     @connection_ids = id for id in @connection_ids when id isnt connection_id
 
   message: (connection_id, message) ->
-    @messages.push {connection_id: connection_id, body: message, for_tick: message.tick}
+    @messages.push { connection_id: connection_id, body: message }
