@@ -35,6 +35,7 @@ socket = io.listen(server)
 socket.on 'connection', (client) ->
   sys.puts 'client connected ' + client.sessionId
   game.connect(client.sessionId)
+  client.broadcast client: client.sessionId, type: "connection"
 
   client.on 'disconnect', ->
     sys.puts "disconnected"
@@ -51,6 +52,8 @@ socket.on 'connection', (client) ->
     try
       sys.puts 'msg received: ' + message
       game.message(client.sessionId, message)
+      message.client = client.sessionId
+      client.broadcast(message)
       sys.puts JSON.stringify(game.messages)
     catch error
       log "Server couldn't parse message #{message} from client #{client}. Error: #{error}"
