@@ -117,7 +117,7 @@
           this.log('disconnected: ' + message.client);
           player = this.players_by_connection_id[message.client];
           delete this.players_by_connection_id[message.client];
-          return player.destroy;
+          return player.destroy();
         case 'set_location':
           player = this.players_by_connection_id[message.client];
           player.attr({

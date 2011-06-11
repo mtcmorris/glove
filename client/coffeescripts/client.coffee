@@ -94,7 +94,7 @@ window.client =
         @log 'disconnected: ' + message.client
         player = @players_by_connection_id[message.client]
         delete @players_by_connection_id[message.client]
-        player.destroy
+        player.destroy()
 
       when 'set_location'
         player = @players_by_connection_id[message.client]

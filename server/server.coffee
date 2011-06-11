@@ -39,15 +39,15 @@ socket.on 'connection', (client) ->
 
   notify = (id) ->
     sys.puts 'All clients connected: ' + id
-    client.broadcast(client: id, type: "connection")
+    you = if client.id then true else false
+    client.broadcast(client: id, type: "connection", you: you)
 
   notify(id) for id, client of socket.clientsIndex
 
 
   client.on 'disconnect', ->
-    sys.puts 'client connected ' + client.sessionId
-    game.disconnect(client.sessionId) if client.sessionId?
-    client.broadcast(client: clientid, type: "disconnection") for clientid in game.connection_ids when clientid != client.sessionId
+    sys.puts 'discon: ' + client.sessionId
+    client.broadcast(type: 'disconnection', client: client.sessionId)
   
 
   client.on 'message', (message) ->
@@ -60,3 +60,9 @@ socket.on 'connection', (client) ->
       client.broadcast(message)
     catch error
       log "Server couldn't parse message #{message} from client #{client}. Error: #{error}"
+
+socket.on 'disconnect', (client) ->
+  disconnected_id = client.sessionId
+  sys.puts 'dd: ' + disconnected_id
+  client.send(client: disconnected_id, type: 'disconnection') for id, client of socket.clientsIndex
+  #client.broadcast(client: disconnected_id, type: 'disconnection')
