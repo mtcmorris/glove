@@ -67,8 +67,10 @@ Crafty.c "player"
     @attr
       x: 100
       y: 100
-      w: 40
-      h: 40
+      w: 32
+      h: 32
+    @collision (new Crafty.polygon([0,0], [30,0], [30,30], [0, 30]).shift(5, 5))
+      
 
     console.log 'Player inited!'
 
@@ -195,7 +197,7 @@ window.client =
   init: ->
     Crafty.init(600, 300)
     Crafty.background("#000")
-    Crafty.sprite 40, "images/lofi_char.png",
+    Crafty.sprite 32, "images/lofi_char_32x32.png",
       player_green: [0,0],
       player_gray: [1,0],
       goblin_green: [0,5],
