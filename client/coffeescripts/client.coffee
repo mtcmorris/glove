@@ -35,15 +35,13 @@ Crafty.c "player"
   init: ->
     @requires("2D, DOM, Collision")
     @origin("center")
-    @css
-      border: '1px solid white'
+    # @css
+    #   border: '1px solid white'
     @attr
       x: 100
       y: 100
       w: 40
       h: 40
-    @bind 'enterframe', ->
-      debugger if window.debug #ghetto!
 
     console.log 'Player inited!'
 
@@ -72,12 +70,20 @@ Crafty.c 'monster'
     console.log 'Monster inited!'
 
 
-Crafty.c 'wall'
+Crafty.c 'tile'
   init: ->
-    @requires('2D, DOM, wall_gray')
+    @requires('2D, DOM')
     @attr
       w: 40
       h: 40
+
+Crafty.c 'wall'
+  init: ->
+    @requires('tile, wall_gray')
+
+Crafty.c 'floor'
+  init: ->
+    @requires('tile, floor_gray')
 
 
 
@@ -85,7 +91,7 @@ Crafty.c 'wall'
 
 window.client =
   init: ->
-    Crafty.init(600, 600)
+    Crafty.init(600, 300)
     Crafty.background("#000")
     Crafty.sprite 40, "images/lofi_char.png",
       player_green: [0,0],
@@ -95,6 +101,15 @@ window.client =
       floor_brown: [12,1]
 
     @player = window.Crafty.e("player, player_green, WASD").wasd(3)
+    Crafty.viewport.x = @player.x
+    Crafty.viewport.y = @player.y
+
+    @player.bind 'enterframe', ->
+      if @x and @y
+        Crafty.viewport.x = (@x * -1) + Crafty.viewport.width / 2
+        Crafty.viewport.y = (@y * -1) + Crafty.viewport.height / 2
+
+      debugger if window.debug #ghetto!
 
     @socket = new io.Socket(null, {
         port: 9000,
@@ -131,21 +146,38 @@ window.client =
       damage: damage
 
 
+  add_map_tiles: (map) ->
+    _.each map, (row, y) ->
+      _.each row, (cell, x) ->
+        tile = null
+        switch cell
+          when 'W'
+            tile = Crafty.e('wall')
+          when 'f'
+            tile = Crafty.e('floor')
+        tile.attr(x: x * tile.w, y: y * tile.h) if tile
+    @log 'Map loaded!'
+
 
   send: (message) ->
-    @log 'sending: ' + $.toJSON(message)
+    @log 'sending: ' + $.toJSON(message) if window.log_out
     @socket.send(message)
 
   receive: (message) ->
-    @log 'IN: ' + $.toJSON(message)
-    @dir message
-    
+    @log 'IN: ' + $.toJSON(message) if window.log_in
+
     switch message.type
       when 'connection'
         @log 'connected: ' + message.client
         player = @players_by_connection_id[message.client] || Crafty.e('player, player_gray')
         @players_by_connection_id[message.client] = player
         player.attr(clientid: message.client)
+
+      when 'map'
+        #Oh snap, it's the map!
+        map = message.body.map
+        @add_map_tiles(map)
+
 
       when 'disconnection'
         @log 'disconnected: ' + message.client

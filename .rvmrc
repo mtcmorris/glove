@@ -1,0 +1,13 @@
+rvm_install_on_use_flag=1
+
+if ! command -v bundle ; then
+  gem install bundler
+fi
+
+if ! command -v guard ; then
+  gem install guard --version=0.3.4
+  gem install guard-coffeescript
+  gem install guard-sass
+fi
+
+
