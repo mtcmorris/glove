@@ -120,8 +120,12 @@
         _results = [];
         for (_i = 0, _len = hit_data.length; _i < _len; _i++) {
           collision = hit_data[_i];
+<<<<<<< HEAD
           collider = collision.obj;
           _results.push(collider.__c['player'] ? window.client.send(window.client.take_damage_message(collider[0], this.strength)) : void 0);
+=======
+          _results.push(collider = collision.obj);
+>>>>>>> e190153... Disable take damage message for now
         }
         return _results;
       });
@@ -144,10 +148,9 @@
             this.y = this.y - this.speed;
           }
           if (impulse[1] < 0) {
-            this.y = this.y + this.speed;
+            return this.y = this.y + this.speed;
           }
         }
-        return console.log("Monster coords is " + this.x + ", " + this.y);
       });
       behaviour = {
         identifier: "sleep",
@@ -178,9 +181,8 @@
     },
     attack: function() {
       if (this.target) {
-        this.action = "attacking";
+        return this.action = "attacking";
       }
-      return console.log("attacking!");
     },
     getImpulse: function(obj) {
       if (obj) {
@@ -390,10 +392,7 @@
         case 'setName':
           return '';
         case 'take_damage':
-          entity = Crafty(message.body.entity_id);
-          if (entity) {
-            return entity.take_damage(message.body.damage);
-          }
+          return entity = Crafty(message.body.entity_id);
       }
     }
   };
