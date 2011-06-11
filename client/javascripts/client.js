@@ -65,6 +65,7 @@
       this.strength = 1;
       this.addComponent("2D, DOM, Collide");
       this.origin("center");
+      this.target = false;
       this.attr({
         x: 200,
         y: 200,
@@ -102,13 +103,21 @@
       closest_player = this.closestPlayer();
       console.log("Closest is " + closest_player);
       if (closest_player && this.distanceFrom(closest_player) < 200) {
+        this.target = closest_player;
         return true;
       } else {
+        this.target = false;
         return false;
       }
     },
     attack: function() {
+      if (this.target) {
+        console.log("Impulse is " + (this.getImpulse(this.target)));
+      }
       return console.log("attacking!");
+    },
+    getImpulse: function(obj) {
+      return [Math.floor(this.x - obj.x), Math.floor(this.y - obj.y)];
     },
     closestPlayer: function() {
       var closest_distance, closest_player, key, player, _ref;

@@ -49,6 +49,8 @@ Crafty.c 'monster'
     @strength = 1
     @addComponent("2D, DOM, Collide")
     @origin("center")
+    
+    @target = false
     @attr
       x: 200
       y: 200
@@ -86,14 +88,21 @@ Crafty.c 'monster'
     closest_player = this.closestPlayer()
     console.log "Closest is #{closest_player}"
     if closest_player && this.distanceFrom(closest_player) < 200
+      @target = closest_player
       true
     else
+      @target = false
       false
     # Check if a player is close
   attack: ->
+    if @target
+      console.log "Impulse is #{this.getImpulse(@target)}"
     console.log "attacking!"
     # RAWWWWWW
-    
+  
+  getImpulse: (obj) ->
+    [Math.floor(@x - obj.x), Math.floor(@y - obj.y)]
+  
   closestPlayer: ->
     closest_distance = this.distanceFrom(window.client.player)
     closest_player = window.client.player
