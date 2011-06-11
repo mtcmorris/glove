@@ -66,6 +66,24 @@ Crafty.c 'monster'
 
     console.log 'Monster inited!'
 
+  behaviour: ->
+    # Possible future tree:
+    # sleeping
+    #   attacking
+    #   retreating
+    #   beserking
+    
+    {
+      identifier: "sleep", strategy: "sequential",
+      children: [
+        { identifier: "attack" }
+      ]
+    }
+  canAttack: ->
+    # Check if a player is close
+  attack: ->
+    # RAWWWWWW
+
 
 Crafty.c 'tile'
   init: ->
@@ -124,6 +142,11 @@ window.client =
 
     @game = new window.Game
     @players_by_connection_id = {}
+    @monsters = []
+    
+  tick: ->
+    for monster in @monsters
+      monster.state = monster.state.tick()
 
 
   log: (msg) -> console.log msg if console?.log?

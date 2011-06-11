@@ -81,7 +81,20 @@
         return _results;
       });
       return console.log('Monster inited!');
-    }
+    },
+    behaviour: function() {
+      return {
+        identifier: "sleep",
+        strategy: "sequential",
+        children: [
+          {
+            identifier: "attack"
+          }
+        ]
+      };
+    },
+    canAttack: function() {},
+    attack: function() {}
   });
   Crafty.c('tile', {
     init: function() {
@@ -140,7 +153,18 @@
         body: $("#player-name").innerHTML
       });
       this.game = new window.Game;
-      return this.players_by_connection_id = {};
+      this.players_by_connection_id = {};
+      return this.monsters = [];
+    },
+    tick: function() {
+      var monster, _i, _len, _ref, _results;
+      _ref = this.monsters;
+      _results = [];
+      for (_i = 0, _len = _ref.length; _i < _len; _i++) {
+        monster = _ref[_i];
+        _results.push(monster.state = monster.state.tick());
+      }
+      return _results;
     },
     log: function(msg) {
       if ((typeof console != "undefined" && console !== null ? console.log : void 0) != null) {
