@@ -3,24 +3,28 @@ Crafty.c 'CollisionInfo'
     @requires('2D, Collision')
 
   collision_info_for_collider: (collider) ->
-    left_self: @x
-    left_collider: collider.x
-    right_self: @x + @w
-    right_collider: collider.x + collider.width
-    top_self: @y
-    top_collider: collider.y
-    bottom_self: @y + @h
-    bottom_collider: collider.y + collider.height
+    left_self = @x
+    left_collider = collider.x
+    right_self = @x + @w
+    right_collider = collider.x + collider.w
+    top_self = @y
+    top_collider = collider.y
+    bottom_self = @y + @h
+    bottom_collider = collider.y + collider.h
 
-    collider_is_to_bottom = bottom_self < top_collider
-    collider_is_to_top = top_self > bottom_collider
-    collider_is_to_right = right_self < left_collider
-    collider_is_to_left = left_self > right_collider
+    collider_is_to_bottom = bottom_self > top_collider
+    collider_is_to_top = top_self < bottom_collider
+    collider_is_to_right = right_self > left_collider
+    collider_is_to_left = left_self < right_collider
 
-    { collider_is_to_bottom: collider_is_to_bottom
+
+    c_info =
+      collider_is_to_bottom: collider_is_to_bottom
       collider_is_to_top: collider_is_to_top
       collider_is_to_right: collider_is_to_right
-      collider_is_to_left: collider_is_to_left }
+      collider_is_to_left: collider_is_to_left
+
+    return c_info
 
 
 Crafty.c "WASD"
@@ -56,7 +60,7 @@ Crafty.c 'damageable'
 
 Crafty.c "player"
   init: ->
-    @requires("2D, DOM, Collision")
+    @requires("2D, DOM, Collision, CollisionInfo")
     @origin("center")
     # @css
     #   border: '1px solid white'
@@ -67,6 +71,9 @@ Crafty.c "player"
       h: 40
 
     console.log 'Player inited!'
+
+  dxy: (dx, dy) ->
+    @move_to(@x + dx, @y + dy)
 
   move_to: (x, y) ->
     location_message = client.set_location_message(x, y)
@@ -82,8 +89,10 @@ Crafty.c "player"
 Crafty.c 'monster'
   init: ->
     @strength = 1
-    @addComponent("2D, DOM, Collision")
+    @addComponent("2D, DOM, Collision, CollisionInfo")
     @origin("center")
+    
+    @target = false
     @attr
       x: 200
       y: 200
@@ -94,13 +103,71 @@ Crafty.c 'monster'
       for collision in hit_data
         #is the collider a player? if so, hurt the player unless the player attacked in the last X milliseconds
         collider = collision.obj
-        if collider.__c['player']
+        # if collider.__c['player']
           #send a message telling the player he got hurt
-          window.client.send window.client.take_damage_mesage(collider[0], @strength)
+          # window.client.send window.client.take_damage_mesage(collider[0], @strength)
 
+    @speed = 1
+    @state = false
 
+    @bind "enterframe", ->
+      @state = @state.tick() if @state
+      if @target
+        impulse = this.getImpulse(@target)
+
+        @x = @x + @speed if impulse[0] < 0
+        @x = @x - @speed if impulse[0] > 0
+        @y = @y - @speed if impulse[1] > 0
+        @y = @y + @speed if impulse[1] < 0
+    # Possible future tree:
+    # sleeping
+    #   attacking
+    #   retreating
+    #   beserking
+    behaviour = {
+      identifier: "sleep", strategy: "sequential",
+      children: [
+        { identifier: "attack" }
+      ]
+    }
+    
+
+    @state = window.client.machine.generateTree(behaviour, this)
     console.log 'Monster inited!'
+  onHit: (hit_data) ->
 
+  sleep: ->
+    console.log "sleeping"
+
+  canAttack: ->
+    closest_player = this.closestPlayer()
+    if closest_player && this.distanceFrom(closest_player) < 300
+      @target = closest_player
+      true
+    else
+      @target = false
+      false
+    # Check if a player is close
+  attack: ->
+    if @target
+      @action = "attacking"
+  
+  getImpulse: (obj) ->
+    if obj
+      [Math.floor(@x - obj.x), Math.floor(@y - obj.y)]
+    else
+      [0,0]
+  
+  closestPlayer: ->
+    closest_distance = this.distanceFrom(window.client.player)
+    closest_player = window.client.player
+    for key, player of window.client.players_by_connection_id
+      if player && this.distanceFrom(player) < closest_distance
+        closest_player = player
+    closest_player
+    
+  distanceFrom: (player) ->
+    Math.sqrt(Math.pow(@x - player.x, 2) + Math.pow(@y - player.y, 2))
 
 Crafty.c 'tile'
   init: ->
@@ -128,6 +195,7 @@ window.client =
     Crafty.sprite 40, "images/lofi_char.png",
       player_green: [0,0],
       player_gray: [1,0],
+      goblin_green: [0,5],
     Crafty.sprite 40, "images/lofi_environment.png",
       wall_gray: [0,0],
       floor_brown: [12,1]
@@ -135,11 +203,24 @@ window.client =
     @player = window.Crafty.e("player, player_green, WASD").wasd(3)
     @player.onHit 'wall', (hit_data) =>
       for collision in hit_data
+        #bail early if we've resolved this collision
+        break if not @player.hit('wall')
+
         collider = collision.obj
-        if collider.__c['wall']
-          ''
-          #collider is a wall, move the player
-          #@player.dxy(x: 1, y: 1
+        c_info = @player.collision_info_for_collider(collider)
+        dx = null
+        dy = null
+
+        moved_left = @player.prev_x > @player.x
+        moved_right = @player.prev_x < @player.x
+        moved_up = @player.prev_y > @player.y
+        moved_down = @player.prev_y < @player.y
+
+        dx = -1 * @player.speed if moved_right and c_info.collider_is_to_right
+        dx = 1 * @player.speed if moved_left and c_info.collider_is_to_left
+        dy = -1 * @player.speed if moved_down and c_info.collider_is_to_bottom
+        dy = 1 * @player.speed if moved_up and c_info.collider_is_to_top
+        @player.dxy(dx, dy)
 
 
     Crafty.viewport.x = @player.x
@@ -168,6 +249,12 @@ window.client =
 
     @game = new window.Game
     @players_by_connection_id = {}
+    @monsters = []
+    
+    @machine = new Machine();
+    monster = window.Crafty.e("monster", "goblin_green")
+
+    @monsters.push monster
 
 
   log: (msg) -> console.log msg if console?.log?
@@ -236,7 +323,7 @@ window.client =
 
       when 'take_damage'
         entity = Crafty(message.body.entity_id)
-        entity.take_damage(message.body.damage) if entity
+        # entity.take_damage(message.body.damage) if entity
 
 
 

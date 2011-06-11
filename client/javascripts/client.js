@@ -5,28 +5,26 @@
       return this.requires('2D, Collision');
     },
     collision_info_for_collider: function(collider) {
-      var collider_is_to_bottom, collider_is_to_left, collider_is_to_right, collider_is_to_top;
-      ({
-        left_self: this.x,
-        left_collider: collider.x,
-        right_self: this.x + this.w,
-        right_collider: collider.x + collider.width,
-        top_self: this.y,
-        top_collider: collider.y,
-        bottom_self: this.y + this.h,
-        bottom_collider: collider.y + collider.height
-      });
-      collider_is_to_bottom = bottom_self < top_collider;
-      collider_is_to_top = top_self > bottom_collider;
-      collider_is_to_right = right_self < left_collider;
-      collider_is_to_left = left_self > right_collider;
-      return {
-        collider_is_to_bottom: collider_is_to_bottom({
-          collider_is_to_top: collider_is_to_top,
-          collider_is_to_right: collider_is_to_right,
-          collider_is_to_left: collider_is_to_left
-        })
+      var bottom_collider, bottom_self, c_info, collider_is_to_bottom, collider_is_to_left, collider_is_to_right, collider_is_to_top, left_collider, left_self, right_collider, right_self, top_collider, top_self;
+      left_self = this.x;
+      left_collider = collider.x;
+      right_self = this.x + this.w;
+      right_collider = collider.x + collider.w;
+      top_self = this.y;
+      top_collider = collider.y;
+      bottom_self = this.y + this.h;
+      bottom_collider = collider.y + collider.h;
+      collider_is_to_bottom = bottom_self > top_collider;
+      collider_is_to_top = top_self < bottom_collider;
+      collider_is_to_right = right_self > left_collider;
+      collider_is_to_left = left_self < right_collider;
+      c_info = {
+        collider_is_to_bottom: collider_is_to_bottom,
+        collider_is_to_top: collider_is_to_top,
+        collider_is_to_right: collider_is_to_right,
+        collider_is_to_left: collider_is_to_left
       };
+      return c_info;
     }
   });
   Crafty.c("WASD", {
@@ -76,7 +74,7 @@
   });
   Crafty.c("player", {
     init: function() {
-      this.requires("2D, DOM, Collision");
+      this.requires("2D, DOM, Collision, CollisionInfo");
       this.origin("center");
       this.attr({
         x: 100,
@@ -85,6 +83,9 @@
         h: 40
       });
       return console.log('Player inited!');
+    },
+    dxy: function(dx, dy) {
+      return this.move_to(this.x + dx, this.y + dy);
     },
     move_to: function(x, y) {
       var location_message;
@@ -102,9 +103,11 @@
   });
   Crafty.c('monster', {
     init: function() {
+      var behaviour;
       this.strength = 1;
-      this.addComponent("2D, DOM, Collision");
+      this.addComponent("2D, DOM, Collision, CollisionInfo");
       this.origin("center");
+      this.target = false;
       this.attr({
         x: 200,
         y: 200,
@@ -116,12 +119,87 @@
         _results = [];
         for (_i = 0, _len = hit_data.length; _i < _len; _i++) {
           collision = hit_data[_i];
-          collider = collision.obj;
-          _results.push(collider.__c['player'] ? window.client.send(window.client.take_damage_mesage(collider[0], this.strength)) : void 0);
+          _results.push(collider = collision.obj);
         }
         return _results;
       });
+      this.speed = 1;
+      this.state = false;
+      this.bind("enterframe", function() {
+        var impulse;
+        if (this.state) {
+          this.state = this.state.tick();
+        }
+        if (this.target) {
+          impulse = this.getImpulse(this.target);
+          if (impulse[0] < 0) {
+            this.x = this.x + this.speed;
+          }
+          if (impulse[0] > 0) {
+            this.x = this.x - this.speed;
+          }
+          if (impulse[1] > 0) {
+            this.y = this.y - this.speed;
+          }
+          if (impulse[1] < 0) {
+            return this.y = this.y + this.speed;
+          }
+        }
+      });
+      behaviour = {
+        identifier: "sleep",
+        strategy: "sequential",
+        children: [
+          {
+            identifier: "attack"
+          }
+        ]
+      };
+      this.state = window.client.machine.generateTree(behaviour, this);
       return console.log('Monster inited!');
+    },
+    onHit: function(hit_data) {},
+    sleep: function() {
+      return console.log("sleeping");
+    },
+    canAttack: function() {
+      var closest_player;
+      closest_player = this.closestPlayer();
+      if (closest_player && this.distanceFrom(closest_player) < 300) {
+        this.target = closest_player;
+        return true;
+      } else {
+        this.target = false;
+        return false;
+      }
+    },
+    attack: function() {
+      if (this.target) {
+        return this.action = "attacking";
+      }
+    },
+    getImpulse: function(obj) {
+      if (obj) {
+        return [Math.floor(this.x - obj.x), Math.floor(this.y - obj.y)];
+      } else {
+        return [0, 0];
+      }
+    },
+    closestPlayer: function() {
+      var closest_distance, closest_player, key, player, _ref;
+      closest_distance = this.distanceFrom(window.client.player);
+      closest_player = window.client.player;
+      _ref = window.client.players_by_connection_id;
+      for (key in _ref) {
+        player = _ref[key];
+        if (player && this.distanceFrom(player) < closest_distance) {
+          closest_player = player;
+        }
+      }
+      return closest_player;
+    },
+    distanceFrom: function(player) {
+      return Math.sqrt(Math.pow(this.x - player.x, 2) + Math.pow(this.y - player.y, 2));
     }
   });
   Crafty.c('tile', {
@@ -145,11 +223,13 @@
   });
   window.client = {
     init: function() {
+      var monster;
       Crafty.init(600, 300);
       Crafty.background("#000");
       Crafty.sprite(40, "images/lofi_char.png", {
         player_green: [0, 0],
-        player_gray: [1, 0]
+        player_gray: [1, 0],
+        goblin_green: [0, 5]
       });
       Crafty.sprite(40, "images/lofi_environment.png", {
         wall_gray: [0, 0],
@@ -157,12 +237,34 @@
       });
       this.player = window.Crafty.e("player, player_green, WASD").wasd(3);
       this.player.onHit('wall', __bind(function(hit_data) {
-        var collider, collision, _i, _len, _results;
+        var c_info, collider, collision, dx, dy, moved_down, moved_left, moved_right, moved_up, _i, _len, _results;
         _results = [];
         for (_i = 0, _len = hit_data.length; _i < _len; _i++) {
           collision = hit_data[_i];
+          if (!this.player.hit('wall')) {
+            break;
+          }
           collider = collision.obj;
-          _results.push(collider.__c['wall'] ? '' : void 0);
+          c_info = this.player.collision_info_for_collider(collider);
+          dx = null;
+          dy = null;
+          moved_left = this.player.prev_x > this.player.x;
+          moved_right = this.player.prev_x < this.player.x;
+          moved_up = this.player.prev_y > this.player.y;
+          moved_down = this.player.prev_y < this.player.y;
+          if (moved_right && c_info.collider_is_to_right) {
+            dx = -1 * this.player.speed;
+          }
+          if (moved_left && c_info.collider_is_to_left) {
+            dx = 1 * this.player.speed;
+          }
+          if (moved_down && c_info.collider_is_to_bottom) {
+            dy = -1 * this.player.speed;
+          }
+          if (moved_up && c_info.collider_is_to_top) {
+            dy = 1 * this.player.speed;
+          }
+          _results.push(this.player.dxy(dx, dy));
         }
         return _results;
       }, this));
@@ -191,15 +293,19 @@
         body: $("#player-name").innerHTML
       });
       this.game = new window.Game;
-      return this.players_by_connection_id = {};
+      this.players_by_connection_id = {};
+      this.monsters = [];
+      this.machine = new Machine();
+      monster = window.Crafty.e("monster", "goblin_green");
+      return this.monsters.push(monster);
     },
     log: function(msg) {
-      if ((typeof console !== "undefined" && console !== null ? console.log : void 0) != null) {
+      if ((typeof console != "undefined" && console !== null ? console.log : void 0) != null) {
         return console.log(msg);
       }
     },
     dir: function(msg) {
-      if ((typeof console !== "undefined" && console !== null ? console.dir : void 0) != null) {
+      if ((typeof console != "undefined" && console !== null ? console.dir : void 0) != null) {
         return console.dir(msg);
       }
     },
@@ -280,10 +386,7 @@
         case 'setName':
           return '';
         case 'take_damage':
-          entity = Crafty(message.body.entity_id);
-          if (entity) {
-            return entity.take_damage(message.body.damage);
-          }
+          return entity = Crafty(message.body.entity_id);
       }
     }
   };
