@@ -82,6 +82,30 @@
         }
         return _results;
       });
+      this.speed = 1;
+      this.state = false;
+      this.bind("enterframe", function() {
+        var impulse;
+        if (this.state) {
+          this.state = this.state.tick();
+        }
+        if (this.target) {
+          impulse = this.getImpulse(this.target);
+          if (impulse[0] < 0) {
+            this.x = this.x + this.speed;
+          }
+          if (impulse[0] > 0) {
+            this.x = this.x - this.speed;
+          }
+          if (impulse[1] > 0) {
+            this.y = this.y - this.speed;
+          }
+          if (impulse[1] < 0) {
+            this.y = this.y + this.speed;
+          }
+        }
+        return console.log("Monster coords is " + this.x + ", " + this.y);
+      });
       behaviour = {
         identifier: "sleep",
         strategy: "sequential",
@@ -101,8 +125,7 @@
     canAttack: function() {
       var closest_player;
       closest_player = this.closestPlayer();
-      console.log("Closest is " + closest_player);
-      if (closest_player && this.distanceFrom(closest_player) < 200) {
+      if (closest_player && this.distanceFrom(closest_player) < 300) {
         this.target = closest_player;
         return true;
       } else {
@@ -112,12 +135,16 @@
     },
     attack: function() {
       if (this.target) {
-        console.log("Impulse is " + (this.getImpulse(this.target)));
+        this.action = "attacking";
       }
       return console.log("attacking!");
     },
     getImpulse: function(obj) {
-      return [Math.floor(this.x - obj.x), Math.floor(this.y - obj.y)];
+      if (obj) {
+        return [Math.floor(this.x - obj.x), Math.floor(this.y - obj.y)];
+      } else {
+        return [0, 0];
+      }
     },
     closestPlayer: function() {
       var closest_distance, closest_player, key, player, _ref;
@@ -199,17 +226,7 @@
       this.monsters = [];
       this.machine = new Machine();
       monster = window.Crafty.e("monster", "goblin_green");
-      this.monsters.push(monster);
-      return setTimeout("window.client.tick()", 1000);
-    },
-    tick: function() {
-      var monster, _i, _len, _ref;
-      _ref = this.monsters;
-      for (_i = 0, _len = _ref.length; _i < _len; _i++) {
-        monster = _ref[_i];
-        monster.state = monster.state.tick();
-      }
-      return setTimeout("window.client.tick()", 1000);
+      return this.monsters.push(monster);
     },
     log: function(msg) {
       if ((typeof console != "undefined" && console !== null ? console.log : void 0) != null) {

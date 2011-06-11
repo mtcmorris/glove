@@ -65,6 +65,19 @@ Crafty.c 'monster'
           #send a message telling the player he got hurt
           window.client.send window.client.take_damage_mesage(collider[0], @strength)
 
+    @speed = 1
+    @state = false
+
+    @bind "enterframe", ->
+      @state = @state.tick() if @state
+      if @target
+        impulse = this.getImpulse(@target)
+
+        @x = @x + @speed if impulse[0] < 0
+        @x = @x - @speed if impulse[0] > 0
+        @y = @y - @speed if impulse[1] > 0
+        @y = @y + @speed if impulse[1] < 0
+      console.log "Monster coords is #{@x}, #{@y}"
     # Possible future tree:
     # sleeping
     #   attacking
@@ -77,6 +90,7 @@ Crafty.c 'monster'
       ]
     }
     
+
     @state = window.client.machine.generateTree(behaviour, this)
     console.log 'Monster inited!'
   onHit: (hit_data) ->
@@ -86,8 +100,7 @@ Crafty.c 'monster'
 
   canAttack: ->
     closest_player = this.closestPlayer()
-    console.log "Closest is #{closest_player}"
-    if closest_player && this.distanceFrom(closest_player) < 200
+    if closest_player && this.distanceFrom(closest_player) < 300
       @target = closest_player
       true
     else
@@ -96,12 +109,15 @@ Crafty.c 'monster'
     # Check if a player is close
   attack: ->
     if @target
-      console.log "Impulse is #{this.getImpulse(@target)}"
+      @action = "attacking"
     console.log "attacking!"
     # RAWWWWWW
   
   getImpulse: (obj) ->
-    [Math.floor(@x - obj.x), Math.floor(@y - obj.y)]
+    if obj
+      [Math.floor(@x - obj.x), Math.floor(@y - obj.y)]
+    else
+      [0,0]
   
   closestPlayer: ->
     closest_distance = this.distanceFrom(window.client.player)
@@ -178,12 +194,6 @@ window.client =
     monster = window.Crafty.e("monster", "goblin_green")
 
     @monsters.push monster
-    setTimeout("window.client.tick()", 1000)
-    
-  tick: ->
-    for monster in @monsters
-      monster.state = monster.state.tick()
-    setTimeout("window.client.tick()", 1000)
 
 
   log: (msg) -> console.log msg if console?.log?
