@@ -91,13 +91,26 @@
       return console.log('Monster inited!');
     }
   });
+  Crafty.c('wall', {
+    init: function() {
+      this.requires('2D, DOM, wall_gray');
+      return this.attr({
+        w: 40,
+        h: 40
+      });
+    }
+  });
   window.client = {
     init: function() {
       Crafty.init(600, 600);
       Crafty.background("#000");
       Crafty.sprite(40, "images/lofi_char.png", {
         player_green: [0, 0],
-        player_gray: [0, 1]
+        player_gray: [1, 0]
+      });
+      Crafty.sprite(40, "images/lofi_environment.png", {
+        wall_gray: [0, 0],
+        floor_brown: [12, 1]
       });
       this.player = window.Crafty.e("player, player_green, WASD").wasd(3);
       this.socket = new io.Socket(null, {
@@ -155,7 +168,7 @@
       switch (message.type) {
         case 'connection':
           this.log('connected: ' + message.client);
-          player = this.players_by_connection_id[message.client] || Crafty.e('player, player_green');
+          player = this.players_by_connection_id[message.client] || Crafty.e('player, player_gray');
           this.players_by_connection_id[message.client] = player;
           return player.attr({
             clientid: message.client

@@ -69,6 +69,14 @@ Crafty.c 'monster'
     console.log 'Monster inited!'
 
 
+Crafty.c 'wall'
+  init: ->
+    @requires('2D, DOM, wall_gray')
+    @attr
+      w: 40
+      h: 40
+
+
 
 
 
@@ -78,7 +86,10 @@ window.client =
     Crafty.background("#000")
     Crafty.sprite 40, "images/lofi_char.png",
       player_green: [0,0],
-      player_gray: [0,1],
+      player_gray: [1,0],
+    Crafty.sprite 40, "images/lofi_environment.png",
+      wall_gray: [0,0],
+      floor_brown: [12,1]
 
     @player = window.Crafty.e("player, player_green, WASD").wasd(3)
 
@@ -129,7 +140,7 @@ window.client =
     switch message.type
       when 'connection'
         @log 'connected: ' + message.client
-        player = @players_by_connection_id[message.client] || Crafty.e('player, player_green')
+        player = @players_by_connection_id[message.client] || Crafty.e('player, player_gray')
         @players_by_connection_id[message.client] = player
         player.attr(clientid: message.client)
 
