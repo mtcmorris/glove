@@ -70,16 +70,40 @@ abbr[title], dfn[title] {
 input, select {
   vertical-align: middle; }
 
+body, html {
+  margin: 0;
+  padding: 0;
+  height: 100%;
+  overflow: hidden;
+  font-family: Unibody8Regular, monospace;
+  font-size: 20px;
+  background: #bbb; }
+
+#cr-stage {
+  border: 10px solid #fff;
+  margin: 5px auto;
+  color: white;
+  -moz-border-radius: 10px;
+  border-radius: 10px;
+  -webkit-box-shadow: 0px 5px 3px #666;
+  -moz-box-shadow: 0px 5px 3px #666;
+  box-shadow: 0px 5px 3px #666; }
+
 header {
-  height: 18px;
+  height: 35px;
   font-size: 0.8em;
   width: 600px;
   margin: 0 auto;
   position: relative; }
+  header h1 {
+    font-size: 46px;
+    margin: 20px 0;
+    text-shadow: 2px 2px 1px #bbb;
+    filter: dropshadow(color=#bbbbbb, offx=2, offy=2); }
 
 #player-name {
   position: absolute;
-  top: 33px;
+  top: 60px;
   left: 10px;
   color: #fff;
   z-index: 90; }
@@ -88,7 +112,7 @@ header {
   position: absolute;
   right: 10px;
   height: 20px;
-  top: 35px;
+  top: 63px;
   z-index: 99;
   width: 100px;
   border: 1px solid #666;
