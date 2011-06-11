@@ -79,40 +79,50 @@ body, html {
   font-size: 20px;
   background: #bbb; }
 
-#cr-stage {
-  border: 10px solid #fff;
-  margin: 5px auto;
-  color: white;
-  -moz-border-radius: 10px;
-  border-radius: 10px;
-  -webkit-box-shadow: 0px 5px 3px #666;
-  -moz-box-shadow: 0px 5px 3px #666;
-  box-shadow: 0px 5px 3px #666; }
-
-header {
-  height: 35px;
-  font-size: 0.8em;
-  width: 600px;
+#container {
+  width: 620px;
   margin: 0 auto;
   position: relative; }
-  header h1 {
-    font-size: 46px;
-    margin: 20px 0;
-    text-shadow: 2px 2px 1px #bbb;
-    filter: dropshadow(color=#bbbbbb, offx=2, offy=2); }
+  #container header {
+    height: 35px;
+    font-size: 0.8em;
+    width: 600px;
+    margin: 0 auto;
+    position: relative; }
+    #container header h1 {
+      font-size: 46px;
+      margin: 20px 0;
+      text-shadow: 2px 2px 1px #bbb;
+      filter: dropshadow(color=#bbbbbb, offx=2, offy=2); }
+  #container footer {
+    position: absolute;
+    top: 370px;
+    right: 10px;
+    color: #ccc; }
 
 #player-name {
+  color: #FFFFFF;
+  font-size: 22px;
+  letter-spacing: 0.1em;
+  left: 14px;
+  position: absolute;
+  top: 62px;
+  z-index: 90; }
+
+#player-health-heart {
+  background: url("/client/images/lofi_interface.png") no-repeat scroll -40px -285px transparent;
+  height: 40px;
+  left: 440px;
   position: absolute;
   top: 60px;
-  left: 10px;
-  color: #fff;
-  z-index: 90; }
+  width: 40px;
+  z-index: 100; }
 
 #player-health {
   position: absolute;
   right: 10px;
   height: 20px;
-  top: 63px;
+  top: 60px;
   z-index: 99;
   width: 100px;
   border: 1px solid #666;
@@ -123,8 +133,18 @@ header {
   #player-health #player-health-bar {
     position: relative;
     z-index: 90;
-    background: -moz-linear-gradient(top, #2f0000 0%, #8f0000 60%);
+    background: -moz-linear-gradient(top, #df5353 0%, #bf0d00 60%);
     /* firefox */
-    background: -webkit-gradient(linear, left top, left bottom, color-stop(0%, #2f0000), color-stop(60%, #8f0000));
+    background: -webkit-gradient(linear, left top, left bottom, color-stop(0%, #df5353), color-stop(60%, #bf0d00));
     /* webkit */
     height: 20px; }
+
+#cr-stage {
+  border: 10px solid #fff;
+  margin: 5px auto;
+  color: white;
+  -moz-border-radius: 10px;
+  border-radius: 10px;
+  -webkit-box-shadow: 0px 5px 3px #666;
+  -moz-box-shadow: 0px 5px 3px #666;
+  box-shadow: 0px 5px 3px #666; }
