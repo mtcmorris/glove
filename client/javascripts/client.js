@@ -1,5 +1,34 @@
 (function() {
   var __bind = function(fn, me){ return function(){ return fn.apply(me, arguments); }; };
+  Crafty.c('CollisionInfo', {
+    init: function() {
+      return this.requires('2D, Collision');
+    },
+    collision_info_for_collider: function(collider) {
+      var collider_is_to_bottom, collider_is_to_left, collider_is_to_right, collider_is_to_top;
+      ({
+        left_self: this.x,
+        left_collider: collider.x,
+        right_self: this.x + this.w,
+        right_collider: collider.x + collider.width,
+        top_self: this.y,
+        top_collider: collider.y,
+        bottom_self: this.y + this.h,
+        bottom_collider: collider.y + collider.height
+      });
+      collider_is_to_bottom = bottom_self < top_collider;
+      collider_is_to_top = top_self > bottom_collider;
+      collider_is_to_right = right_self < left_collider;
+      collider_is_to_left = left_self > right_collider;
+      return {
+        collider_is_to_bottom: collider_is_to_bottom({
+          collider_is_to_top: collider_is_to_top,
+          collider_is_to_right: collider_is_to_right,
+          collider_is_to_left: collider_is_to_left
+        })
+      };
+    }
+  });
   Crafty.c("WASD", {
     init: function() {
       return this.requires("controls");
@@ -7,7 +36,7 @@
     wasd: function(speed) {
       this.speed || (this.speed = speed);
       this.bind("enterframe", function() {
-        var location_message, x, y;
+        var x, y;
         if (this.disableControls) {
           return;
         }
@@ -24,14 +53,7 @@
           y = this.y + this.speed;
         }
         if ((typeof x !== 'undefined' || typeof y !== 'undefined') && (x !== this.x || y !== this.y)) {
-          location_message = client.set_location_message(this.x, this.y);
-          client.send(location_message);
-          if (x != null) {
-            this.x = x;
-          }
-          if (y != null) {
-            return this.y = y;
-          }
+          return this.move_to(x, y);
         }
       });
       return this;
@@ -63,12 +85,25 @@
         h: 40
       });
       return console.log('Player inited!');
+    },
+    move_to: function(x, y) {
+      var location_message;
+      location_message = client.set_location_message(x, y);
+      client.send(location_message);
+      this.prev_x = this.x;
+      this.prev_y = this.y;
+      if (x != null) {
+        this.x = x;
+      }
+      if (y != null) {
+        return this.y = y;
+      }
     }
   });
   Crafty.c('monster', {
     init: function() {
       this.strength = 1;
-      this.addComponent("2D, DOM, Collide");
+      this.addComponent("2D, DOM, Collision");
       this.origin("center");
       this.attr({
         x: 200,
@@ -121,6 +156,16 @@
         floor_brown: [12, 1]
       });
       this.player = window.Crafty.e("player, player_green, WASD").wasd(3);
+      this.player.onHit('wall', __bind(function(hit_data) {
+        var collider, collision, _i, _len, _results;
+        _results = [];
+        for (_i = 0, _len = hit_data.length; _i < _len; _i++) {
+          collision = hit_data[_i];
+          collider = collision.obj;
+          _results.push(collider.__c['wall'] ? '' : void 0);
+        }
+        return _results;
+      }, this));
       Crafty.viewport.x = this.player.x;
       Crafty.viewport.y = this.player.y;
       this.player.bind('enterframe', function() {
