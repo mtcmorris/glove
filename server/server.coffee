@@ -7,7 +7,7 @@ glove   = require('../lib/glove')
 path    = require('path')
 sys     = require('sys')
 
-HOSTNAME    = 'enterprise-g.local'
+HOSTNAME    = 'localhost'
 PORT    = 9000
 WEBROOT = path.join(path.dirname(__filename), '..')
 
@@ -34,21 +34,28 @@ server.listen(PORT, HOSTNAME)
 socket = io.listen(server)
 
 socket.on 'connection', (client) ->
-  sys.puts 'client connected ' + client.sessionId
-  client.broadcast client: client.sessionId, type: "connection"
+  #game.connect(client.sessionId) if client.sessionId?
+  #other_client_ids = (clientid for clientid in socket.clients when clientid != client.sessionId)
+
+  notify = (id) ->
+    sys.puts 'All clients connected: ' + id
+    client.broadcast(client: id, type: "connection")
+
+  notify(id) for id, client of socket.clientsIndex
+
 
   client.on 'disconnect', ->
-    sys.puts "disconnected"
+    sys.puts 'client connected ' + client.sessionId
+    game.disconnect(client.sessionId) if client.sessionId?
+    client.broadcast(client: clientid, type: "disconnection") for clientid in game.connection_ids when clientid != client.sessionId
   
 
   client.on 'message', (message) ->
-    sys.puts "==================="
-    sys.puts JSON.stringify(message)
-    id = client.sessionId
-    
+    # sys.puts "==================="
+    # sys.puts JSON.stringify(message)
     #pass this on to all the clients
     try
-      sys.puts "msg received from #{id}, rebroadcasting: " + JSON.stringify(message)
+      # sys.puts "msg received from #{id}, rebroadcasting: " + JSON.stringify(message)
       message.client = client.sessionId
       client.broadcast(message)
     catch error

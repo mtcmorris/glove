@@ -75,7 +75,8 @@
         type: "setName",
         body: $("#player-name").innerHTML
       });
-      return this.game = new window.Game;
+      this.game = new window.Game;
+      return this.players_by_connection_id = {};
     },
     log: function(msg) {
       if ((typeof console !== "undefined" && console !== null ? console.log : void 0) != null) {
@@ -101,22 +102,24 @@
       return this.socket.send(message);
     },
     receive: function(message) {
-      var player, _i, _len, _ref;
+      var player;
       this.log('IN: ' + $.toJSON(message));
       this.dir(message);
       switch (message.type) {
         case 'connection':
-          return this.game.connect(message.client);
+          this.log('connected: ' + message.client);
+          player = this.players_by_connection_id[message.client] || Crafty.e('player, player_green');
+          this.players_by_connection_id[message.client] = player;
+          return player.attr({
+            clientid: message.client
+          });
+        case 'disconnection':
+          this.log('disconnected: ' + message.client);
+          player = this.players_by_connection_id[message.client];
+          delete this.players_by_connection_id[message.client];
+          return player.destroy;
         case 'set_location':
-          _ref = Crafty('player');
-          for (_i = 0, _len = _ref.length; _i < _len; _i++) {
-            player = _ref[_i];
-            this.log(player);
-          }
-          for (player in this.game.players) {
-            this.log(player);
-          }
-          player = this.game.players[message.client];
+          player = this.players_by_connection_id[message.client];
           player.attr({
             x: message.body.x,
             y: message.body.y

@@ -61,6 +61,7 @@ window.client =
     @socket.send type: "setName", body: $("#player-name").innerHTML
 
     @game = new window.Game
+    @players_by_connection_id = {}
 
 
   log: (msg) -> console.log msg if console?.log?
@@ -84,14 +85,19 @@ window.client =
 
     switch message.type
       when 'connection'
-        # player = window.Crafty.e('player, player_green')
-        # player.clientid = message.client
-        @game.connect(message.client)
+        @log 'connected: ' + message.client
+        player = @players_by_connection_id[message.client] || Crafty.e('player, player_green')
+        @players_by_connection_id[message.client] = player
+        player.attr(clientid: message.client)
+
+      when 'disconnection'
+        @log 'disconnected: ' + message.client
+        player = @players_by_connection_id[message.client]
+        delete @players_by_connection_id[message.client]
+        player.destroy
 
       when 'set_location'
-        @log player for player in Crafty('player')
-        @log player for player of @game.players
-        player = @game.players[message.client]
+        player = @players_by_connection_id[message.client]
         player.attr({x: message.body.x, y: message.body.y})
         @log message.client + ' ' + player.x + ' ' + player.y
 
