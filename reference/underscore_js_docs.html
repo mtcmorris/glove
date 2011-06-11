@@ -1,0 +1,1485 @@
+<!DOCTYPE html>
+<!-- saved from url=(0048)http://documentcloud.github.com/underscore/#each -->
+<html><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+  
+  <meta http-equiv="X-UA-Compatible" content="chrome=1">
+  <title>Underscore.js</title>
+  <style>
+    body {
+      font-size: 16px;
+      line-height: 24px;
+      background: #f0f0e5;
+      color: #252519;
+      font-family: "Palatino Linotype", "Book Antiqua", Palatino, FreeSerif, serif;
+    }
+    div.container {
+      width: 720px;
+      margin: 50px 0 50px 50px;
+    }
+    p {
+      width: 550px;
+    }
+      #documentation p {
+        margin-bottom: 4px;
+      }
+    a, a:visited {
+      padding: 0 2px;
+      text-decoration: none;
+      background: #dadaba;
+      color: #252519;
+    }
+    a:active, a:hover {
+      color: #000;
+      background: #f0c095;
+    }
+    h1, h2, h3, h4, h5, h6 {
+      margin-top: 40px;
+    }
+    b.header {
+      font-size: 18px;
+    }
+    span.alias {
+      font-size: 14px;
+      font-style: italic;
+      margin-left: 20px;
+    }
+    table, tr, td {
+      margin: 0; padding: 0;
+    }
+      td {
+        padding: 2px 12px 2px 0;
+      }
+    code, pre, tt {
+      font-family: Monaco, Consolas, "Lucida Console", monospace;
+      font-size: 12px;
+      line-height: 18px;
+      color: #555529;
+    }
+      code {
+        margin-left: 20px;
+      }
+      pre {
+        font-size: 12px;
+        padding: 2px 0 2px 12px;
+        border-left: 6px solid #aaaa99;
+        margin: 0px 0 30px;
+      }
+  </style>
+<link type="text/css" rel="stylesheet" href="chrome-extension://cpngackimfmofbokmjmljamhdncknpmg/style.css"><script type="text/javascript" charset="utf-8" src="chrome-extension://cpngackimfmofbokmjmljamhdncknpmg/page_context.js"></script><link rel="stylesheet" type="text/css" href="chrome-extension://cgndfbhngibokieehnjhbjkkhbfmhojo/css/validation.css"></head>
+<body screen_capture_injected="true">
+
+  <div class="container">
+
+    <h1>Underscore.js</h1>
+
+    <p>
+      <a href="http://github.com/documentcloud/underscore/">Underscore</a> is a
+      utility-belt library for JavaScript that provides a lot of the
+      functional programming support that you would expect in
+      <a href="http://prototypejs.org/api">Prototype.js</a>
+      (or <a href="http://www.ruby-doc.org/core/classes/Enumerable.html">Ruby</a>),
+      but without extending any of the built-in JavaScript objects. It's the
+      tie to go along with <a href="http://docs.jquery.com/">jQuery</a>'s tux.
+    </p>
+
+    <p>
+      Underscore provides 60-odd functions that support both the usual
+      functional suspects: <b>map</b>, <b>select</b>, <b>invoke</b> —
+      as well as more specialized helpers: function binding, javascript
+      templating, deep equality testing, and so on. It delegates to built-in
+      functions, if present, so modern browsers will use the
+      native implementations of <b>forEach</b>, <b>map</b>, <b>reduce</b>,
+      <b>filter</b>, <b>every</b>, <b>some</b> and <b>indexOf</b>.
+    </p>
+
+    <p>
+      A complete <a href="http://documentcloud.github.com/underscore/test/test.html">Test &amp; Benchmark Suite</a>
+      is included for your perusal.
+    </p>
+    
+    <p>
+      You may also read through the <a href="http://documentcloud.github.com/underscore/docs/underscore.html">annotated source code</a>.
+    </p>
+
+    <p>
+      The project is
+      <a href="http://github.com/documentcloud/underscore/">hosted on GitHub</a>.
+      You can report bugs and discuss features on the
+      <a href="http://github.com/documentcloud/underscore/issues">issues page</a>,
+      on Freenode in the <tt>#documentcloud</tt> channel,
+      or send tweets to <a href="http://twitter.com/documentcloud">@documentcloud</a>.
+    </p>
+
+    <p>
+      <i>Underscore is an open-source component of <a href="http://documentcloud.org/">DocumentCloud</a>.</i>
+    </p>
+
+    <h2>Downloads <i style="padding-left: 12px; font-size:12px;">(Right-click, and use "Save As")</i></h2>
+
+    <table>
+      <tbody><tr>
+        <td><a href="./underscore_js_docs_files/underscore.js">Development Version (1.1.6)</a></td>
+        <td><i>27kb, Uncompressed with Comments</i></td>
+      </tr>
+      <tr>
+        <td><a href="http://documentcloud.github.com/underscore/underscore-min.js">Production Version (1.1.6)</a></td>
+        <td><i>3kb, Minified and Gzipped</i></td>
+      </tr>
+    </tbody></table>
+
+    <h2>Table of Contents</h2>
+    
+    <a href="http://documentcloud.github.com/underscore/#styles">Object-Oriented and Functional Styles</a>
+
+    <p>
+      <b>Collections</b>
+      <br>
+      <span class="methods"><a href="./underscore_js_docs_files/underscore_js_docs.html">each</a>, <a href="http://documentcloud.github.com/underscore/#map">map</a>,
+      <a href="http://documentcloud.github.com/underscore/#reduce">reduce</a>, <a href="http://documentcloud.github.com/underscore/#reduceRight">reduceRight</a>,
+      <a href="http://documentcloud.github.com/underscore/#detect">detect</a>, <a href="http://documentcloud.github.com/underscore/#select">select</a>,
+      <a href="http://documentcloud.github.com/underscore/#reject">reject</a>, <a href="http://documentcloud.github.com/underscore/#all">all</a>,
+      <a href="http://documentcloud.github.com/underscore/#any">any</a>, <a href="http://documentcloud.github.com/underscore/#include">include</a>,
+      <a href="http://documentcloud.github.com/underscore/#invoke">invoke</a>, <a href="http://documentcloud.github.com/underscore/#pluck">pluck</a>,
+      <a href="http://documentcloud.github.com/underscore/#max">max</a>, <a href="http://documentcloud.github.com/underscore/#min">min</a>,
+      <a href="http://documentcloud.github.com/underscore/#sortBy">sortBy</a>, <a href="http://documentcloud.github.com/underscore/#sortedIndex">sortedIndex</a>,
+      <a href="http://documentcloud.github.com/underscore/#toArray">toArray</a>, <a href="http://documentcloud.github.com/underscore/#size">size</a></span>
+    </p>
+
+    <p>
+      <b>Arrays</b>
+      <br>
+      <span class="methods"><a href="http://documentcloud.github.com/underscore/#first">first</a>, <a href="http://documentcloud.github.com/underscore/#rest">rest</a>, <a href="http://documentcloud.github.com/underscore/#last">last</a>,
+      <a href="http://documentcloud.github.com/underscore/#compact">compact</a>, <a href="http://documentcloud.github.com/underscore/#flatten">flatten</a>, <a href="http://documentcloud.github.com/underscore/#without">without</a>, <a href="http://documentcloud.github.com/underscore/#uniq">uniq</a>,
+      <a href="http://documentcloud.github.com/underscore/#intersect">intersect</a>, <a href="http://documentcloud.github.com/underscore/#zip">zip</a>, <a href="http://documentcloud.github.com/underscore/#indexOf">indexOf</a>,
+      <a href="http://documentcloud.github.com/underscore/#lastIndexOf">lastIndexOf</a>, <a href="http://documentcloud.github.com/underscore/#range">range</a></span>
+    </p>
+
+    <p>
+      <b>Functions</b>
+      <br>
+      <span class="methods"><a href="http://documentcloud.github.com/underscore/#bind">bind</a>, <a href="http://documentcloud.github.com/underscore/#bindAll">bindAll</a>, 
+      <a href="http://documentcloud.github.com/underscore/#memoize">memoize</a>, <a href="http://documentcloud.github.com/underscore/#delay">delay</a>, <a href="http://documentcloud.github.com/underscore/#defer">defer</a>, 
+      <a href="http://documentcloud.github.com/underscore/#throttle">throttle</a>, <a href="http://documentcloud.github.com/underscore/#debounce">debounce</a>, 
+      <a href="http://documentcloud.github.com/underscore/#once">once</a>, <a href="http://documentcloud.github.com/underscore/#after">after</a>, <a href="http://documentcloud.github.com/underscore/#wrap">wrap</a>, <a href="http://documentcloud.github.com/underscore/#compose">compose</a></span>
+    </p>
+
+    <p>
+      <b>Objects</b>
+      <br>
+      <span class="methods"><a href="http://documentcloud.github.com/underscore/#keys">keys</a>, <a href="http://documentcloud.github.com/underscore/#values">values</a>,
+      <a href="http://documentcloud.github.com/underscore/#functions">functions</a>, <a href="http://documentcloud.github.com/underscore/#extend">extend</a>, <a href="http://documentcloud.github.com/underscore/#defaults">defaults</a>, <a href="http://documentcloud.github.com/underscore/#clone">clone</a>, <a href="http://documentcloud.github.com/underscore/#tap">tap</a>,
+      <a href="http://documentcloud.github.com/underscore/#isEqual">isEqual</a>, <a href="http://documentcloud.github.com/underscore/#isEmpty">isEmpty</a>, <a href="http://documentcloud.github.com/underscore/#isElement">isElement</a>,
+      <a href="http://documentcloud.github.com/underscore/#isArray">isArray</a>, <a href="http://documentcloud.github.com/underscore/#isArguments">isArguments</a>, <a href="http://documentcloud.github.com/underscore/#isFunction">isFunction</a>, <a href="http://documentcloud.github.com/underscore/#isString">isString</a>,
+      <a href="http://documentcloud.github.com/underscore/#isNumber">isNumber</a>, <a href="http://documentcloud.github.com/underscore/#isBoolean">isBoolean</a>, <a href="http://documentcloud.github.com/underscore/#isDate">isDate</a>, <a href="http://documentcloud.github.com/underscore/#isRegExp">isRegExp</a>
+      <a href="http://documentcloud.github.com/underscore/#isNaN">isNaN</a>, <a href="http://documentcloud.github.com/underscore/#isNull">isNull</a>,
+      <a href="http://documentcloud.github.com/underscore/#isUndefined">isUndefined</a>
+      </span>
+    </p>
+
+    <p>
+      <b>Utility</b>
+      <br>
+      <span class="methods"><a href="http://documentcloud.github.com/underscore/#noConflict">noConflict</a>,
+      <a href="http://documentcloud.github.com/underscore/#identity">identity</a>, <a href="http://documentcloud.github.com/underscore/#times">times</a>, 
+      <a href="http://documentcloud.github.com/underscore/#mixin">mixin</a>, <a href="http://documentcloud.github.com/underscore/#uniqueId">uniqueId</a>, 
+      <a href="http://documentcloud.github.com/underscore/#template">template</a></span>
+    </p>
+
+    <p>
+      <b>Chaining</b>
+      <br>
+      <span class="methods"><a href="http://documentcloud.github.com/underscore/#chain">chain</a>, <a href="http://documentcloud.github.com/underscore/#value">value</a>
+    </span></p>
+
+    <div id="documentation">
+      
+      <h2 id="styles">Object-Oriented and Functional Styles</h2>
+
+      <p>
+        You can use Underscore in either an object-oriented or a functional style,
+        depending on your preference. The following two lines of code are
+        identical ways to double a list of numbers.
+      </p>
+
+    <pre>_.map([1, 2, 3], function(n){ return n * 2; });
+_([1, 2, 3]).map(function(n){ return n * 2; });</pre>
+
+      <p>
+        Using the object-oriented style allows you to chain together methods. Calling
+        <tt>chain</tt> on a wrapped object will cause all future method calls to
+        return wrapped objects as well. When you've finished the computation,
+        use <tt>value</tt> to retrieve the final value. Here's an example of chaining
+        together a <b>map/flatten/reduce</b>, in order to get the word count of
+        every word in a song.
+      </p>
+
+<pre>var lyrics = [
+  {line : 1, words : "I'm a lumberjack and I'm okay"},
+  {line : 2, words : "I sleep all night and I work all day"},
+  {line : 3, words : "He's a lumberjack and he's okay"},
+  {line : 4, words : "He sleeps all night and he works all day"}
+];
+
+_(lyrics).chain()
+  .map(function(line) { return line.words.split(' '); })
+  .flatten()
+  .reduce(function(counts, word) {
+    counts[word] = (counts[word] || 0) + 1;
+    return counts;
+}, {}).value();
+
+=&gt; {lumberjack : 2, all : 4, night : 2 ... }</pre>
+
+      <p>
+        In addition, the
+        <a href="https://developer.mozilla.org/en/JavaScript/Reference/Global_Objects/Array/prototype">Array prototype's methods</a>
+        are proxied through the chained Underscore object, so you can slip a
+        <tt>reverse</tt> or a <tt>push</tt> into your chain, and continue to
+        modify the array.
+      </p>
+
+      <h2>Collection Functions (Arrays or Objects)</h2>
+
+      <p id="each">
+        <b class="header">each</b><code>_.each(list, iterator, [context])</code>
+        <span class="alias">Alias: <b>forEach</b></span>
+        <br>
+        Iterates over a <b>list</b> of elements, yielding each in turn to an <b>iterator</b>
+        function. The <b>iterator</b> is bound to the <b>context</b> object, if one is
+        passed. Each invocation of <b>iterator</b> is called with three arguments:
+        <tt>(element, index, list)</tt>. If <b>list</b> is a JavaScript object, <b>iterator</b>'s
+        arguments will be <tt>(value, key, list)</tt>. Delegates to the native
+        <b>forEach</b> function if it exists.
+      </p>
+      <pre>_.each([1, 2, 3], function(num){ alert(num); });
+=&gt; alerts each number in turn...
+_.each({one : 1, two : 2, three : 3}, function(num, key){ alert(num); });
+=&gt; alerts each number in turn...</pre>
+
+      <p id="map">
+        <b class="header">map</b><code>_.map(list, iterator, [context])</code>
+        <br>
+        Produces a new array of values by mapping each value in <b>list</b>
+        through a transformation function (<b>iterator</b>). If the native <b>map</b> method
+        exists, it will be used instead. If <b>list</b> is a JavaScript object,
+        <b>iterator</b>'s arguments will be <tt>(value, key, list)</tt>.
+      </p>
+      <pre>_.map([1, 2, 3], function(num){ return num * 3; });
+=&gt; [3, 6, 9]
+_.map({one : 1, two : 2, three : 3}, function(num, key){ return num * 3; });
+=&gt; [3, 6, 9]</pre>
+
+      <p id="reduce">
+        <b class="header">reduce</b><code>_.reduce(list, iterator, memo, [context])</code>
+        <span class="alias">Aliases: <b>inject, foldl</b></span>
+        <br>
+        Also known as <b>inject</b> and <b>foldl</b>, <b>reduce</b> boils down a
+        <b>list</b> of values into a single value. <b>Memo</b> is the initial state
+        of the reduction, and each successive step of it should be returned by
+        <b>iterator</b>.
+      </p>
+      <pre>var sum = _.reduce([1, 2, 3], function(memo, num){ return memo + num; }, 0);
+=&gt; 6
+</pre>
+
+      <p id="reduceRight">
+        <b class="header">reduceRight</b><code>_.reduceRight(list, iterator, memo, [context])</code>
+        <span class="alias">Alias: <b>foldr</b></span>
+        <br>
+        The right-associative version of <b>reduce</b>. Delegates to the
+        JavaScript 1.8 version of <b>reduceRight</b>, if it exists. <b>Foldr</b>
+        is not as useful in JavaScript as it would be in a language with lazy
+        evaluation.
+      </p>
+      <pre>var list = [[0, 1], [2, 3], [4, 5]];
+var flat = _.reduceRight(list, function(a, b) { return a.concat(b); }, []);
+=&gt; [4, 5, 2, 3, 0, 1]
+</pre>
+
+      <p id="detect">
+        <b class="header">detect</b><code>_.detect(list, iterator, [context])</code>
+        <br>
+        Looks through each value in the <b>list</b>, returning the first one that
+        passes a truth test (<b>iterator</b>). The function returns as
+        soon as it finds an acceptable element, and doesn't traverse the
+        entire list.
+      </p>
+      <pre>var even = _.detect([1, 2, 3, 4, 5, 6], function(num){ return num % 2 == 0; });
+=&gt; 2
+</pre>
+
+      <p id="select">
+        <b class="header">select</b><code>_.select(list, iterator, [context])</code>
+        <span class="alias">Alias: <b>filter</b></span>
+        <br>
+        Looks through each value in the <b>list</b>, returning an array of all
+        the values that pass a truth test (<b>iterator</b>). Delegates to the
+        native <b>filter</b> method, if it exists.
+      </p>
+      <pre>var evens = _.select([1, 2, 3, 4, 5, 6], function(num){ return num % 2 == 0; });
+=&gt; [2, 4, 6]
+</pre>
+
+      <p id="reject">
+        <b class="header">reject</b><code>_.reject(list, iterator, [context])</code>
+        <br>
+        Returns the values in <b>list</b> without the elements that the truth
+        test (<b>iterator</b>) passes. The opposite of <b>select</b>.
+      </p>
+      <pre>var odds = _.reject([1, 2, 3, 4, 5, 6], function(num){ return num % 2 == 0; });
+=&gt; [1, 3, 5]
+</pre>
+
+      <p id="all">
+        <b class="header">all</b><code>_.all(list, iterator, [context])</code>
+        <span class="alias">Alias: <b>every</b></span>
+        <br>
+        Returns <i>true</i> if all of the values in the <b>list</b> pass the <b>iterator</b>
+        truth test. Delegates to the native method <b>every</b>, if present.
+      </p>
+      <pre>_.all([true, 1, null, 'yes'], _.identity);
+=&gt; false
+</pre>
+
+      <p id="any">
+        <b class="header">any</b><code>_.any(list, [iterator], [context])</code>
+        <span class="alias">Alias: <b>some</b></span>
+        <br>
+        Returns <i>true</i> if any of the values in the <b>list</b> pass the
+        <b>iterator</b> truth test. Short-circuits and stops traversing the list
+        if a true element is found. Delegates to the native method <b>some</b>,
+        if present.
+      </p>
+      <pre>_.any([null, 0, 'yes', false]);
+=&gt; true
+</pre>
+
+      <p id="include">
+        <b class="header">include</b><code>_.include(list, value)</code>
+        <span class="alias">Alias: <b>contains</b></span>
+        <br>
+        Returns <i>true</i> if the <b>value</b> is present in the <b>list</b>, using
+        <i>===</i> to test equality. Uses <b>indexOf</b> internally, if <b>list</b>
+        is an Array.
+      </p>
+      <pre>_.include([1, 2, 3], 3);
+=&gt; true
+</pre>
+
+      <p id="invoke">
+        <b class="header">invoke</b><code>_.invoke(list, methodName, [*arguments])</code>
+        <br>
+        Calls the method named by <b>methodName</b> on each value in the <b>list</b>.
+        Any extra arguments passed to <b>invoke</b> will be forwarded on to the
+        method invocation.
+      </p>
+      <pre>_.invoke([[5, 1, 7], [3, 2, 1]], 'sort');
+=&gt; [[1, 5, 7], [1, 2, 3]]
+</pre>
+
+      <p id="pluck">
+        <b class="header">pluck</b><code>_.pluck(list, propertyName)</code>
+        <br>
+        An convenient version of what is perhaps the most common use-case for
+        <b>map</b>: extracting a list of property values.
+      </p>
+      <pre>var stooges = [{name : 'moe', age : 40}, {name : 'larry', age : 50}, {name : 'curly', age : 60}];
+_.pluck(stooges, 'name');
+=&gt; ["moe", "larry", "curly"]
+</pre>
+
+      <p id="max">
+        <b class="header">max</b><code>_.max(list, [iterator], [context])</code>
+        <br>
+        Returns the maximum value in <b>list</b>. If <b>iterator</b> is passed,
+        it will be used on each value to generate the criterion by which the
+        value is ranked.
+      </p>
+      <pre>var stooges = [{name : 'moe', age : 40}, {name : 'larry', age : 50}, {name : 'curly', age : 60}];
+_.max(stooges, function(stooge){ return stooge.age; });
+=&gt; {name : 'curly', age : 60};
+</pre>
+
+      <p id="min">
+        <b class="header">min</b><code>_.min(list, [iterator], [context])</code>
+        <br>
+        Returns the minimum value in <b>list</b>. If <b>iterator</b> is passed,
+        it will be used on each value to generate the criterion by which the
+        value is ranked.
+      </p>
+      <pre>var numbers = [10, 5, 100, 2, 1000];
+_.min(numbers);
+=&gt; 2
+</pre>
+
+      <p id="sortBy">
+        <b class="header">sortBy</b><code>_.sortBy(list, iterator, [context])</code>
+        <br>
+        Returns a sorted <b>list</b>, ranked by the results of running each
+        value through <b>iterator</b>.
+      </p>
+      <pre>_.sortBy([1, 2, 3, 4, 5, 6], function(num){ return Math.sin(num); });
+=&gt; [5, 4, 6, 3, 1, 2]
+</pre>
+
+      <p id="sortedIndex">
+        <b class="header">sortedIndex</b><code>_.sortedIndex(list, value, [iterator])</code>
+        <br>
+        Uses a binary search to determine the index at which the <b>value</b>
+        <i>should</i> be inserted into the <b>list</b> in order to maintain the <b>list</b>'s
+        sorted order. If an <b>iterator</b> is passed, it will be used to compute
+        the sort ranking of each value.
+      </p>
+      <pre>_.sortedIndex([10, 20, 30, 40, 50], 35);
+=&gt; 3
+</pre>
+
+      <p id="toArray">
+        <b class="header">toArray</b><code>_.toArray(list)</code>
+        <br>
+        Converts the <b>list</b> (anything that can be iterated over), into a
+        real Array. Useful for transmuting the <b>arguments</b> object.
+      </p>
+      <pre>(function(){ return _.toArray(arguments).slice(0); })(1, 2, 3);
+=&gt; [1, 2, 3]
+</pre>
+
+      <p id="size">
+        <b class="header">size</b><code>_.size(list)</code>
+        <br>
+        Return the number of values in the <b>list</b>.
+      </p>
+      <pre>_.size({one : 1, two : 2, three : 3});
+=&gt; 3
+</pre>
+
+      <h2>Array Functions</h2>
+
+      <p>
+        <i>Note: All array functions will also work on the <b>arguments</b> object.</i>
+      </p>
+
+      <p id="first">
+        <b class="header">first</b><code>_.first(array, [n])</code>
+        <span class="alias">Alias: <b>head</b></span>
+        <br>
+        Returns the first element of an <b>array</b>. Passing <b>n</b> will
+        return the first <b>n</b> elements of the array.
+      </p>
+      <pre>_.first([5, 4, 3, 2, 1]);
+=&gt; 5
+</pre>
+
+      <p id="rest">
+        <b class="header">rest</b><code>_.rest(array, [index])</code>
+        <span class="alias">Alias: <b>tail</b></span>
+        <br>
+        Returns the <b>rest</b> of the elements in an array. Pass an <b>index</b>
+        to return the values of the array from that index onward.
+      </p>
+      <pre>_.rest([5, 4, 3, 2, 1]);
+=&gt; [4, 3, 2, 1]
+</pre>
+
+      <p id="last">
+        <b class="header">last</b><code>_.last(array)</code>
+        <br>
+        Returns the last element of an <b>array</b>.
+      </p>
+      <pre>_.last([5, 4, 3, 2, 1]);
+=&gt; 1
+</pre>
+
+      <p id="compact">
+        <b class="header">compact</b><code>_.compact(array)</code>
+        <br>
+        Returns a copy of the <b>array</b> with all falsy values removed.
+        In JavaScript, <i>false</i>, <i>null</i>, <i>0</i>, <i>""</i>,
+        <i>undefined</i> and <i>NaN</i> are all falsy.
+      </p>
+      <pre>_.compact([0, 1, false, 2, '', 3]);
+=&gt; [1, 2, 3]
+</pre>
+
+      <p id="flatten">
+        <b class="header">flatten</b><code>_.flatten(array)</code>
+        <br>
+        Flattens a nested <b>array</b> (the nesting can be to any depth).
+      </p>
+      <pre>_.flatten([1, [2], [3, [[[4]]]]]);
+=&gt; [1, 2, 3, 4];
+</pre>
+
+      <p id="without">
+        <b class="header">without</b><code>_.without(array, [*values])</code>
+        <br>
+        Returns a copy of the <b>array</b> with all instances of the <b>values</b>
+        removed. <i>===</i> is used for the equality test.
+      </p>
+      <pre>_.without([1, 2, 1, 0, 3, 1, 4], 0, 1);
+=&gt; [2, 3, 4]
+</pre>
+
+      <p id="uniq">
+        <b class="header">uniq</b><code>_.uniq(array, [isSorted])</code>
+        <span class="alias">Alias: <b>unique</b></span>
+        <br>
+        Produces a duplicate-free version of the <b>array</b>, using <i>===</i> to test
+        object equality. If you know in advance that the <b>array</b> is sorted,
+        passing <i>true</i> for <b>isSorted</b> will run a much faster algorithm.
+      </p>
+      <pre>_.uniq([1, 2, 1, 3, 1, 4]);
+=&gt; [1, 2, 3, 4]
+</pre>
+
+      <p id="intersect">
+        <b class="header">intersect</b><code>_.intersect(*arrays)</code>
+        <br>
+        Computes the list of values that are the intersection of all the <b>arrays</b>.
+        Each value in the result is present in each of the <b>arrays</b>.
+      </p>
+      <pre>_.intersect([1, 2, 3], [101, 2, 1, 10], [2, 1]);
+=&gt; [1, 2]
+</pre>
+
+      <p id="zip">
+        <b class="header">zip</b><code>_.zip(*arrays)</code>
+        <br>
+        Merges together the values of each of the <b>arrays</b> with the
+        values at the corresponding position. Useful when you have separate
+        data sources that are coordinated through matching array indexes.
+        If you're working with a matrix of nested arrays, <b>zip.apply</b>
+        can transpose the matrix in a similar fashion.
+      </p>
+      <pre>_.zip(['moe', 'larry', 'curly'], [30, 40, 50], [true, false, false]);
+=&gt; [["moe", 30, true], ["larry", 40, false], ["curly", 50, false]]
+</pre>
+
+      <p id="indexOf">
+        <b class="header">indexOf</b><code>_.indexOf(array, value, [isSorted])</code>
+        <br>
+        Returns the index at which <b>value</b> can be found in the <b>array</b>,
+        or <i>-1</i> if value is not present in the <b>array</b>. Uses the native
+        <b>indexOf</b> function unless it's missing. If you're working with a 
+        large array, and you know that the array is already sorted, pass <tt>true</tt>
+        for <b>isSorted</b> to use a faster binary search.
+      </p>
+      <pre>_.indexOf([1, 2, 3], 2);
+=&gt; 1
+</pre>
+
+      <p id="lastIndexOf">
+        <b class="header">lastIndexOf</b><code>_.lastIndexOf(array, value)</code>
+        <br>
+        Returns the index of the last occurrence of <b>value</b> in the <b>array</b>,
+        or <i>-1</i> if value is not present. Uses the native <b>lastIndexOf</b>
+        function if possible.
+      </p>
+      <pre>_.lastIndexOf([1, 2, 3, 1, 2, 3], 2);
+=&gt; 4
+</pre>
+
+      <p id="range">
+        <b class="header">range</b><code>_.range([start], stop, [step])</code>
+        <br>
+        A function to create flexibly-numbered lists of integers, handy for
+        <tt>each</tt> and <tt>map</tt> loops. <b>start</b>, if omitted, defaults
+        to <i>0</i>; <b>step</b> defaults to <i>1</i>. Returns a list of integers
+        from <b>start</b> to <b>stop</b>, incremented (or decremented) by <b>step</b>,
+        exclusive.
+      </p>
+      <pre>_.range(10);
+=&gt; [0, 1, 2, 3, 4, 5, 6, 7, 8, 9]
+_.range(1, 11);
+=&gt; [1, 2, 3, 4, 5, 6, 7, 8, 9, 10]
+_.range(0, 30, 5);
+=&gt; [0, 5, 10, 15, 20, 25]
+_.range(0, -10, -1);
+=&gt; [0, -1, -2, -3, -4, -5, -6, -7, -8, -9]
+_.range(0);
+=&gt; []
+</pre>
+
+      <h2>Function (uh, ahem) Functions</h2>
+
+      <p id="bind">
+        <b class="header">bind</b><code>_.bind(function, object, [*arguments])</code>
+        <br>
+        Bind a <b>function</b> to an <b>object</b>, meaning that whenever
+        the function is called, the value of <i>this</i> will be the <b>object</b>.
+        Optionally, bind <b>arguments</b> to the <b>function</b> to pre-fill them,
+        also known as <b>currying</b>.
+      </p>
+      <pre>var func = function(greeting){ return greeting + ': ' + this.name };
+func = _.bind(func, {name : 'moe'}, 'hi');
+func();
+=&gt; 'hi: moe'
+</pre>
+
+      <p id="bindAll">
+        <b class="header">bindAll</b><code>_.bindAll(object, [*methodNames])</code>
+        <br>
+        Binds a number of methods on the <b>object</b>, specified by
+        <b>methodNames</b>, to be run in the context of that object whenever they
+        are invoked. Very handy for binding functions that are going to be used
+        as event handlers, which would otherwise be invoked with a fairly useless
+        <i>this</i>. If no <b>methodNames</b> are provided, all of the object's
+        function properties will be bound to it.
+      </p>
+      <pre>var buttonView = {
+  label   : 'underscore',
+  onClick : function(){ alert('clicked: ' + this.label); },
+  onHover : function(){ console.log('hovering: ' + this.label); }
+};
+_.bindAll(buttonView);
+jQuery('#underscore_button').bind('click', buttonView.onClick);
+=&gt; When the button is clicked, this.label will have the correct value...
+</pre>
+
+      <p id="memoize">
+        <b class="header">memoize</b><code>_.memoize(function, [hashFunction])</code>
+        <br>
+        Memoizes a given <b>function</b> by caching the computed result. Useful
+        for speeding up slow-running computations. If passed an optional 
+        <b>hashFunction</b>, it will be used to compute the hash key for storing
+        the result, based on the arguments to the original function. The default
+        <b>hashFunction</b> just uses the first argument to the memoized function
+        as the key.
+      </p>
+      <pre>var fibonacci = function(n) {
+  return n &lt; 2 ? n : fibonacci(n - 1) + fibonacci(n - 2);
+};
+var fastFibonacci = _.memoize(fibonacci);
+</pre>
+
+      <p id="delay">
+        <b class="header">delay</b><code>_.delay(function, wait, [*arguments])</code>
+        <br>
+        Much like <b>setTimeout</b>, invokes <b>function</b> after <b>wait</b>
+        milliseconds. If you pass the optional <b>arguments</b>, they will be
+        forwarded on to the <b>function</b> when it is invoked.
+      </p>
+      <pre>var log = _.bind(console.log, console);
+_.delay(log, 1000, 'logged later');
+=&gt; 'logged later' // Appears after one second.
+</pre>
+
+      <p id="defer">
+        <b class="header">defer</b><code>_.defer(function)</code>
+        <br>
+        Defers invoking the <b>function</b> until the current call stack has cleared,
+        similar to using <b>setTimeout</b> with a delay of 0. Useful for performing
+        expensive computations or HTML rendering in chunks without blocking the UI thread
+        from updating.
+      </p>
+      <pre>_.defer(function(){ alert('deferred'); });
+// Returns from the function before the alert runs.
+</pre>
+
+      <p id="throttle">
+        <b class="header">throttle</b><code>_.throttle(function, wait)</code>
+        <br>
+        Returns a throttled version of the function, that, when invoked repeatedly, 
+        will only actually call the wrapped function at most once per every <b>wait</b>
+        milliseconds. Useful for rate-limiting events that occur faster than you
+        can keep up with.
+      </p>
+      <pre>var throttled = _.throttle(updatePosition, 100);
+$(window).scroll(throttled);
+</pre>
+
+      <p id="debounce">
+        <b class="header">debounce</b><code>_.debounce(function, wait)</code>
+        <br>
+        Repeated calls to a debounced function will postpone it's execution
+        until after <b>wait</b> milliseconds have elapsed. Useful for implementing
+        behavior that should only happen <i>after</i> the input has stopped arriving.
+        For example: rendering a preview of a Markdown comment, recalculating a
+        layout after the window has stopped being resized...
+      </p>
+      <pre>var lazyLayout = _.debounce(calculateLayout, 300);
+$(window).resize(lazyLayout);
+</pre>
+
+      <p id="once">
+        <b class="header">once</b><code>_.once(function)</code>
+        <br>
+        Creates a version of the function that can only be called one time. 
+        Repeated calls to the modified function will have no effect, returning
+        the value from the original call. Useful for initialization functions,
+        instead of having to set a boolean flag and then check it later.
+      </p>
+      <pre>var initialize = _.once(createApplication);
+initialize();
+initialize();
+// Application is only created once.
+</pre>
+
+      <p id="after">
+        <b class="header">after</b><code>_.after(count, function)</code>
+        <br>
+        Creates a version of the function that will only be run after first 
+        being called <b>count</b> times. Useful for grouping asynchronous responses,
+        where you want to be sure that all the async calls have finished, before
+        proceeding.
+      </p>
+      <pre>var renderNotes = _.after(notes.length, render);
+_.each(notes, function(note) {
+  note.asyncSave({success: renderNotes}); 
+});
+// renderNotes is run once, after all notes have saved.
+</pre>
+
+      <p id="wrap">
+        <b class="header">wrap</b><code>_.wrap(function, wrapper)</code>
+        <br>
+        Wraps the first <b>function</b> inside of the <b>wrapper</b> function,
+        passing it as the first argument. This allows the <b>wrapper</b> to
+        execute code before and after the <b>function</b> runs, adjust the arguments,
+        and execute it conditionally.
+      </p>
+      <pre>var hello = function(name) { return "hello: " + name; };
+hello = _.wrap(hello, function(func) {
+  return "before, " + func("moe") + ", after";
+});
+hello();
+=&gt; 'before, hello: moe, after'
+</pre>
+
+      <p id="compose">
+        <b class="header">compose</b><code>_.compose(*functions)</code>
+        <br>
+        Returns the composition of a list of <b>functions</b>, where each function
+        consumes the return value of the function that follows. In math terms,
+        composing the functions <i>f()</i>, <i>g()</i>, and <i>h()</i> produces
+        <i>f(g(h()))</i>.
+      </p>
+      <pre>var greet    = function(name){ return "hi: " + name; };
+var exclaim  = function(statement){ return statement + "!"; };
+var welcome = _.compose(exclaim, greet);
+welcome('moe');
+=&gt; 'hi: moe!'
+</pre>
+
+      <h2>Object Functions</h2>
+
+      <p id="keys">
+        <b class="header">keys</b><code>_.keys(object)</code>
+        <br>
+        Retrieve all the names of the <b>object</b>'s properties.
+      </p>
+      <pre>_.keys({one : 1, two : 2, three : 3});
+=&gt; ["one", "two", "three"]
+</pre>
+
+      <p id="values">
+        <b class="header">values</b><code>_.values(object)</code>
+        <br>
+        Return all of the values of the <b>object</b>'s properties.
+      </p>
+      <pre>_.values({one : 1, two : 2, three : 3});
+=&gt; [1, 2, 3]
+</pre>
+
+      <p id="functions">
+        <b class="header">functions</b><code>_.functions(object)</code>
+        <span class="alias">Alias: <b>methods</b></span>
+        <br>
+        Returns a sorted list of the names of every method in an object —
+        that is to say, the name of every function property of the object.
+      </p>
+      <pre>_.functions(_);
+=&gt; ["all", "any", "bind", "bindAll", "clone", "compact", "compose" ...
+</pre>
+
+      <p id="extend">
+        <b class="header">extend</b><code>_.extend(destination, *sources)</code>
+        <br>
+        Copy all of the properties in the <b>source</b> objects over to the
+        <b>destination</b> object. It's in-order, to the last source will override
+        properties of the same name in previous arguments.
+      </p>
+      <pre>_.extend({name : 'moe'}, {age : 50});
+=&gt; {name : 'moe', age : 50}
+</pre>
+
+      <p id="defaults">
+        <b class="header">defaults</b><code>_.defaults(object, *defaults)</code>
+        <br>
+        Fill in missing properties in <b>object</b> with default values from the
+        <b>defaults</b> objects. As soon as the property is filled, further defaults
+        will have no effect.
+      </p>
+      <pre>var iceCream = {flavor : "chocolate"};
+_.defaults(iceCream, {flavor : "vanilla", sprinkles : "lots"});
+=&gt; {flavor : "chocolate", sprinkles : "lots"}
+</pre>
+
+      <p id="clone">
+        <b class="header">clone</b><code>_.clone(object)</code>
+        <br>
+        Create a shallow-copied clone of the <b>object</b>. Any nested objects
+        or arrays will be copied by reference, not duplicated.
+      </p>
+      <pre>_.clone({name : 'moe'});
+=&gt; {name : 'moe'};
+</pre>
+
+      <p id="tap">
+        <b class="header">tap</b><code>_.tap(object, interceptor)</code>
+        <br>
+        Invokes <b>interceptor</b> with the <b>object</b>, and then returns <b>object</b>.
+        The primary purpose of this method is to "tap into" a method chain, in order to perform operations on intermediate results within the chain.
+      </p>
+      <pre>_([1,2,3,200]).chain().
+  select(function(num) { return num % 2 == 0; }).
+  tap(console.log).
+  map(function(num) { return num * num }).
+  value();
+=&gt; [2, 200]
+=&gt; [4, 40000]
+</pre>
+
+      <p id="isEqual">
+        <b class="header">isEqual</b><code>_.isEqual(object, other)</code>
+        <br>
+        Performs an optimized deep comparison between the two objects, to determine
+        if they should be considered equal.
+      </p>
+      <pre>var moe   = {name : 'moe', luckyNumbers : [13, 27, 34]};
+var clone = {name : 'moe', luckyNumbers : [13, 27, 34]};
+moe == clone;
+=&gt; false
+_.isEqual(moe, clone);
+=&gt; true
+</pre>
+
+      <p id="isEmpty">
+        <b class="header">isEmpty</b><code>_.isEmpty(object)</code>
+        <br>
+        Returns <i>true</i> if <b>object</b> contains no values.
+      </p>
+      <pre>_.isEmpty([1, 2, 3]);
+=&gt; false
+_.isEmpty({});
+=&gt; true
+</pre>
+
+      <p id="isElement">
+        <b class="header">isElement</b><code>_.isElement(object)</code>
+        <br>
+        Returns <i>true</i> if <b>object</b> is a DOM element.
+      </p>
+      <pre>_.isElement(jQuery('body')[0]);
+=&gt; true
+</pre>
+
+      <p id="isArray">
+        <b class="header">isArray</b><code>_.isArray(object)</code>
+        <br>
+        Returns <i>true</i> if <b>object</b> is an Array.
+      </p>
+      <pre>(function(){ return _.isArray(arguments); })();
+=&gt; false
+_.isArray([1,2,3]);
+=&gt; true
+</pre>
+
+      <p id="isArguments">
+        <b class="header">isArguments</b><code>_.isArguments(object)</code>
+        <br>
+        Returns <i>true</i> if <b>object</b> is an Arguments object.
+      </p>
+      <pre>(function(){ return _.isArguments(arguments); })(1, 2, 3);
+=&gt; true
+_.isArguments([1,2,3]);
+=&gt; false
+</pre>
+
+      <p id="isFunction">
+        <b class="header">isFunction</b><code>_.isFunction(object)</code>
+        <br>
+        Returns <i>true</i> if <b>object</b> is a Function.
+      </p>
+      <pre>_.isFunction(alert);
+=&gt; true
+</pre>
+
+      <p id="isString">
+        <b class="header">isString</b><code>_.isString(object)</code>
+        <br>
+        Returns <i>true</i> if <b>object</b> is a String.
+      </p>
+      <pre>_.isString("moe");
+=&gt; true
+</pre>
+
+      <p id="isNumber">
+        <b class="header">isNumber</b><code>_.isNumber(object)</code>
+        <br>
+        Returns <i>true</i> if <b>object</b> is a Number.
+      </p>
+      <pre>_.isNumber(8.4 * 5);
+=&gt; true
+</pre>
+
+      <p id="isBoolean">
+        <b class="header">isBoolean</b><code>_.isBoolean(object)</code>
+        <br>
+        Returns <i>true</i> if <b>object</b> is either <i>true</i> or <i>false</i>.
+      </p>
+      <pre>_.isBoolean(null);
+=&gt; false
+</pre>
+
+      <p id="isDate">
+        <b class="header">isDate</b><code>_.isDate(object)</code>
+        <br>
+        Returns <i>true</i> if <b>object</b> is a Date.
+      </p>
+      <pre>_.isDate(new Date());
+=&gt; true
+</pre>
+
+      <p id="isRegExp">
+        <b class="header">isRegExp</b><code>_.isRegExp(object)</code>
+        <br>
+        Returns <i>true</i> if <b>object</b> is a RegExp.
+      </p>
+      <pre>_.isRegExp(/moe/);
+=&gt; true
+</pre>
+
+      <p id="isNaN">
+        <b class="header">isNaN</b><code>_.isNaN(object)</code>
+        <br>
+        Returns <i>true</i> if <b>object</b> is <i>NaN</i>.<br> Note: this is not
+        the same as the native <b>isNaN</b> function, which will also return
+        true if the variable is <i>undefined</i>.
+      </p>
+      <pre>_.isNaN(NaN);
+=&gt; true
+isNaN(undefined);
+=&gt; true
+_.isNaN(undefined);
+=&gt; false
+</pre>
+
+      <p id="isNull">
+        <b class="header">isNull</b><code>_.isNull(object)</code>
+        <br>
+        Returns <i>true</i> if the value of <b>object</b> is <i>null</i>.
+      </p>
+      <pre>_.isNull(null);
+=&gt; true
+_.isNull(undefined);
+=&gt; false
+</pre>
+
+      <p id="isUndefined">
+        <b class="header">isUndefined</b><code>_.isUndefined(variable)</code>
+        <br>
+        Returns <i>true</i> if <b>variable</b> is <i>undefined</i>.
+      </p>
+      <pre>_.isUndefined(window.missingVariable);
+=&gt; true
+</pre>
+
+      <h2>Utility Functions</h2>
+
+      <p id="noConflict">
+        <b class="header">noConflict</b><code>_.noConflict()</code>
+        <br>
+        Give control of the "_" variable back to its previous owner. Returns
+        a reference to the <b>Underscore</b> object.
+      </p>
+      <pre>var underscore = _.noConflict();</pre>
+
+      <p id="identity">
+        <b class="header">identity</b><code>_.identity(value)</code>
+        <br>
+        Returns the same value that is used as the argument. In math:
+        <tt>f(x) = x</tt><br>
+        This function looks useless, but is used throughout Underscore as
+        a default iterator.
+      </p>
+      <pre>var moe = {name : 'moe'};
+moe === _.identity(moe);
+=&gt; true</pre>
+
+      <p id="times">
+        <b class="header">times</b><code>_.times(n, iterator)</code>
+        <br>
+        Invokes the given iterator function <b>n</b> times.
+      </p>
+      <pre>_(3).times(function(){ genie.grantWish(); });</pre>
+
+      <p id="mixin">
+        <b class="header">mixin</b><code>_.mixin(object)</code>
+        <br>
+        Allows you to extend Underscore with your own utility functions. Pass
+        a hash of <tt>{name: function}</tt> definitions to have your functions 
+        added to the Underscore object, as well as the OOP wrapper.
+      </p>
+      <pre>_.mixin({
+  capitalize : function(string) {
+    return string.charAt(0).toUpperCase() + string.substring(1).toLowerCase();
+  }
+});
+_("fabio").capitalize();
+=&gt; "Fabio"
+</pre>
+
+      <p id="uniqueId">
+        <b class="header">uniqueId</b><code>_.uniqueId([prefix])</code>
+        <br>
+        Generate a globally-unique id for client-side models or DOM elements
+        that need one. If <b>prefix</b> is passed, the id will be appended to it.
+      </p>
+      <pre>_.uniqueId('contact_');
+=&gt; 'contact_104'</pre>
+
+      <p id="template">
+        <b class="header">template</b><code>_.template(templateString, [context])</code>
+        <br>
+        Compiles JavaScript templates into functions that can be evaluated
+        for rendering. Useful for rendering complicated bits of HTML from JSON
+        data sources. Template functions can both interpolate variables, using<br>
+        <tt>&lt;%= … %&gt;</tt>, as well as execute arbitrary JavaScript code, with
+        <tt>&lt;% … %&gt;</tt>. When you evaluate a template function, pass in a
+        <b>context</b> object that has properties corresponding to the template's free
+        variables. If you're writing a one-off, you can pass the <b>context</b>
+        object as the second parameter to <b>template</b> in order to render
+        immediately instead of returning a template function.
+      </p>
+      <pre>var compiled = _.template("hello: &lt;%= name %&gt;");
+compiled({name : 'moe'});
+=&gt; "hello: moe"
+
+var list = "&lt;% _.each(people, function(name) { %&gt; &lt;li&gt;&lt;%= name %&gt;&lt;/li&gt; &lt;% }); %&gt;";
+_.template(list, {people : ['moe', 'curly', 'larry']});
+=&gt; "&lt;li&gt;moe&lt;/li&gt;&lt;li&gt;curly&lt;/li&gt;&lt;li&gt;larry&lt;/li&gt;"</pre>
+
+      <p>
+        You can also use <tt>print</tt> from within JavaScript code.  This is
+        sometimes more convenient than using <tt>&lt;%= ... %&gt;</tt>.
+      </p>
+      
+      <pre>var compiled = _.template("&lt;% print('Hello ' + epithet); %&gt;");
+compiled({epithet: "stooge"});
+=&gt; "Hello stooge."</pre>
+
+      <p>
+        If ERB-style delimiters aren't your cup of tea, you can change Underscore's
+        template settings to use different symbols to set off interpolated code.
+        Define an <b>interpolate</b> regex, and an (optional) <b>evaluate</b> regex
+        to match expressions that should be inserted and evaluated, respectively.
+        If no <b>evaluate</b> regex is provided, your templates will only be 
+        capable of interpolating values. 
+        For example, to perform
+        <a href="http://github.com/janl/mustache.js#readme">Mustache.js</a>
+        style templating:
+      </p>
+
+      <pre>_.templateSettings = {
+  interpolate : /\{\{(.+?)\}\}/g
+};
+
+var template = _.template("Hello {{ name }}!");
+template({name : "Mustache"});
+=&gt; "Hello Mustache!"</pre>
+
+      <h2>Chaining</h2>
+
+      <p id="chain">
+        <b class="header">chain</b><code>_(obj).chain()</code>
+        <br>
+        Returns a wrapped object. Calling methods on this object will continue
+        to return wrapped objects until <tt>value</tt> is used. (
+        <a href="http://documentcloud.github.com/underscore/#styles">A more realistic example.</a>)
+      </p>
+      <pre>var stooges = [{name : 'curly', age : 25}, {name : 'moe', age : 21}, {name : 'larry', age : 23}];
+var youngest = _(stooges).chain()
+  .sortBy(function(stooge){ return stooge.age; })
+  .map(function(stooge){ return stooge.name + ' is ' + stooge.age; })
+  .first()
+  .value();
+=&gt; "moe is 21"
+</pre>
+
+      <p id="value">
+        <b class="header">value</b><code>_(obj).value()</code>
+        <br>
+        Extracts the value of a wrapped object.
+      </p>
+      <pre>_([1, 2, 3]).value();
+=&gt; [1, 2, 3]
+</pre>
+
+      <h2 id="duck_typing">Duck Typing</h2>
+
+      <p>
+        The <b>isType</b> (<tt>isArray</tt>, <tt>isFunction</tt>, <tt>isString</tt> ...) family of type-checking
+        functions use property detection to do their work, which, although
+        orders of magnitude faster than the alternative, isn't entirely safe when dealing
+        with objects that are used as hashes, where arbitrary strings are being
+        set for the keys. It's entirely possible for an object to masquerade as
+        another type, if you're setting properties with names like "concat" and
+        "charCodeAt". So be aware.
+      </p>
+
+
+      <h2>Links &amp; Suggested Reading</h2>
+
+      <p>
+        <a href="http://mirven.github.com/underscore.lua/">Underscore.lua</a>,
+        a Lua port of the functions that are applicable in both languages.
+        Includes OOP-wrapping and chaining.
+        The <a href="http://github.com/mirven/underscore.lua">source</a> is
+        available on GitHub.
+      </p>
+      
+      <p>
+        <a href="https://github.com/edtsech/underscore.string">Underscore.string</a>,
+        an Underscore extension that adds functions for string-manipulation: 
+        <tt>trim</tt>, <tt>startsWith</tt>, <tt>contains</tt>, <tt>capitalize</tt>,
+        <tt>reverse</tt>, <tt>sprintf</tt>, and more.
+      </p>
+
+      <p>
+        Ruby's <a href="http://ruby-doc.org/core/classes/Enumerable.html">Enumerable</a> module.
+      </p>
+
+      <p>
+        <a href="http://www.prototypejs.org/">Prototype.js</a>, which provides
+        JavaScript with collection functions in the manner closest to Ruby's Enumerable.
+      </p>
+
+      <p>
+        Oliver Steele's
+        <a href="http://osteele.com/sources/javascript/functional/">Functional JavaScript</a>,
+        which includes comprehensive higher-order function support as well as string lambdas.
+      </p>
+
+      <p>
+        Python's <a href="http://docs.python.org/library/itertools.html">itertools</a>.
+      </p>
+
+      <h2 id="changelog">Change Log</h2>
+      
+      <p>
+        <b class="header">1.1.6</b> — <small><i>April 18, 2011</i></small><br>
+        Added <tt>_.after</tt>, which will return a function that only runs after
+        first being called a specified number of times.
+        <tt>_.invoke</tt> can now take a direct function reference.
+        <tt>_.every</tt> now requires an iterator function to be passed, which
+        mirrors the ECMA5 API.
+        <tt>_.extend</tt> no longer copies keys when the value is undefined.
+        <tt>_.bind</tt> now errors when trying to bind an undefined value.
+      </p>
+      
+      <p>
+        <b class="header">1.1.5</b> — <small><i>Mar 20, 2011</i></small><br>
+        Added an <tt>_.defaults</tt> function, for use merging together JS objects
+        representing default options.
+        Added an <tt>_.once</tt> function, for manufacturing functions that should
+        only ever execute a single time.
+        <tt>_.bind</tt> now delegates to the native ECMAScript 5 version, 
+        where available.
+        <tt>_.keys</tt> now throws an error when used on non-Object values, as in
+        ECMAScript 5.
+        Fixed a bug with <tt>_.keys</tt> when used over sparse arrays.
+      </p>
+      
+      <p>
+        <b class="header">1.1.4</b> — <small><i>Jan 9, 2011</i></small><br>
+        Improved compliance with ES5's Array methods when passing <tt>null</tt> 
+        as a value. <tt>_.wrap</tt> now correctly sets <tt>this</tt> for the
+        wrapped function. <tt>_.indexOf</tt> now takes an optional flag for
+        finding the insertion index in an array that is guaranteed to already
+        be sorted. Avoiding the use of <tt>.callee</tt>, to allow <tt>_.isArray</tt>
+        to work properly in ES5's strict mode.
+      </p>
+      
+      <p>
+        <b class="header">1.1.3</b> — <small><i>Dec 1, 2010</i></small><br>
+        In CommonJS, Underscore may now be required with just: <br>
+        <tt>var _ = require("underscore")</tt>.
+        Added <tt>_.throttle</tt> and <tt>_.debounce</tt> functions.
+        Removed <tt>_.breakLoop</tt>, in favor of an ECMA5-style un-<i>break</i>-able
+        each implementation — this removes the try/catch, and you'll now have
+        better stack traces for exceptions that are thrown within an Underscore iterator.
+        Improved the <b>isType</b> family of functions for better interoperability
+        with Internet Explorer host objects.
+        <tt>_.template</tt> now correctly escapes backslashes in templates.
+        Improved <tt>_.reduce</tt> compatibility with the ECMA5 version: 
+        if you don't pass an initial value, the first item in the collection is used.
+        <tt>_.each</tt> no longer returns the iterated collection, for improved
+        consistency with ES5's <tt>forEach</tt>.
+      </p>
+      
+      <p>
+        <b class="header">1.1.2</b><br>
+        Fixed <tt>_.contains</tt>, which was mistakenly pointing at 
+        <tt>_.intersect</tt> instead of <tt>_.include</tt>, like it should 
+        have been. Added <tt>_.unique</tt> as an alias for <tt>_.uniq</tt>.
+      </p>
+      
+      <p>
+        <b class="header">1.1.1</b><br>
+        Improved the speed of <tt>_.template</tt>, and its handling of multiline
+        interpolations. Ryan Tenney contributed optimizations to many Underscore 
+        functions. An annotated version of the source code is now available.
+      </p>
+      
+      <p>
+        <b class="header">1.1.0</b><br>
+        The method signature of <tt>_.reduce</tt> has been changed to match
+        the ECMAScript 5 signature, instead of the Ruby/Prototype.js version.
+        This is a backwards-incompatible change. <tt>_.template</tt> may now be
+        called with no arguments, and preserves whitespace. <tt>_.contains</tt>
+        is a new alias for <tt>_.include</tt>.
+      </p>
+      
+      <p>
+        <b class="header">1.0.4</b><br>
+        <a href="http://themoell.com/">Andri Möll</a> contributed the <tt>_.memoize</tt> 
+        function, which can be used to speed up expensive repeated computations 
+        by caching the results.
+      </p>
+      
+      <p>
+        <b class="header">1.0.3</b><br>
+        Patch that makes <tt>_.isEqual</tt> return <tt>false</tt> if any property
+        of the compared object has a <tt>NaN</tt> value. Technically the correct
+        thing to do, but of questionable semantics. Watch out for NaN comparisons.
+      </p>
+      
+      <p>
+        <b class="header">1.0.2</b><br>
+        Fixes <tt>_.isArguments</tt> in recent versions of Opera, which have
+        arguments objects as real Arrays.
+      </p>
+      
+      <p>
+        <b class="header">1.0.1</b><br>
+        Bugfix for <tt>_.isEqual</tt>, when comparing two objects with the same 
+        number of undefined keys, but with different names.
+      </p>
+      
+      <p>
+        <b class="header">1.0.0</b><br>
+        Things have been stable for many months now, so Underscore is now
+        considered to be out of beta, at <b>1.0</b>. Improvements since <b>0.6</b>
+        include <tt>_.isBoolean</tt>, and the ability to have <tt>_.extend</tt>
+        take multiple source objects.
+      </p>
+      
+      <p>
+        <b class="header">0.6.0</b><br>
+        Major release. Incorporates a number of 
+        <a href="http://github.com/ratbeard">Mile Frawley's</a> refactors for
+        safer duck-typing on collection functions, and cleaner internals. A new
+        <tt>_.mixin</tt> method that allows you to extend Underscore with utility
+        functions of your own. Added <tt>_.times</tt>, which works the same as in 
+        Ruby or Prototype.js. Native support for ECMAScript 5's <tt>Array.isArray</tt>, 
+        and <tt>Object.keys</tt>.
+      </p>
+
+      <p>
+        <b class="header">0.5.8</b><br>
+        Fixed Underscore's collection functions to work on
+        <a href="https://developer.mozilla.org/En/DOM/NodeList">NodeLists</a> and
+        <a href="https://developer.mozilla.org/En/DOM/HTMLCollection">HTMLCollections</a>
+        once more, thanks to
+        <a href="http://github.com/jmtulloss">Justin Tulloss</a>.
+      </p>
+
+      <p>
+        <b class="header">0.5.7</b><br>
+        A safer implementation of <tt>_.isArguments</tt>, and a
+        faster <tt>_.isNumber</tt>,<br>thanks to
+        <a href="http://jedschmidt.com/">Jed Schmidt</a>.
+      </p>
+
+      <p>
+        <b class="header">0.5.6</b><br>
+        Customizable delimiters for <tt>_.template</tt>, contributed by
+        <a href="http://github.com/iamnoah">Noah Sloan</a>.
+      </p>
+
+      <p>
+        <b class="header">0.5.5</b><br>
+        Fix for a bug in MobileSafari's OOP-wrapper, with the arguments object.
+      </p>
+
+      <p>
+        <b class="header">0.5.4</b><br>
+        Fix for multiple single quotes within a template string for
+        <tt>_.template</tt>. See:
+        <a href="http://www.west-wind.com/Weblog/posts/509108.aspx">Rick Strahl's blog post</a>.
+      </p>
+
+      <p>
+        <b class="header">0.5.2</b><br>
+        New implementations of <tt>isArray</tt>, <tt>isDate</tt>, <tt>isFunction</tt>,
+        <tt>isNumber</tt>, <tt>isRegExp</tt>, and <tt>isString</tt>, thanks to
+        a suggestion from
+        <a href="http://www.broofa.com/">Robert Kieffer</a>.
+        Instead of doing <tt>Object#toString</tt>
+        comparisons, they now check for expected properties, which is less safe,
+        but more than an order of magnitude faster. Most other Underscore
+        functions saw minor speed improvements as a result.
+        <a href="http://dolzhenko.org/">Evgeniy Dolzhenko</a>
+        contributed <tt>_.tap</tt>,
+        <a href="http://ruby-doc.org/core-1.9/classes/Object.html#M000191">similar to Ruby 1.9's</a>,
+        which is handy for injecting side effects (like logging) into chained calls.
+      </p>
+
+      <p>
+        <b class="header">0.5.1</b><br>
+        Added an <tt>_.isArguments</tt> function. Lots of little safety checks
+        and optimizations contributed by
+        <a href="http://github.com/iamnoah/">Noah Sloan</a> and 
+        <a href="http://themoell.com/">Andri Möll</a>.
+      </p>
+
+      <p>
+        <b class="header">0.5.0</b><br>
+        <b>[API Changes]</b> <tt>_.bindAll</tt> now takes the context object as
+        its first parameter. If no method names are passed, all of the context
+        object's methods are bound to it, enabling chaining and easier binding.
+        <tt>_.functions</tt> now takes a single argument and returns the names
+        of its Function properties. Calling <tt>_.functions(_)</tt> will get you
+        the previous behavior.
+        Added <tt>_.isRegExp</tt> so that <tt>isEqual</tt> can now test for RegExp equality.
+        All of the "is" functions have been shrunk down into a single definition.
+        <a href="http://github.com/grayrest/">Karl Guertin</a> contributed patches.
+      </p>
+
+      <p>
+        <b class="header">0.4.7</b><br>
+        Added <tt>isDate</tt>, <tt>isNaN</tt>, and <tt>isNull</tt>, for completeness.
+        Optimizations for <tt>isEqual</tt> when checking equality between Arrays
+        or Dates. <tt>_.keys</tt> is now <small><i><b>25%–2X</b></i></small> faster (depending on your
+        browser) which speeds up the functions that rely on it, such as <tt>_.each</tt>.
+      </p>
+
+      <p>
+        <b class="header">0.4.6</b><br>
+        Added the <tt>range</tt> function, a port of the
+        <a href="http://docs.python.org/library/functions.html#range">Python
+        function of the same name</a>, for generating flexibly-numbered lists
+        of integers. Original patch contributed by
+        <a href="http://github.com/kylichuku">Kirill Ishanov</a>.
+      </p>
+
+      <p>
+        <b class="header">0.4.5</b><br>
+        Added <tt>rest</tt> for Arrays and arguments objects, and aliased
+        <tt>first</tt> as <tt>head</tt>, and <tt>rest</tt> as <tt>tail</tt>,
+        thanks to <a href="http://github.com/lukesutton/">Luke Sutton</a>'s patches.
+        Added tests ensuring that all Underscore Array functions also work on
+        <i>arguments</i> objects.
+      </p>
+
+      <p>
+        <b class="header">0.4.4</b><br>
+        Added <tt>isString</tt>, and <tt>isNumber</tt>, for consistency. Fixed
+        <tt>_.isEqual(NaN, NaN)</tt> to return <i>true</i> (which is debatable).
+      </p>
+
+      <p>
+        <b class="header">0.4.3</b><br>
+        Started using the native <tt>StopIteration</tt> object in browsers that support it.
+        Fixed Underscore setup for CommonJS environments.
+      </p>
+
+      <p>
+        <b class="header">0.4.2</b><br>
+        Renamed the unwrapping function to <tt>value</tt>, for clarity.
+      </p>
+
+      <p>
+        <b class="header">0.4.1</b><br>
+        Chained Underscore objects now support the Array prototype methods, so
+        that you can perform the full range of operations on a wrapped array
+        without having to break your chain. Added a <tt>breakLoop</tt> method
+        to <b>break</b> in the middle of any Underscore iteration. Added an
+        <tt>isEmpty</tt> function that works on arrays and objects.
+      </p>
+
+      <p>
+        <b class="header">0.4.0</b><br>
+        All Underscore functions can now be called in an object-oriented style,
+        like so: <tt>_([1, 2, 3]).map(...);</tt>. Original patch provided by
+        <a href="http://macournoyer.com/">Marc-André Cournoyer</a>.
+        Wrapped objects can be chained through multiple
+        method invocations. A <a href="http://documentcloud.github.com/underscore/#functions"><tt>functions</tt></a> method
+        was added, providing a sorted list of all the functions in Underscore.
+      </p>
+
+      <p>
+        <b class="header">0.3.3</b><br>
+        Added the JavaScript 1.8 function <tt>reduceRight</tt>. Aliased it
+        as <tt>foldr</tt>, and aliased <tt>reduce</tt> as <tt>foldl</tt>.
+      </p>
+
+      <p>
+        <b class="header">0.3.2</b><br>
+        Now runs on stock <a href="http://www.mozilla.org/rhino/">Rhino</a>
+        interpreters with: <tt>load("underscore.js")</tt>.
+        Added <a href="http://documentcloud.github.com/underscore/#identity"><tt>identity</tt></a> as a utility function.
+      </p>
+
+      <p>
+        <b class="header">0.3.1</b><br>
+        All iterators are now passed in the original collection as their third
+        argument, the same as JavaScript 1.6's <b>forEach</b>. Iterating over
+        objects is now called with <tt>(value, key, collection)</tt>, for details
+        see <a href="./underscore_js_docs_files/underscore_js_docs.html"><tt>_.each</tt></a>.
+      </p>
+
+      <p>
+        <b class="header">0.3.0</b><br>
+        Added <a href="http://github.com/dmitryBaranovskiy">Dmitry Baranovskiy</a>'s
+        comprehensive optimizations, merged in
+        <a href="http://github.com/kriskowal/">Kris Kowal</a>'s patches to make Underscore
+        <a href="http://wiki.commonjs.org/wiki/CommonJS">CommonJS</a> and
+        <a href="http://narwhaljs.org/">Narwhal</a> compliant.
+      </p>
+
+      <p>
+        <b class="header">0.2.0</b><br>
+        Added <tt>compose</tt> and <tt>lastIndexOf</tt>, renamed <tt>inject</tt> to
+        <tt>reduce</tt>, added aliases for <tt>inject</tt>, <tt>filter</tt>,
+        <tt>every</tt>, <tt>some</tt>, and <tt>forEach</tt>.
+      </p>
+
+      <p>
+        <b class="header">0.1.1</b><br>
+        Added <tt>noConflict</tt>, so that the "Underscore" object can be assigned to
+        other variables.
+      </p>
+
+      <p>
+        <b class="header">0.1.0</b><br>
+        Initial release of Underscore.js.
+      </p>
+
+      <p>
+        <a href="http://documentcloud.org/" title="A DocumentCloud Project" style="background:none;">
+          <img src="./underscore_js_docs_files/a_documentcloud_project.png" alt="A DocumentCloud Project">
+        </a>
+      </p>
+
+    </div>
+
+  </div>
+
+  <!-- Include Underscore, so you can play with it in the console. -->
+  <script type="text/javascript" src="./underscore_js_docs_files/underscore.js"></script>
+
+
+
+<div id="html-validator-loading"><img src="chrome-extension://cgndfbhngibokieehnjhbjkkhbfmhojo/images/loading.gif">Validating...</div><div id="html-validator-message"><span id="html-validation-message-close">X</span><div id="html-validator-message-content"></div></div></body><style type="text/css">embed[type*="application/x-shockwave-flash"],embed[src*=".swf"],object[type*="application/x-shockwave-flash"],object[codetype*="application/x-shockwave-flash"],object[src*=".swf"],object[codebase*="swflash.cab"],object[classid*="D27CDB6E-AE6D-11cf-96B8-444553540000"],object[classid*="d27cdb6e-ae6d-11cf-96b8-444553540000"],object[classid*="D27CDB6E-AE6D-11cf-96B8-444553540000"]{	display: none !important;}</style><style>#A9AdsMiddleBoxTop, #A9AdsOutOfStockWidgetTop, #A9AdsServicesWidgetTop, #ADSLOT_1, #ADSLOT_2, #ADSLOT_3, #ADSLOT_4, #ADVERTISE_HERE_ROW, #AD_CONTROL_22, #AD_ROW, #ADsmallWrapper, #Ad1, #Ad160x600, #Ad2, #Ad300x250, #Ad3Left, #Ad3Right, #Ad3TextAd, #AdA, #AdArea { display: none !important; } #AdBanner_F1, #AdBar, #AdBar1, #AdBox2, #AdC, #AdContainer, #AdContainerTop, #AdContentModule_F, #AdDetails_GoogleLinksBottom, #AdDetails_InsureWith, #AdE, #AdF, #AdFrame4, #AdG, #AdH, #AdHeader, #AdI, #AdJ, #AdLeaderboardBottom, #AdLeaderboardTop { display: none !important; } #AdMiddle, #AdMobileLink, #AdPopUp, #AdRectangle, #AdSenseDiv, #AdServer, #AdShowcase_F1, #AdSky23, #AdSkyscraper, #AdSpacing, #AdSponsor_SF, #AdSubsectionShowcase_F1, #AdTargetControl1_iframe, #AdText, #AdTop, #AdTopLeader, #Ad_BelowContent, #Ad_Block, #Ad_Center1, #Ad_Right1 { display: none !important; } #Ad_RightBottom, #Ad_RightTop, #Ad_Top, #Adbanner, #Adrectangle, #Ads, #AdsContent, #AdsRight, #AdsWrap, #Ads_BA_CAD, #Ads_BA_CAD2, #Ads_BA_CAD_box, #Ads_BA_SKY, #Ads_CAD, #Ads_OV_BS, #Ads_Special, #AdvertMPU23b, #AdvertPanel, #AdvertiseFrame, #Advertisement { display: none !important; } #Advertisements, #Advertorial, #Advertorials, #AdvertsBottom, #AdvertsBottomR, #BANNER_160x600, #BANNER_300x250, #BANNER_728x90, #BannerAd, #BannerAdvert, #BigBoxAd, #BodyAd, #BotAd, #Bottom468x60AD, #ButtonAd, #CompanyDetailsNarrowGoogleAdsPresentationControl, #CompanyDetailsWideGoogleAdsPresentationControl, #ContentAd, #ContentAd1, #ContentAd2 { display: none !important; } #ContentAdPlaceHolder1, #ContentAdPlaceHolder2, #ContentAdXXL, #ContentPolepositionAds_Result, #DartAd300x250, #DivAdEggHeadCafeTopBanner, #FIN_videoplayer_300x250ad, #FooterAd, #FooterAdContainer, #GoogleAd1, #GoogleAd2, #GoogleAd3, #GoogleAdsPlaceHolder, #GoogleAdsPresentationControl, #GoogleAdsense, #Google_Adsense_Main, #HEADERAD, #HOME_TOP_RIGHT_BOXAD, #HeaderAD, #HeaderAdsBlock { display: none !important; } #HeaderAdsBlockFront, #HeaderBannerAdSpacer, #HeaderTextAd, #HeroAd, #HomeAd1, #HouseAd, #ID_Ad_Sky, #JobsearchResultsAds, #Journal_Ad_125, #Journal_Ad_300, #JuxtapozAds, #KH-contentAd, #LargeRectangleAd, #LeftAd, #LeftAdF1, #LeftAdF2, #LftAd, #LoungeAdsDiv, #LowerContentAd, #MainSponsoredLinks { display: none !important; } #Nightly_adContainer, #NormalAdModule, #OverrideAdArea, #PREFOOTER_LEFT_BOXAD, #PREFOOTER_RIGHT_BOXAD, #PageLeaderAd, #RelevantAds, #RgtAd1, #RightAd, #RightBottom300x250AD, #RightNavTopAdSpot, #RightSponsoredAd, #SectionAd300-250, #SectionSponsorAd, #SideAdMpu, #SidebarAdContainer, #SkyAd, #SpecialAds, #SponsoredAd, #SponsoredLinks { display: none !important; } #TOP_ADROW, #TOP_RIGHT_BOXAD, #Tadspacefoot, #Tadspacehead, #Tadspacemrec, #TextLinkAds, #ThreadAd, #Top468x60AD, #TopAd, #TopAdBox, #TopAdContainer, #TopAdDiv, #TopAdPos, #VM-MPU-adspace, #VM-footer-adspace, #VM-header-adspace, #VM-header-adwrap, #XEadLeaderboard, #XEadSkyscraper, #YahooAdParentContainer { display: none !important; } #_ads, #abHeaderAdStreamer, #about_adsbottom, #abovepostads, #ad-120x600-sidebar, #ad-120x60Div, #ad-160x600, #ad-160x600-sidebar, #ad-250, #ad-250x300, #ad-300, #ad-300x250, #ad-300x250-sidebar, #ad-300x250Div, #ad-300x60-1, #ad-376x280, #ad-728, #ad-728x90, #ad-728x90-leaderboard-top, #ad-728x90-top0 { display: none !important; } #ad-ads, #ad-article, #ad-banner, #ad-banner-1, #ad-billboard-bottom, #ad-block-125, #ad-bottom, #ad-bottom-wrapper, #ad-box, #ad-box-first, #ad-box-second, #ad-boxes, #ad-bs, #ad-buttons, #ad-colB-1, #ad-column, #ad-container, #ad-content, #ad-contentad, #ad-flex-first { display: none !important; } #ad-footer, #ad-footprint-160x600, #ad-frame, #ad-front-footer, #ad-front-sponsoredlinks, #ad-fullbanner2, #ad-globalleaderboard, #ad-halfpage, #ad-header, #ad-header-728x90, #ad-horizontal-header, #ad-img, #ad-inner, #ad-label, #ad-leaderboard, #ad-leaderboard-bottom, #ad-leaderboard-container, #ad-leaderboard-spot, #ad-leaderboard-top, #ad-left { display: none !important; } #ad-links-content, #ad-list-row, #ad-lrec, #ad-medium, #ad-medium-rectangle, #ad-medrec, #ad-middlethree, #ad-middletwo, #ad-module, #ad-mpu, #ad-mpu1-spot, #ad-mpu2, #ad-mpu2-spot, #ad-north, #ad-one, #ad-placard, #ad-placeholder, #ad-rectangle, #ad-right, #ad-righttop { display: none !important; } #ad-row, #ad-side-text, #ad-sidebar, #ad-sky, #ad-skyscraper, #ad-slug-wrapper, #ad-small-banner, #ad-space, #ad-special, #ad-splash, #ad-sponsors, #ad-spot, #ad-squares, #ad-target, #ad-target-Leaderbord, #ad-teaser, #ad-text, #ad-top, #ad-top-banner, #ad-top-text-low { display: none !important; } #ad-top-wrap, #ad-tower, #ad-trailerboard-spot, #ad-two, #ad-typ1, #ad-unit, #ad-west, #ad-wrap, #ad-wrap-right, #ad-wrapper, #ad-wrapper1, #ad-yahoo-simple, #ad-zone-1, #ad-zone-2, #ad-zone-inline, #ad01, #ad02, #ad1, #ad1006, #ad11 { display: none !important; } #ad125BL, #ad125BR, #ad125TL, #ad125TR, #ad125x125, #ad160x600, #ad160x600right, #ad1Sp, #ad2, #ad2Sp, #ad3, #ad300, #ad300-250, #ad300X250, #ad300_x_250, #ad300x100Middle, #ad300x150, #ad300x250, #ad300x250Module, #ad300x60 { display: none !important; } #ad300x600, #ad300x600_callout, #ad336, #ad336x280, #ad375x85, #ad4, #ad468, #ad468x60, #ad468x60_top, #ad526x250, #ad600, #ad7, #ad728, #ad728Mid, #ad728Top, #ad728Wrapper, #ad728top, #ad728x90, #ad728x90_1, #ad90 { display: none !important; } #adBadges, #adBanner, #adBanner10, #adBanner120x600, #adBanner160x600, #adBanner2, #adBanner3, #adBanner336x280, #adBanner4, #adBanner728, #adBanner9, #adBannerTable, #adBannerTop, #adBar, #adBelt, #adBlock125, #adBlockTop, #adBlocks, #adBox, #adBox11 { display: none !important; } #adBox16, #adBox350, #adBox390, #adCirc300X200, #adCirc_620_100, #adCol, #adColumn, #adComponentWrapper, #adContainer, #adContainer_1, #adContainer_2, #adContainer_3, #adDiv, #adDiv300, #adDiv728, #adFiller, #adFps, #adFtofrs, #adGallery, #adGoogleText { display: none !important; } #adGroup1, #adHeader, #adHeaderTop, #adIsland, #adL, #adLB, #adLabel, #adLayer, #adLeader, #adLeaderTop, #adLeaderboard, #adMPU, #adMediumRectangle, #adMiddle0Frontpage, #adMiniPremiere, #adMonster1, #adP, #adPlaceHolderRight, #adPlacer, #adPosOne { display: none !important; } #adRight, #adRight2, #adSPLITCOLUMNTOPRIGHT, #adSenseModule, #adSenseWrapper, #adServer_marginal, #adSidebar, #adSidebarSq, #adSky, #adSkyscraper, #adSlider, #adSpace, #adSpace0, #adSpace1, #adSpace10, #adSpace11, #adSpace12, #adSpace13, #adSpace14, #adSpace15 { display: none !important; } #adSpace16, #adSpace17, #adSpace18, #adSpace19, #adSpace2, #adSpace20, #adSpace21, #adSpace22, #adSpace23, #adSpace24, #adSpace25, #adSpace3, #adSpace300_ifrMain, #adSpace4, #adSpace5, #adSpace6, #adSpace7, #adSpace8, #adSpace9, #adSpace_footer { display: none !important; } #adSpace_right, #adSpace_top, #adSpacer, #adSpecial, #adSplotlightEm, #adSpot-Leader, #adSpot-banner, #adSpot-island, #adSpot-mrec1, #adSpot-sponsoredlinks, #adSpot-textbox1, #adSpot-widestrip, #adSpotAdvertorial, #adSpotIsland, #adSpotSponsoredLinks, #adSquare, #adStaticA, #adStrip, #adSuperAd, #adSuperPremiere { display: none !important; } #adSuperSkyscraper, #adSuperbanner, #adTableCell, #adTag1, #adTag2, #adText, #adTextLink, #adText_container, #adTile, #adTop, #adTopContent, #adTopboxright, #adTower, #adUnit, #adWrapper, #adZoneTop, #ad_1, #ad_130x250_inhouse, #ad_160x160, #ad_160x600 { display: none !important; } #ad_190x90, #ad_2, #ad_3, #ad_300, #ad_300_250, #ad_300_250_1, #ad_300a, #ad_300b, #ad_300c, #ad_300x250, #ad_300x250_content_column, #ad_300x250m, #ad_300x90, #ad_4, #ad_468_60, #ad_5, #ad_728_foot, #ad_728x90, #ad_728x90_container, #ad_940 { display: none !important; } #ad_984, #ad_A, #ad_B, #ad_Banner, #ad_C, #ad_C2, #ad_D, #ad_E, #ad_F, #ad_G, #ad_H, #ad_I, #ad_J, #ad_K, #ad_L, #ad_M, #ad_N, #ad_O, #ad_P, #ad_YieldManager-300x250 { display: none !important; } #ad_YieldManager-728x90, #ad_anchor, #ad_area, #ad_banner, #ad_banner_top, #ad_banners, #ad_bar, #ad_bellow_post, #ad_bigsize_wrapper, #ad_block_1, #ad_block_2, #ad_bottom, #ad_box, #ad_box_colspan, #ad_box_top, #ad_branding, #ad_bs_area, #ad_buttons, #ad_center_monster, #ad_circ300x250 { display: none !important; } #ad_cna2, #ad_cont, #ad_container, #ad_container_marginal, #ad_container_side, #ad_container_sidebar, #ad_container_top, #ad_content_top, #ad_content_wrap, #ad_feature, #ad_firstpost, #ad_footer, #ad_front_three, #ad_fullbanner, #ad_gallery, #ad_global_header, #ad_haha_1, #ad_haha_4, #ad_halfpage, #ad_head { display: none !important; } #ad_header, #ad_holder, #ad_horizontal, #ad_horseshoe_left, #ad_horseshoe_right, #ad_horseshoe_spacer, #ad_horseshoe_top, #ad_hotpots, #ad_in_arti, #ad_island, #ad_label, #ad_large_rectangular, #ad_lastpost, #ad_layer2, #ad_leader, #ad_leaderBoard, #ad_leaderboard, #ad_leaderboard728x90, #ad_leaderboard_top, #ad_left { display: none !important; } #ad_lrec, #ad_lwr_square, #ad_main, #ad_medium_rectangle, #ad_medium_rectangular, #ad_mediumrectangle, #ad_menu_header, #ad_message, #ad_middle, #ad_most_pop_234x60_req_wrapper, #ad_mpu, #ad_mpu300x250, #ad_mpuav, #ad_mrcontent, #ad_newsletter, #ad_overlay, #ad_play_300, #ad_rect, #ad_rect_body, #ad_rect_bottom { display: none !important; } #ad_rectangle, #ad_rectangle_medium, #ad_related_links_div, #ad_related_links_div_program, #ad_replace_div_0, #ad_replace_div_1, #ad_report_leaderboard, #ad_report_rectangle, #ad_results, #ad_right, #ad_right_main, #ad_ros_tower, #ad_rr_1, #ad_sec, #ad_sec_div, #ad_sgd, #ad_sidebar, #ad_sidebar1, #ad_sidebar2, #ad_sidebar3 { display: none !important; } #ad_sky, #ad_skyscraper, #ad_skyscraper160x600, #ad_skyscraper_text, #ad_slot_leaderboard, #ad_slot_livesky, #ad_slot_sky_top, #ad_space, #ad_square, #ad_ss, #ad_table, #ad_term_bottom_place, #ad_text:not(textarea), #ad_thread_first_post_content, #ad_top, #ad_top_holder, #ad_tp_banner_1, #ad_tp_banner_2, #ad_unit, #ad_vertical { display: none !important; } #ad_wide, #ad_wide_box, #ad_widget, #ad_window, #ad_wrap, #ad_wrapper, #adaptvcompanion, #adbForum, #adbanner, #adbar, #adbig, #adbnr, #adboard, #adbody, #adbottom, #adbox, #adbox1, #adbox2, #adbutton, #adclear { display: none !important; } #adcode, #adcode1, #adcode2, #adcode3, #adcode4, #adcolumnwrapper, #adcontainer, #adcontainer1, #adcontainerRight, #adcontainsm, #adcontent, #adcontent1, #adcontrolPushSite, #add_ciao2, #addbottomleft, #addiv-bottom, #addiv-top, #adfooter, #adfooter_728x90, #adframe:not(frameset) { display: none !important; } #adhead, #adhead_g, #adheader, #adhome, #adiframe1_iframe, #adiframe2_iframe, #adiframe3_iframe, #adimg, #adition_content_ad, #adlabel, #adlabelFooter, #adlayerContainer, #adlayerad, #adleaderboard, #adleaderboard_flex, #adleaderboardb, #adleaderboardb_flex, #adleft, #adlinks, #adlinkws { display: none !important; } #adlrec, #admanager_leaderboard, #admid, #admiddle3center, #admiddle3left, #adposition, #adposition-C, #adposition-FPMM, #adposition1, #adposition2, #adposition3, #adposition4, #adrectangle, #adrectanglea, #adrectanglea_flex, #adrectangleb, #adrectangleb_flex, #adrig, #adright, #adright2 { display: none !important; } #adrighthome, #ads-468, #ads-area, #ads-block, #ads-bot, #ads-bottom, #ads-col, #ads-dell, #ads-horizontal, #ads-indextext, #ads-leaderboard1, #ads-lrec, #ads-menu, #ads-middle, #ads-prices, #ads-rhs, #ads-right, #ads-sponsored-boxes, #ads-top, #ads-vers7 { display: none !important; } #ads-wrapper, #ads120, #ads160left, #ads2, #ads300, #ads300-250, #ads300Bottom, #ads300Top, #ads336x280, #ads7, #ads728bottom, #ads728top, #ads790, #adsDisplay, #adsID, #ads_160, #ads_300, #ads_728, #ads_banner, #ads_belowforumlist { display: none !important; } #ads_belownav, #ads_bottom, #ads_bottom_inner, #ads_bottom_outer, #ads_box, #ads_button, #ads_catDiv, #ads_footer, #ads_fullsize, #ads_header, #ads_html1, #ads_html2, #ads_inner, #ads_lb, #ads_medrect, #ads_notice, #ads_right, #ads_right_sidebar, #ads_sidebar_roadblock, #ads_space { display: none !important; } #ads_top, #ads_watch_top_square, #ads_zone27, #adsbottom, #adsbox, #adsbox-left, #adsbox-right, #adscolumn, #adsd_contentad_r1, #adsd_contentad_r2, #adsd_contentad_r3, #adsd_topbanner, #adsd_txt_sky, #adsdiv, #adsense, #adsense-2, #adsense-header, #adsense-tag, #adsense-text, #adsense03 { display: none !important; } #adsense04, #adsense05, #adsense1, #adsenseLeft, #adsenseOne, #adsenseWrap, #adsense_article_left, #adsense_box, #adsense_box_video, #adsense_inline, #adsense_leaderboard, #adsense_overlay, #adsense_placeholder_2, #adsenseheader, #adsensetopplay, #adsensewidget-3, #adserv, #adshometop, #adsimage, #adskinlink { display: none !important; } #adsky, #adskyscraper, #adslider, #adslot, #adsmiddle, #adsonar, #adspace, #adspace-1, #adspace-300x250, #adspace300x250, #adspaceBox, #adspaceBox300, #adspace_header, #adsponsorImg, #adspot, #adspot-1, #adspot-149x170, #adspot-1x4, #adspot-2, #adspot-295x60 { display: none !important; } #adspot-2a, #adspot-2b, #adspot-300x250-pos-1, #adspot-300x250-pos-2, #adspot-468x60-pos-2, #adspot-a, #adspot300x250, #adspot_220x90, #adspot_300x250, #adspot_468x60, #adspot_728x90, #adsquare, #adsright, #adst, #adstop, #adt, #adtab, #adtag_right_side, #adtagfooter, #adtagheader { display: none !important; } #adtagrightcol, #adtaily-widget-light, #adtech_googleslot_03c, #adtech_takeover, #adtext, #adtop, #adtophp, #adtxt, #adv-masthead, #adv_google_300, #adv_google_728, #adv_top_banner_wrapper, #adver1, #adver2, #adver3, #adver4, #adver5, #adver6, #adver7, #advert { display: none !important; } #advert-1, #advert-120, #advert-boomer, #advert-display, #advert-header, #advert-leaderboard, #advert-links-bottom, #advert-skyscraper, #advert-top, #advert1, #advertBanner, #advertContainer, #advertDB, #advertRight, #advert_125x125, #advert_250x250, #advert_box, #advert_home01, #advert_leaderboard, #advert_lrec_format { display: none !important; } #advert_mid, #advert_mpu, #advert_mpu_1, #advert_right_skyscraper, #advert_sky, #advertbox, #advertbox2, #advertbox3, #advertbox4, #adverthome, #advertise, #advertise-here-sidebar, #advertise-now, #advertise1, #advertiseHere, #advertisement160x600, #advertisement728x90, #advertisementLigatus, #advertisementPrio2, #advertisementsarticle { display: none !important; } #advertiser-container, #advertiserLinks, #advertisers, #advertising, #advertising-banner, #advertising-caption, #advertising-container, #advertising-control, #advertising-skyscraper, #advertising2, #advertisingModule160x600, #advertisingModule728x90, #advertisingTopWrapper, #advertising_btm, #advertising_horiz_cont, #advertisment, #advertismentElementInUniversalbox, #advertorial, #advertorial_red_listblock, #adverts { display: none !important; } #adverts-top-container, #adverts-top-left, #adverts-top-middle, #adverts-top-right, #advertsingle, #advt, #adwhitepaperwidget, #adwin_rec, #adwith, #adwords-4-container, #adwrapper, #adxBigAd, #adxMiddle5, #adxSponLink, #adxSponLinkA, #adxtop, #adz, #adzbanner, #adzerk, #adzerk1 { display: none !important; } #adzone, #adzoneBANNER, #adzoneheader, #affinityBannerAd, #after-content-ads, #after-header-ad-left, #after-header-ad-right, #after-header-ads, #agi-ad300x250, #agi-ad300x250overlay, #agi-sponsored, #alert_ads, #anchorAd, #annoying_ad, #ap_adframe, #apiBackgroundAd, #apiTopAdWrap, #apmNADiv, #araHealthSponsorAd, #area-adcenter { display: none !important; } #area1ads, #article-ad-container, #article-box-ad, #articleAdReplacement, #articleLeftAdColumn, #articleSideAd, #article_ad, #article_ad_container, #article_box_ad, #articlead1, #articlead2, #asinglead, #atlasAdDivGame, #awds-nt1-ad, #babAdTop, #banner-300x250, #banner-ad, #banner-ad-container, #banner-ads, #banner250x250 { display: none !important; } #banner468x60, #banner728x90, #bannerAd, #bannerAdTop, #bannerAdWrapper, #bannerAd_ctr, #banner_300_250, #banner_ad, #banner_ad_footer, #banner_ad_module, #banner_admicro, #banner_ads, #banner_content_ad, #banner_topad, #bannerad, #bannerad2, #baseAdvertising, #basket-adContainer, #bbccom_mpu, #bbo_ad1 { display: none !important; } #bg-footer-ads, #bg-footer-ads2, #bg_YieldManager-160x600, #bg_YieldManager-300x250, #bg_YieldManager-728x90, #bigAd, #bigBoxAd, #bigad300outer, #bigadbox, #bigadframe, #bigadspot, #billboard_ad, #block-ad_cube-1, #block-openads-0, #block-openads-1, #block-openads-2, #block-openads-3, #block-openads-4, #block-openads-5, #block-thewrap_ads_250x300-0 { display: none !important; } #block_advert, #blog-ad, #blog_ad_content, #blog_ad_opa, #blog_ad_right, #blog_ad_top, #blox-big-ad, #blox-big-ad-bottom, #blox-big-ad-top, #blox-halfpage-ad, #blox-tile-ad, #blox-tower-ad, #body_728_ad, #book-ad, #botad, #bott_ad2, #bott_ad2_300, #bottom-ad, #bottom-ad-container, #bottom-ad-wrapper { display: none !important; } #bottom-ads, #bottomAd, #bottomAdCCBucket, #bottomAdContainer, #bottomAdSense, #bottomAdSenseDiv, #bottomAds, #bottomRightAd, #bottomRightAdSpace, #bottom_ad, #bottom_ad_area, #bottom_ad_unit, #bottom_ads, #bottom_banner_ad, #bottom_overture, #bottom_sponsor_ads, #bottom_sponsored_links, #bottom_text_ad, #bottomad, #bottomads { display: none !important; } #bottomadsense, #bottomadwrapper, #bottomleaderboardad, #box-content-ad, #box-googleadsense-1, #box-googleadsense-r, #box1ad, #boxAd300, #boxAdContainer, #box_ad, #box_advertisment, #box_mod_googleadsense, #boxad1, #boxad2, #boxad3, #boxad4, #boxad5, #bpAd, #bps-header-ad-container, #btnads { display: none !important; } #btr_horiz_ad, #burn_header_ad, #button-ads-horizontal, #button-ads-vertical, #buttonAdWrapper1, #buttonAdWrapper2, #buttonAds, #buttonAdsContainer, #button_ad_container, #button_ad_wrap, #buttonad, #buy-sell-ads, #c4ad-Middle1, #c_ad_sb, #c_ad_sky, #caAdLarger, #catad, #category-ad, #cellAd, #channel_ad { display: none !important; } #channel_ads, #ciHomeRHSAdslot, #circ_ad, #closeable-ad, #cmn_toolbar_ad, #cnnAboveFoldBelowAd, #cnnRR336ad, #cnnSponsoredPods, #cnnTopAd, #cnnVPAd, #col3_advertising, #colAd, #colRightAd, #collapseobj_adsection, #column4-google-ads, #comments-ad-container, #commercial_ads, #common_right_ad_wrapper, #common_right_lower_ad_wrapper, #common_right_lower_adspace { display: none !important; } #common_right_lower_player_ad_wrapper, #common_right_lower_player_adspace, #common_right_player_ad_wrapper, #common_right_player_adspace, #common_right_right_adspace, #common_top_adspace, #comp_AdsLeaderboardTop, #companion-ad, #companionAdDiv, #companionad, #container-righttopads, #container-topleftads, #containerLocalAds, #containerLocalAdsInner, #containerMrecAd, #containerSqAd, #content-ad-header, #content-header-ad, #content-left-ad, #content-right-ad { display: none !important; } #contentAd, #contentBoxad, #contentTopAds2, #content_ad, #content_ad_square, #content_ad_top, #content_ads_content, #content_box_300body_sponsoredoffers, #content_box_adright300_google, #content_mpu, #contentad, #contentad_imtext, #contentad_right, #contentads, #contentinlineAd, #contextad, #contextual-ads, #contextual-ads-block, #contextualad, #coverads { display: none !important; } #ctl00_Adspace_Top_Height, #ctl00_BottomAd, #ctl00_ContentMain_BanManAd468_BanManAd, #ctl00_ContentPlaceHolder1_blockAdd_divAdvert, #ctl00_ContentRightColumn_RightColumn_Ad1_BanManAd, #ctl00_ContentRightColumn_RightColumn_Ad2_BanManAd, #ctl00_ContentRightColumn_RightColumn_PremiumAd1_ucBanMan_BanManAd, #ctl00_LHTowerAd, #ctl00_LeftHandAd, #ctl00_MasterHolder_IBanner_adHolder, #ctl00_TopAd, #ctl00_TowerAd, #ctl00_VBanner_adHolder, #ctl00__Content__RepeaterReplies_ctl03__AdReply, #ctl00_abot_bb, #ctl00_adFooter, #ctl00_advert_LargeMPU_div_AdPlaceHolder, #ctl00_atop_bt, #ctl00_cphMain_hlAd1, #ctl00_cphMain_hlAd2 { display: none !important; } #ctl00_cphMain_hlAd3, #ctl00_ctl00_MainPlaceHolder_itvAdSkyscraper, #ctl00_ctl00_ctl00_Main_Main_PlaceHolderGoogleTopBanner_MPTopBannerAd, #ctl00_ctl00_ctl00_Main_Main_SideBar_MPSideAd, #ctl00_dlTilesAds, #ctl00_m_skinTracker_m_adLBL, #ctl00_phCrackerMain_ucAffiliateAdvertDisplayMiddle_pnlAffiliateAdvert, #ctl00_phCrackerMain_ucAffiliateAdvertDisplayRight_pnlAffiliateAdvert, #ctl00_topAd, #ctrlsponsored, #cubeAd, #cube_ads, #cube_ads_inner, #cubead, #cubead-2, #currencies-sponsored-by, #dItemBox_ads, #dart_160x600, #dc-display-right-ad-1, #dcol-sponsored { display: none !important; } #defer-adright, #detail_page_vid_topads, #div-gpt-ad-1, #div-gpt-ad-2, #div-gpt-ad-3, #div-gpt-ad-4, #divAd, #divAdBox, #divAdWrapper, #divAdvertisement, #divBottomad1, #divBottomad2, #divDoubleAd, #divLeftAd12, #divLeftRecAd, #divMenuAds, #divWNAdHeader, #divWrapper_Ad, #div_ad_leaderboard, #div_video_ads { display: none !important; } #dlads, #dni-header-ad, #dnn_adLeaderBoard2008, #dnn_ad_banner, #download_ads, #dp_ads1, #ds-mpu, #editorsmpu, #embedded-ad, #evotopTen_advert, #ex-ligatus, #exads, #extra-search-ads, #fb_adbox, #fb_rightadpanel, #featuread, #featured-advertisements, #featuredAdContainer2, #featuredAds, #featured_ad_links { display: none !important; } #feed_links_ad_container, #file_sponsored_link, #first-300-ad, #first-adlayer, #first_ad_unit, #firstad, #fl_hdrAd, #flash_ads_1, #flexiad, #floating_ad_container, #foot-ad-1, #footad, #footer-ad, #footer-ads, #footer-advert, #footer-adverts, #footer-sponsored, #footerAd, #footerAdDiv, #footerAds { display: none !important; } #footerAdvertisement, #footerAdverts, #footer_ad, #footer_ad_01, #footer_ad_block, #footer_ad_container, #footer_ad_modules, #footer_ads, #footer_adspace, #footer_text_ad, #footerad, #footerads, #footeradsbox, #forum_top_ad, #four_ads, #fpad1, #fpad2, #fpv_companionad, #fr_ad_center, #frame_admain { display: none !important; } #frnAdSky, #frnBannerAd, #frnContentAd, #front_advert, #front_mpu, #ft-ad, #ft-ad-1, #ft-ad-container, #ft_mpu, #fullsizebanner_468x60, #fusionad, #fw-advertisement, #g_ad, #g_adsense, #ga_300x250, #gad, #gad2, #gad3, #gad5, #galleries-tower-ad { display: none !important; } #gallery-ad, #gallery-ad-m0, #gallery-random-ad, #gallery_ads, #game-info-ad, #gamead, #gasense, #gglads, #global_header_ad_area, #gm-ad-lrec, #gmi-ResourcePageAd, #gmi-ResourcePageLowerAd, #goad1, #goads, #gooadtop, #google-ad, #google-ad-art, #google-ad-table-right, #google-ad-tower, #google-ads { display: none !important; } #google-ads-bottom, #google-ads-header, #google-ads-left-side, #google-adsense-mpusize, #googleAd, #googleAdArea, #googleAds, #googleAdsSml, #googleAdsense, #googleAdsenseBanner, #googleAdsenseBannerBlog, #googleAdwordsModule, #googleAfcContainer, #googleSearchAds, #googleShoppingAdsRight, #googleShoppingAdsTop, #googleSubAds, #google_ad, #google_ad_container, #google_ad_inline { display: none !important; } #google_ad_test, #google_ads, #google_ads_aCol, #google_ads_frame1, #google_ads_frame1_anchor, #google_ads_frame2, #google_ads_frame2_anchor, #google_ads_frame3, #google_ads_frame3_anchor, #google_ads_test, #google_ads_top, #google_adsense_home_468x60_1, #googlead, #googlead-sidebar-middle, #googlead-sidebar-top, #googlead2, #googleadbox, #googleads, #googleadsense, #googlesponsor { display: none !important; } #gpt-ad-halfpage, #gpt-ad-rectangle1, #gpt-ad-rectangle2, #gpt-ad-skyscraper, #gpt-ad-story_rectangle3, #grid_ad, #gsyadrectangleload, #gsyadrightload, #gsyadtop, #gsyadtopload, #gtopadvts, #half-page-ad, #halfPageAd, #halfe-page-ad-box, #hd-ads, #hd-banner-ad, #hdtv_ad_ss, #head-ad, #head-ad-1, #headAd { display: none !important; } #head_ad, #head_advert, #headad, #header-ad, #header-ad-left, #header-ad-rectangle-container, #header-ad-right, #header-ad2010, #header-ads, #header-adspace, #header-advert, #header-advertisement, #header-advertising, #header-adverts, #headerAd, #headerAdBackground, #headerAdContainer, #headerAdWrap, #headerAds, #headerAdsWrapper { display: none !important; } #headerTopAd, #header_ad, #header_ad_728_90, #header_ad_container, #header_adcode, #header_ads, #header_advertisement_top, #header_leaderboard_ad_container, #header_publicidad, #headerad, #headeradbox, #headerads, #headeradsbox, #headeradvertholder, #headeradwrap, #headline_ad, #headlinesAdBlock, #hiddenadAC, #hideads, #hl-sponsored-results { display: none !important; } #hly_ad_side_bar_tower_left, #home-advert-module, #home-rectangle-ad, #homeMPU, #homeTopRightAd, #home_ad, #home_bottom_ad, #home_contentad, #home_feature_ad, #home_mpu, #home_spensoredlinks, #homead, #homepage-ad, #homepageAdsTop, #homepageFooterAd, #homepage_right_ad, #homepage_right_ad_container, #homepage_top_ads, #hometop_234x60ad, #hor_ad { display: none !important; } #horizontal-banner-ad, #horizontal_ad, #horizontal_ad_top, #horizontalads, #hot-deals-ad, #houseAd, #hp-header-ad, #hp-right-ad, #hp-store-ad, #hpV2_300x250Ad, #hpV2_googAds, #hp_ad300x250, #icePage_SearchLinks_AdRightDiv, #icePage_SearchLinks_DownloadToolbarAdRightDiv, #icePage_SearchResults_ads0_SponsoredLink, #icePage_SearchResults_ads1_SponsoredLink, #icePage_SearchResults_ads2_SponsoredLink, #icePage_SearchResults_ads3_SponsoredLink, #icePage_SearchResults_ads4_SponsoredLink, #imu_ad_module { display: none !important; } #in_serp_ad, #inadspace, #indexad, #inline-story-ad, #inlineAd, #inlinead, #inlinegoogleads, #inlist-ad-block, #inner-advert-row, #innerpage-ad, #inside-page-ad, #insider_ad_wrapper, #instoryad, #instoryadtext, #instoryadwrap, #int-ad, #interstitial_ad_wrapper, #islandAd, #j_ad, #ji_medShowAdBox { display: none !important; } #jmp-ad-buttons, #joead, #joead2, #ka_adRightSkyscraperWide, #kaufDA-widget, #kdz_ad1, #kdz_ad2, #keyadvertcontainer, #landing-adserver, #lapho-top-ad-1, #largead, #lateAd, #layerAds_layerDiv, #layerTLDADSERV, #layer_ad_content, #layer_ad_main, #layerad, #leader-board-ad, #leaderAd, #leaderAdContainer { display: none !important; } #leader_board_ad, #leaderad, #leaderad_section, #leaderboard-ad, #leaderboard-bottom-ad, #leaderboard_ad, #left-ad-skin, #left-lower-adverts, #left-lower-adverts-container, #leftAdContainer, #leftAd_rdr, #leftAdvert, #leftSectionAd300-100, #left_ad, #left_adspace, #leftad, #leftads, #leftcolAd, #lg-banner-ad, #ligatus { display: none !important; } #linkAds, #linkads, #live-ad, #logoAd, #longAdSpace, #lowerAdvertisementImg, #lowerads, #lowerthirdad, #lowertop-adverts, #lowertop-adverts-container, #lpAdPanel, #lrecad, #lsadvert-left_menu_1, #lsadvert-left_menu_2, #lsadvert-top, #mBannerAd, #main-ad, #main-ad160x600, #main-ad160x600-img, #main-ad728x90 { display: none !important; } #main-bottom-ad, #main-tj-ad, #mainAd, #mainAdUnit, #mainAdvert, #main_ad, #main_rec_ad, #main_top_ad_container, #marketing-promo, #mastAd, #mastAdvert, #mastad, #mastercardAd, #masthead_ad, #masthead_topad, #medRecAd, #media_ad, #mediaplayer_adburner, #mediumAdvertisement, #medrectad { display: none !important; } #menuAds, #mi_story_assets_ad, #mid-ad300x250, #mid-table-ad, #midRightTextAds, #mid_ad_div, #mid_ad_title, #mid_mpu, #midadd, #midadspace, #middle-ad, #middle_ad, #middle_body_advertising, #middlead, #middleads, #midrect_ad, #midstrip_ad, #mini-ad, #mochila-column-right-ad-300x250, #mochila-column-right-ad-300x250-1 { display: none !important; } #module-google_ads, #module_ad, #module_box_ad, #module_sky_scraper, #monsterAd, #moogleAd, #most_popular_ad, #motionAd, #mpu, #mpu-advert, #mpu-cont, #mpu300250, #mpuAd, #mpuDiv, #mpuSlot, #mpuWrapper, #mpuWrapperAd, #mpu_banner, #mpu_firstpost, #mpu_holder { display: none !important; } #mpu_text_ad, #mpuad, #mpubox, #mr_banner_topad, #mrecAdContainer, #msAds, #ms_ad, #msad, #multiLinkAdContainer, #multi_ad, #my-ads, #myads_HeaderButton, #n_sponsor_ads, #namecom_ad_hosting_main, #narrow_ad_unit, #natadad300x250, #national_microlink_ads, #nationalad, #navi_banner_ad_780, #nba160PromoAd { display: none !important; } #nba300Ad, #nbaGI300ad, #nbaHouseAnd600Ad, #nbaLeft600Ad, #nbaMidAds, #nbaVid300Ad, #nbcAd300x250, #new_topad, #newads, #news_advertorial_content, #news_advertorial_top, #ng_rtcol_ad, #noresults_ad_container, #noresultsads, #northad, #ns_ad1, #ns_ad2, #ns_ad3, #oanda_ads, #onespot-ads { display: none !important; } #online_ad, #p-googleadsense, #page-header-ad, #page-top-ad, #pageAds, #pageAdsDiv, #pageBannerAd, #page_ad, #page_content_top_ad, #pagelet_adbox, #pagelet_netego_ads, #pagelet_search_ads2, #panelAd, #pb_report_ad, #pcworldAdBottom, #pcworldAdTop, #pinball_ad, #player-below-advert, #player_ad, #player_ads { display: none !important; } #pod-ad-video-page, #populate_ad_bottom, #populate_ad_left, #portlet-advertisement-left, #portlet-advertisement-right, #post-promo-ad, #post5_adbox, #post_ad, #premium_ad, #priceGrabberAd, #prime-ad-space, #print_ads, #printads, #product-adsense, #promo-ad, #promoAds, #ps-vertical-ads, #pub468x60, #publicidad, #pushdown_ad { display: none !important; } #qm-ad-big-box, #qm-ad-sky, #qm-dvdad, #quigo_ad, #r1SoftAd, #rail_ad1, #rail_ad2, #realEstateAds, #rectAd, #rect_ad, #rectangle-ad, #rectangle_ad, #refine-300-ad, #region-node-advert, #region-top-ad, #rh-ad-container, #rh_tower_ad, #rhapsodyAd, #rhs_ads, #rhsadvert { display: none !important; } #right-ad, #right-ad-skin, #right-ad-title, #right-ad1, #right-ads-3, #right-box-ad, #right-featured-ad, #right-mpu-1-ad-container, #right-uppder-adverts, #right-uppder-adverts-container, #rightAd, #rightAd300x250, #rightAdBar, #rightAdColumn, #rightAd_rdr, #rightAdsDiv, #rightColAd, #rightColumnMpuAd, #rightColumnSkyAd, #right_ad { display: none !important; } #right_ad_wrapper, #right_ads, #right_advertisement, #right_advertising, #right_column_ad_container, #right_column_ads, #right_column_adverts, #right_column_internal_ad_container, #right_column_top_ad_unit, #rightad, #rightadContainer, #rightads, #rightadvertbar-doubleclickads, #rightbar-ad, #rightcolhouseads, #rightcolumn_300x250ad, #rightgoogleads, #rightside-ads, #rightside_ad, #righttop-adverts { display: none !important; } #righttop-adverts-container, #rm_ad_text, #ros_ad, #rotatingads, #row2AdContainer, #rr_MSads, #rt-ad, #rt-ad-top, #rt-ad468, #rtMod_ad, #rtmod_ad, #sAdsBox, #sb-ad-sq, #sb_ad_links, #sb_advert, #search-google-ads, #search-sponsored-links, #search-sponsored-links-top, #searchAdSenseBox, #searchAdSenseBoxAd { display: none !important; } #searchAdSkyscraperBox, #search_ads, #search_result_ad, #sec_adspace, #second-adlayer, #secondBoxAdContainer, #secondrowads, #sect-ad-300x100, #sect-ad-300x250-2, #section-ad-1-728, #section-ad-300-250, #section-ad-4-160, #section-blog-ad, #section-container-ddc_ads, #section_advertorial_feature, #servfail-ads, #sew-ad1, #shoppingads, #show-ad, #showAd { display: none !important; } #showad, #side-ad, #side-ad-container, #sideAd, #sideAdSub, #sideBarAd, #side_ad, #side_ad_wrapper, #side_ads_by_google, #side_sky_ad, #sidead, #sideads, #sideadtop-to, #sidebar-125x125-ads, #sidebar-125x125-ads-below-index, #sidebar-ad, #sidebar-ad-boxes, #sidebar-ad-space, #sidebar-ad-wrap, #sidebar-ad3 { display: none !important; } #sidebar-ads, #sidebar2ads, #sidebar_ad, #sidebar_ad_widget, #sidebar_ads, #sidebar_ads_180, #sidebar_sponsoredresult_body, #sidebar_txt_ad_links, #sidebarad, #sidebarads, #sidebaradver_advertistxt, #sideline-ad, #single-mpu, #singlead, #site-ad-container, #site-leaderboard-ads, #site_top_ad, #sitead, #sky-ad, #skyAd { display: none !important; } #skyAdContainer, #skyScrapperAd, #skyWrapperAds, #sky_ad, #sky_advert, #skyads, #skyadwrap, #skyline_ad, #skyscraper-ad, #skyscraperAd, #skyscraperAdContainer, #skyscraper_ad, #skyscraper_advert, #skyscraperad, #slide_ad, #sliderAdHolder, #slideshow_ad_300x250, #sm-banner-ad, #small_ad, #small_ad_banners_vertical { display: none !important; } #small_ads, #smallerAd, #some-ads, #some-more-ads, #specialAd_one, #specialAd_two, #specialadvertisingreport_container, #specials_ads, #speeds_ads, #speeds_ads_fstitem, #speedtest_mrec_ad, #sphereAd, #sponlink, #sponlinks, #sponsAds, #sponsLinks, #sponseredlinks, #sponsorAd1, #sponsorAd2, #sponsorAdDiv { display: none !important; } #sponsorLinks, #sponsorTextLink, #sponsor_banderole, #sponsor_deals, #sponsored, #sponsored-ads, #sponsored-features, #sponsored-links, #sponsored-listings, #sponsored-resources, #sponsored1, #sponsoredBox1, #sponsoredBox2, #sponsoredLinks, #sponsoredList, #sponsoredResults, #sponsoredResultsWide, #sponsoredSiteMainline, #sponsoredSiteSidebar, #sponsored_ads_v4 { display: none !important; } #sponsored_container, #sponsored_content, #sponsored_game_row_listing, #sponsored_head, #sponsored_links, #sponsored_v12, #sponsoredads, #sponsoredlinks, #sponsoredlinks_cntr, #sponsoredlinkslabel, #sponsoredresults_top, #sponsoredwellcontainerbottom, #sponsoredwellcontainertop, #sponsorlink, #spotlightAds, #spotlightad, #sqAd, #squareAd, #squareAdSpace, #squareAds { display: none !important; } #square_ad, #start_middle_container_advertisment, #sticky-ad, #stickyBottomAd, #story-90-728-area, #story-ad-a, #story-ad-b, #story-leaderboard-ad, #story-sponsoredlinks, #storyAd, #storyAdWrap, #storyad2, #subpage-ad-right, #subpage-ad-top, #swads, #synch-ad, #systemad_background, #tabAdvertising, #takeoverad, #tblAd { display: none !important; } #tbl_googlead, #tcwAd, #td-GblHdrAds, #template_ad_leaderboard, #tertiary_advertising, #test_adunit_160_article, #text-ad, #text-ads, #text-link-ads, #textAd, #textAds, #text_ad, #text_ads, #text_advert, #textad, #textad3, #the-last-ad-standing, #thefooterad, #themis-ads, #tile-ad { display: none !important; } #tmglBannerAd, #tmp2_promo_ad, #toolbarSlideUpAd, #top-ad, #top-ad-container, #top-ad-menu, #top-ads, #top-ads-tabs, #top-advertisement, #top-banner-ad, #top-search-ad-wrapper, #topAd, #topAd728x90, #topAdBanner, #topAdBox, #topAdContainer, #topAdSenseDiv, #topAdcontainer, #topAds, #topAdsContainer { display: none !important; } #topAdvert, #topBannerAd, #topBannerAdContainer, #topContentAdTeaser, #topNavLeaderboardAdHolder, #topOverallAdArea, #topRightBlockAdSense, #top_ad, #top_ad_area, #top_ad_banner, #top_ad_game, #top_ad_unit, #top_ad_wrapper, #top_ad_zone, #top_ads, #top_advertise, #top_advertising, #top_rectangle_ad, #top_right_ad, #top_wide_ad { display: none !important; } #topad, #topad1, #topad2, #topad_left, #topad_right, #topadbar, #topadblock, #topaddwide, #topads, #topadsense, #topadspace, #topadwrap, #topadzone, #topbanner_ad, #topbannerad, #topbar-ad, #topcustomad, #topleaderboardad, #topnav-ad-shell, #topnavad { display: none !important; } #toprightAdvert, #toprightad, #topsponsored, #toptextad, #tour300Ad, #tourSponsoredLinksContainer, #towerad, #ts-ad_module, #ttp_ad_slot1, #ttp_ad_slot2, #twogamesAd, #txfPageMediaAdvertVideo, #txt_link_ads, #txtads, #undergameAd, #upperAdvertisementImg, #upperMpu, #upperad, #urban_contentad_1, #urban_contentad_2 { display: none !important; } #urban_contentad_article, #v_ad, #vert-ads, #vert_ad, #vert_ad_placeholder, #vertical_ad, #vertical_ads, #videoAd, #videoAdvert, #video_ads_overdiv, #video_advert2, #video_advert3, #video_cnv_ad, #video_overlay_ad, #videoadlogo, #viewportAds, #viewvid_ad300x250, #wallpaperAd_left, #wallpaperAd_right, #walltopad { display: none !important; } #weblink_ads_container, #welcomeAdsContainer, #welcome_ad_mrec, #welcome_advertisement, #wf_ContentAd, #wf_FrontSingleAd, #wf_SingleAd, #wf_bottomContentAd, #wgtAd, #whatsnews_top_ad, #whitepaper-ad, #whoisRightAdContainer, #wide_ad_unit_top, #wideskyscraper_160x600_left, #wideskyscraper_160x600_right, #widget_Adverts, #widget_advertisement, #widgetwidget_adserve2, #wrapAdRight, #wrapAdTop { display: none !important; } #wrapperAdsTopLeft, #wrapperAdsTopRight, #xColAds, #y-ad-units, #y708-ad-expedia, #y708-ad-lrec, #y708-ad-partners, #y708-ad-ysm, #y708-advertorial-marketplace, #yahoo-ads, #yahoo-sponsors, #yahooSponsored, #yahoo_ads, #yahoo_ads_2010, #yahoo_text_ad, #yahooad-tbl, #yan-sponsored, #yatadsky, #ybf-ads, #yfi_fp_ad_mort { display: none !important; } #yfi_fp_ad_nns, #yfi_pf_ad_mort, #ygrp-sponsored-links, #ymap_adbanner, #yn-gmy-ad-lrec, #yreSponsoredLinks, #ysm_ad_iframe, #zoneAdserverMrec, #zoneAdserverSuper, .ADBAR, .ADPod, .AD_ALBUM_ITEMLIST, .AD_MOVIE_ITEM, .AD_MOVIE_ITEMLIST, .AD_MOVIE_ITEMROW, .Ad-Header, .Ad-MPU, .Ad1, .Ad120x600, .Ad160x600 { display: none !important; } .Ad160x600left, .Ad160x600right, .Ad2, .Ad247x90, .Ad300x, .Ad300x250, .Ad300x250L, .Ad728x90, .AdBorder, .AdBox, .AdBox7, .AdContainerBox308, .AdContainerModule, .AdHeader, .AdHere, .AdInfo, .AdInline, .AdMedium, .AdPlaceHolder, .AdProS728x90Container { display: none !important; } .AdProduct, .AdRingtone, .AdSense, .AdSenseLeft, .AdSlot, .AdSpace, .AdTextSmallFont, .AdTitle, .AdUnit, .AdUnit300, .Ad_C, .Ad_D_Wrapper, .Ad_E_Wrapper, .Ad_Right, .Ads, .AdsBottom, .AdsBoxBottom, .AdsBoxSection, .AdsBoxTop, .AdsLinks1 { display: none !important; } .AdsLinks2, .AdsRec, .Advert, .AdvertMidPage, .AdvertiseWithUs, .Advertisement, .AdvertisementTextTag, .Advman_Widget, .ArticleAd, .ArticleInlineAd, .BannerAd, .BigBoxAd, .BlockAd, .BlueTxtAdvert, .BottomAdContainer, .BottomAffiliate, .BoxAd, .CG_adkit_leaderboard, .CG_details_ad_dropzone, .CWReviewsProdInfoAd { display: none !important; } .ComAread, .CommentAd, .ContentAd, .ContentAds, .DAWRadvertisement, .DeptAd, .DisplayAd, .FT_Ad, .FlatAds, .GOOGLE_AD, .GoogleAd, .GoogleAdSenseBottomModule, .GoogleAdSenseRightModule, .HPG_Ad_B, .HPNewAdsBannerDiv, .HPRoundedAd, .HomeContentAd, .IABAdSpace, .InArticleAd, .IndexRightAd { display: none !important; } .LazyLoadAd, .LeftAd, .LeftButtonAdSlot, .LeftTowerAd, .M2Advertisement, .MD_adZone, .MOS-ad-hack, .MPU, .MPUHolder, .MPUTitleWrapperClass, .MREC_ads, .MiddleAd, .MiddleAdContainer, .MiddleAdvert, .NewsAds, .OAS, .OpaqueAdBanner, .OpenXad, .PU_DoubleClickAdsContent, .Post5ad { display: none !important; } .Post9ad, .RBboxAd, .RW_ad300, .RectangleAd, .RelatedAds, .Right300x250AD, .RightAd1, .RightAdvertiseArea, .RightGoogleAFC, .RightRailAd, .RightRailTop300x250Ad, .RightSponsoredAdTitle, .RightTowerAd, .STR_AdBlock, .SectionSponsor, .SideAdCol, .SidebarAd, .SidebarAdvert, .SitesGoogleAdsModule, .SkyAdContainer { display: none !important; } .SponsoredAdTitle, .SponsoredContent, .SponsoredLinkItemTD, .SponsoredLinks, .SponsoredLinksGrayBox, .SponsoredLinksModule, .SponsoredLinksPadding, .SponsoredLinksPanel, .Sponsored_link, .SquareAd, .StandardAdLeft, .StandardAdRight, .TRU-onsite-ads-leaderboard, .TextAd, .TheEagleGoogleAdSense300x250, .TopAd, .TopAdContainer, .TopAdL, .TopAdR, .TopBannerAd { display: none !important; } .UIWashFrame_SidebarAds, .UnderAd, .VerticalAd, .Video-Ad, .VideoAd, .WidgetAdvertiser, .a160x600, .a728x90, .ad-120x60, .ad-120x600, .ad-160, .ad-160x600, .ad-250, .ad-300, .ad-300-block, .ad-300-blog, .ad-300x100, .ad-300x250, .ad-300x250-first, .ad-300x250-right0 { display: none !important; } .ad-300x600, .ad-350, .ad-355x75, .ad-600, .ad-635x40, .ad-728, .ad-728x90, .ad-728x90-1, .ad-728x90-top0, .ad-728x90_forum, .ad-90x600, .ad-above-header, .ad-adlink-bottom, .ad-adlink-side, .ad-area, .ad-background, .ad-banner, .ad-bigsize, .ad-block, .ad-blog2biz { display: none !important; } .ad-body, .ad-bottom, .ad-box, .ad-break, .ad-btn, .ad-btn-heading, .ad-button, .ad-cell, .ad-column, .ad-container, .ad-container-300x250, .ad-container-728x90, .ad-content, .ad-context, .ad-disclaimer, .ad-display, .ad-div, .ad-enabled, .ad-feedback, .ad-filler { display: none !important; } .ad-flex, .ad-footer, .ad-footer-leaderboard, .ad-forum, .ad-google, .ad-graphic-large, .ad-gray, .ad-hdr, .ad-head, .ad-header, .ad-heading, .ad-holder, .ad-homeleaderboard, .ad-img, .ad-in-post, .ad-index-main, .ad-inline, .ad-island, .ad-label, .ad-leaderboard { display: none !important; } .ad-links, .ad-lrec, .ad-medium, .ad-medium-two, .ad-mpl, .ad-mpu, .ad-msn, .ad-note, .ad-notice, .ad-other, .ad-permalink, .ad-placeholder, .ad-postText, .ad-poster, .ad-priority, .ad-rect, .ad-rectangle, .ad-rectangle-text, .ad-related, .ad-rh { display: none !important; } .ad-ri, .ad-right, .ad-right-header, .ad-right-txt, .ad-row, .ad-section, .ad-show-label, .ad-side, .ad-sidebar, .ad-sidebar-outer, .ad-sidebar300, .ad-sky, .ad-skyscr, .ad-slot, .ad-slot-234-60, .ad-slot-300-250, .ad-slot-728-90, .ad-space, .ad-space-mpu-box, .ad-space-topbanner { display: none !important; } .ad-spot, .ad-square, .ad-square300, .ad-squares, .ad-statement, .ad-story-inject, .ad-tabs, .ad-text, .ad-text-links, .ad-tile, .ad-title, .ad-top, .ad-top-left, .ad-unit, .ad-unit-300, .ad-unit-300-wrapper, .ad-unit-anchor, .ad-vert, .ad-vertical-container, .ad-vtu { display: none !important; } .ad-widget-list, .ad-with-us, .ad-wrap, .ad-wrapper, .ad-zone, .ad-zone-s-q-l, .ad.super, .ad0, .ad08, .ad08sky, .ad1, .ad10, .ad120, .ad120x240backgroundGray, .ad120x600, .ad125, .ad140, .ad160, .ad160x600, .ad160x600GrayBorder { display: none !important; } .ad18, .ad19, .ad2, .ad21, .ad230, .ad250, .ad250c, .ad3, .ad300, .ad300250, .ad300_250, .ad300x100, .ad300x250, .ad300x250-hp-features, .ad300x250Module, .ad300x250Top, .ad300x250_container, .ad300x250box, .ad300x50-right, .ad300x600 { display: none !important; } .ad310, .ad336x280, .ad343x290, .ad4, .ad400right, .ad450, .ad468, .ad468_60, .ad468x60, .ad540x90, .ad6, .ad600, .ad620x70, .ad626X35, .ad7, .ad728, .ad728_90, .ad728x90, .ad728x90_container, .ad8 { display: none !important; } .ad90x780, .adAgate, .adArea674x60, .adBanner, .adBanner300x250, .adBanner728x90, .adBannerTyp1, .adBannerTypSortableList, .adBannerTypW300, .adBar, .adBgBottom, .adBgMId, .adBgTop, .adBlock, .adBottomLink, .adBottomboxright, .adBox, .adBox1, .adBox230X96, .adBox728X90 { display: none !important; } .adBoxBody, .adBoxBorder, .adBoxContainer, .adBoxContent, .adBoxInBignews, .adBoxSidebar, .adBoxSingle, .adBwrap, .adCMRight, .adCell, .adColumn, .adCont, .adContTop, .adContainer, .adContour, .adCreative, .adCube, .adDiv, .adElement, .adFender3 { display: none !important; } .adFrame, .adFtr, .adFullWidthMiddle, .adGoogle, .adHeader, .adHeadline, .adHolder, .adHome300x250, .adHorisontal, .adInNews, .adIsland, .adLabel, .adLeader, .adLeaderForum, .adLeaderboard, .adLeft, .adLoaded, .adLocal, .adMPU, .adMarker { display: none !important; } .adMastheadLeft, .adMastheadRight, .adMegaBoard, .adMinisLR, .adMkt2Colw, .adModule, .adModuleAd, .adMpu, .adNewsChannel, .adNoOutline, .adNotice, .adNoticeOut, .adObj, .adPageBorderL, .adPageBorderR, .adPanel, .adPod, .adRect, .adResult, .adRight { display: none !important; } .adSKY, .adSelfServiceAdvertiseLink, .adServer, .adSky, .adSky600, .adSkyscaper, .adSkyscraperHolder, .adSlot, .adSpBelow, .adSpace, .adSpacer, .adSplash, .adSponsor, .adSpot, .adSpot-searchAd, .adSpot-textBox, .adSpot-twin, .adSpotIsland, .adSquare, .adSubColPod { display: none !important; } .adSummary, .adSuperboard, .adSupertower, .adTD, .adTab, .adTag, .adText, .adTileWrap, .adTiler, .adTitle, .adTopLink, .adTopboxright, .adTout, .adTxt, .adUnit, .adUnitHorz, .adUnitVert, .adUnitVert_noImage, .adWebBoard, .adWidget { display: none !important; } .adWithTab, .adWrap, .adWrapper, .ad_0, .ad_1, .ad_120x90, .ad_125, .ad_130x90, .ad_160, .ad_160x600, .ad_2, .ad_200, .ad_200x200, .ad_250x250, .ad_250x250_w, .ad_3, .ad_300, .ad_300_250, .ad_300x250, .ad_300x250_box_right { display: none !important; } .ad_336, .ad_336x280, .ad_350x100, .ad_350x250, .ad_400x200, .ad_468, .ad_468x60, .ad_600, .ad_728, .ad_728_90b, .ad_728x90, .ad_925x90, .ad_Left, .ad_Right, .ad_amazon, .ad_banner, .ad_banner_border, .ad_bar, .ad_bg, .ad_bigbox { display: none !important; } .ad_biz, .ad_block, .ad_block_338, .ad_body, .ad_border, .ad_botbanner, .ad_bottom, .ad_bottom_leaderboard, .ad_bottom_left, .ad_box, .ad_box2, .ad_box_ad, .ad_box_div, .ad_callout, .ad_caption, .ad_column, .ad_column_box, .ad_column_hl, .ad_contain, .ad_container { display: none !important; } .ad_content, .ad_content_wide, .ad_contents, .ad_descriptor, .ad_disclaimer, .ad_eyebrow, .ad_footer, .ad_frame, .ad_framed, .ad_front_promo, .ad_head, .ad_header, .ad_heading, .ad_headline, .ad_hpm, .ad_info_block, .ad_inline, .ad_island, .ad_label, .ad_launchpad { display: none !important; } .ad_leader, .ad_leaderboard, .ad_left, .ad_line, .ad_link, .ad_links, .ad_linkunit, .ad_loc, .ad_lrec, .ad_main, .ad_medrec, .ad_medrect, .ad_middle, .ad_mod, .ad_mpu, .ad_mr, .ad_mrec, .ad_mrec_title_article, .ad_mrect, .ad_news { display: none !important; } .ad_note, .ad_notice, .ad_one, .ad_p360, .ad_partner, .ad_partners, .ad_plus, .ad_post, .ad_power, .ad_promo, .ad_rec, .ad_rectangle, .ad_right, .ad_right_col, .ad_row, .ad_row_bottom_item, .ad_sidebar, .ad_skyscraper, .ad_slug, .ad_slug_table { display: none !important; } .ad_space, .ad_space_300_250, .ad_spacer, .ad_sponsor, .ad_sponsoredsection, .ad_spot_b, .ad_spot_c, .ad_square_r, .ad_square_top, .ad_sub, .ad_tag_middle, .ad_text, .ad_text_w, .ad_title, .ad_top, .ad_top_leaderboard, .ad_top_left, .ad_topright, .ad_tower, .ad_unit { display: none !important; } .ad_unit_rail, .ad_url, .ad_warning, .ad_wid300, .ad_wide, .ad_wrap, .ad_wrapper, .ad_wrapper_fixed, .ad_wrapper_top, .ad_wrp, .ad_zone, .adarea, .adarea-long, .adbanner, .adbannerbox, .adbannerright, .adbar, .adboard, .adborder, .adbot { display: none !important; } .adbottom, .adbottomright, .adbox-outer, .adbox-wrapper, .adbox_300x600, .adbox_366x280, .adbox_468X60, .adbox_bottom, .adboxclass, .adbreak, .adbug, .adbutton, .adbuttons, .adcode, .adcol1, .adcol2, .adcolumn, .adcolumn_wrapper, .adcont, .adcopy { display: none !important; } .add_300x250, .addiv, .adenquire, .adfieldbg, .adfoot, .adfootbox, .adframe, .adhead, .adhead_h, .adhead_h_wide, .adheader, .adheader100, .adhi, .adhint, .adholder, .adhoriz, .adi, .adiframe, .adinfo, .adinside { display: none !important; } .adintro, .adits, .adjlink, .adkicker, .adkit, .adkit-advert, .adkit-lb-footer, .adlabel-horz, .adlabel-vert, .adlabelleft, .adleader, .adleaderboard, .adleft1, .adline, .adlink, .adlinks, .adlist, .adlnklst, .admarker, .admedrec { display: none !important; } .admessage, .admodule, .admpu, .admpu-small, .adnation-banner, .adnotice, .adops, .adp-AdPrefix, .adpadding, .adpane, .adpic, .adprice, .adproxy, .adrec, .adright, .adroot, .adrotate_widget, .adrow, .adrow-post, .adrow1box1 { display: none !important; } .adrow1box3, .adrow1box4, .adrule, .ads-125, .ads-300, .ads-728x90-wrap, .ads-banner, .ads-below-content, .ads-categories-bsa, .ads-favicon, .ads-item, .ads-links-general, .ads-mpu, .ads-outer, .ads-profile, .ads-right, .ads-section, .ads-sidebar, .ads-sky, .ads-sponsors { display: none !important; } .ads-stripe, .ads-text, .ads-top, .ads-widget, .ads-widget-partner-gallery, .ads03, .ads160, .ads1_250, .ads2, .ads3, .ads300, .ads460, .ads460_home, .ads468, .ads728, .ads728x90, .adsArea, .adsBelowHeadingNormal, .adsBlock, .adsBox { display: none !important; } .adsCell, .adsCont, .adsDiv, .adsFull, .adsImages, .adsInsideResults_v3, .adsMPU, .adsMiddle, .adsRight, .adsTextHouse, .adsTop, .adsTower2, .adsTowerWrap, .adsWithUs, .ads_125_square, .ads_180, .ads_300, .ads_300x250, .ads_320, .ads_337x280 { display: none !important; } .ads_728x90, .ads_big, .ads_big-half, .ads_box, .ads_brace, .ads_catDiv, .ads_container, .ads_disc_anchor, .ads_disc_leader, .ads_disc_lwr_square, .ads_disc_skyscraper, .ads_disc_square, .ads_div, .ads_footer, .ads_header, .ads_horizontal, .ads_leaderboard, .ads_lr_wrapper, .ads_medrect, .ads_mpu { display: none !important; } .ads_outer, .ads_rectangle, .ads_right, .ads_sc_bl_i, .ads_sc_tb, .ads_sc_tl_i, .ads_show_if, .ads_side, .ads_sidebar, .ads_singlepost, .ads_spacer, .ads_takeover, .ads_title, .ads_top, .ads_top_promo, .ads_tr, .ads_verticalSpace, .ads_vtlLink, .ads_widesky, .ads_wrapperads_top { display: none !important; } .adsafp, .adsbg300, .adsblockvert, .adsborder, .adsbottom, .adsbox, .adsboxitem, .adsbyyahoo, .adsc, .adscaleAdvert, .adsclick, .adscontainer, .adscreen, .adsd_shift100, .adsection_a2, .adsection_c2, .adsense-ad, .adsense-category, .adsense-category-bottom, .adsense-googleAds { display: none !important; } .adsense-heading, .adsense-overlay, .adsense-post, .adsense-right, .adsense-title, .adsense3, .adsense300, .adsenseAds, .adsenseBlock, .adsenseContainer, .adsenseGreenBox, .adsenseList, .adsense_bdc_v2, .adsense_mpu, .adsensebig, .adsenseblock, .adsenseblock_bottom, .adsenseblock_top, .adsenselr, .adsensem_widget { display: none !important; } .adsensesq, .adsenvelope, .adset, .adsforums, .adsghori, .adsgvert, .adshome, .adside, .adsidebox, .adsider, .adsingle, .adsleft, .adsleftblock, .adslink, .adslogan, .adsmalltext, .adsmessage, .adsnippet_widget, .adsp, .adspace { display: none !important; } .adspace-MR, .adspace-widget, .adspace180, .adspace_bottom, .adspace_buysell, .adspace_rotate, .adspace_skyscraper, .adspacer, .adspot, .adspot728x90, .adstextpad, .adstitle, .adstop, .adstory, .adstrip, .adtab, .adtable, .adtag, .adtech, .adtext { display: none !important; } .adtext_gray, .adtext_horizontal, .adtext_onwhite, .adtext_vertical, .adtile, .adtips, .adtips1, .adtop, .adtravel, .adtxt, .adtxtlinks, .adunit, .adv-mpu, .adver, .adverTag, .adver_cont_below, .advert-300-side, .advert-300x100-side, .advert-728x90, .advert-article-bottom { display: none !important; } .advert-bannerad, .advert-bg-250, .advert-box, .advert-btm, .advert-head, .advert-horizontal, .advert-iab-300-250, .advert-iab-468-60, .advert-mpu, .advert-skyscraper, .advert-text, .advert-title, .advert-txt, .advert300, .advert300x250, .advert300x440, .advert4, .advert5, .advert8, .advertColumn { display: none !important; } .advertCont, .advertContainer, .advertContent, .advertHeadline, .advertIslandWrapper, .advertRight, .advertSuperBanner, .advertText, .advertTitleSky, .advert_336, .advert_468x60, .advert_box, .advert_cont, .advert_container, .advert_djad, .advert_home_300, .advert_label, .advert_leaderboard, .advert_list, .advert_note { display: none !important; } .advert_surr, .advert_top, .advertheader-red, .advertise, .advertise-here, .advertise-homestrip, .advertise-horz, .advertise-inquiry, .advertise-leaderboard, .advertise-list, .advertise-top, .advertise-vert, .advertiseContainer, .advertiseText, .advertise_ads, .advertise_here, .advertise_link, .advertise_link_sidebar, .advertisement, .advertisement-728x90 { display: none !important; } .advertisement-block, .advertisement-sidebar, .advertisement-space, .advertisement-sponsor, .advertisement-swimlane, .advertisement-text, .advertisement-top, .advertisement468, .advertisementBox, .advertisementColumnGroup, .advertisementContainer, .advertisementHeader, .advertisementLabel, .advertisementPanel, .advertisement_300x250, .advertisement_btm, .advertisement_caption, .advertisement_g, .advertisement_header, .advertisement_horizontal { display: none !important; } .advertisement_top, .advertiser, .advertiser-links, .advertisespace_div, .advertising-banner, .advertising-header, .advertising-leaderboard, .advertising-local-links, .advertising2, .advertisingTable, .advertising_block, .advertising_images, .advertisment, .advertisment_two, .advertize, .advertize_here, .advertorial, .advertorial-2, .advertorial-promo-box, .advertorial_red { display: none !important; } .advertorialtitle, .adverts, .adverts-125, .adverts_RHS, .advt, .advt-banner-3, .advt-block, .advt-sec, .advt300, .advt720, .adwordListings, .adwords, .adwordsHeader, .adwrap, .adwrapper, .adwrapper-lrec, .adwrapper948, .adzone-footer, .adzone-sidebar, .affiliate { display: none !important; } .affiliate-link, .affiliate-sidebar, .affiliateAdvertText, .affinityAdHeader, .afsAdvertising, .after_ad, .agi-adsaleslinks, .alb-content-ad, .alignads, .alt_ad, .anchorAd, .another_text_ad, .answer_ad_content, .aolSponsoredLinks, .aopsadvert, .apiAdMarkerAbove, .apiAds, .app_advertising_skyscraper, .archive-ads, .art_ads { display: none !important; } .article-ad-box, .article-ads, .article-content-adwrap, .articleAd, .articleAds, .articleAdsL, .articleEmbeddedAdBox, .article_ad, .article_adbox, .article_mpu_box, .article_page_ads_bottom, .articleads, .aseadn, .aux-ad-widget-1, .aux-ad-widget-2, .b-astro-sponsored-links_horizontal, .b-astro-sponsored-links_vertical, .b_ads_cont, .b_ads_top, .banmanad { display: none !important; } .banner-468x60, .banner-ad, .banner-ads, .banner-adverts, .banner300by250, .banner300x100, .banner300x250, .banner468, .banner468by60, .banner728x90, .bannerAd, .bannerAdWrapper300x250, .bannerAdWrapper730x86, .bannerAdvert, .bannerRightAd, .banner_300x250, .banner_728x90, .banner_ad, .banner_ad_footer, .banner_ad_leaderboard { display: none !important; } .bannerad, .bannerad-125tower, .bannerad-468x60, .barkerAd, .base-ad-mpu, .base_ad, .base_printer_widgets_AdBreak, .bg-ad-link, .bgnavad, .big-ads, .bigAd, .big_ad, .big_ads, .bigad, .bigad2, .bigbox_ad, .bigboxad, .billboard300x250, .billboard_ad, .biz-ad { display: none !important; } .biz-ads, .biz-adtext, .blk_advert, .block-ad, .block-ad300, .block-admanager, .block-ads-bottom, .block-ads-top, .block-adsense, .block-adspace-full, .block-deca_advertising, .block-google_admanager, .block-openads, .block-openadstream, .block-openx, .block-thirdage-ads, .block-wtg_adtech, .blockAd, .blockAds, .block_ad { display: none !important; } .block_ad_sb_text, .block_ad_sponsored_links, .block_ad_sponsored_links-wrapper, .block_ad_sponsored_links_localized, .blockad, .blocked-ads, .blog-ad-leader-inner, .blog-ads-container, .blogAd, .blogAdvertisement, .blogArtAd, .blogBigAd, .blog_ad, .blogads, .blox3featuredAd, .body_ad, .body_sponsoredresults_bottom, .body_sponsoredresults_middle, .body_sponsoredresults_top, .bodyads { display: none !important; } .bodyads2, .bookseller-header-advt, .bottom-ad, .bottom-ad-fr, .bottomAd, .bottomAds, .bottom_ad, .bottom_ad_block, .bottom_ads, .bottom_adsense, .bottomad, .bottomadvert, .bottomrightrailAd, .bottomvidad, .box-ad, .box-ad-grey, .box-ads, .box-adsense, .boxAd, .boxAds { display: none !important; } .boxAdsInclude, .box_ad, .box_ad_container, .box_ad_content, .box_ad_spacer, .box_ad_wrap, .box_ads, .box_advertising, .box_advertisment_62_border, .box_content_ad, .box_content_ads, .box_textads, .boxad, .boxyads, .bps-ad-wrapper, .bps-advertisement, .bps-advertisement-inline-ads, .br-ad, .breakad_container, .brokerad { display: none !important; } .bsa_ads, .btm_ad, .btn-ad, .bullet-sponsored-links, .bullet-sponsored-links-gray, .burstContentAdIndex, .busrep_poll_and_ad_container, .buttonAd, .buttonAds, .button_ads, .buttonadbox, .buttonads, .bx_ad, .bx_ad_right, .cA-adStrap, .cColumn-TextAdsBox, .calloutAd, .carbonad, .carbonad-tag, .care2_adspace { display: none !important; } .catalog_ads, .category-ad, .categorySponsorAd, .category__big_game_container_body_games_advertising, .cb-ad-banner, .cb-ad-container, .cb_ads, .cb_navigation_ad, .cbstv_ad_label, .cbzadvert, .cbzadvert_block, .cdAdTitle, .cdmainlineSearchAdParent, .cdsidebarSearchAdParent, .centerAd, .center_ad, .centerad, .centered-ad, .chitikaAdCopy, .cinemabotad { display: none !important; } .classifiedAdThree, .clearerad, .cm_ads, .cms-Advert, .cnbc_badge_banner_ad_area, .cnbc_banner_ad_area, .cnn160AdFooter, .cnnAd, .cnnMosaic160Container, .cnnStoreAd, .cnnStoryElementBoxAd, .cnnWCAdBox, .cnnWireAdLtgBox, .cnn_728adbin, .cnn_adcntr300x100, .cnn_adcntr728x90, .cnn_adspc336cntr, .cnn_adtitle, .cntrad, .column2-ad { display: none !important; } .columnRightAdvert, .com-ad-server, .comment-advertisement, .comment_ad_box, .common_advertisement_title, .communityAd, .conTSponsored, .conductor_ad, .confirm_ad_left, .confirm_ad_right, .confirm_leader_ad, .consoleAd, .container-adwords, .containerSqAd, .container_serendipity_plugin_google_adsense, .content-ad, .content-ads, .content-advert, .contentAd, .contentAdFoot { display: none !important; } .contentAdsWrapper, .content_ad, .content_ad_728, .content_adsense, .content_adsq, .content_tagsAdTech, .contentad, .contentad300x250, .contentad_right_col, .contentadcontainer, .contentadfloatl, .contentadleft, .contentads, .contentadstartpage, .contenttextad, .contest_ad, .cp_ad, .cpmstarHeadline, .cpmstarText, .create_ad { display: none !important; } .cs-mpu, .cscTextAd, .cse_ads, .cspAd, .ct_ad, .cube-ad, .cubeAd, .cube_ads, .currency_ad, .custom_ads, .cwAdvert, .darla_ad, .dart-ad, .dartAdImage, .dart_ad, .dart_tag, .dartadvert, .dartiframe, .dc-ad, .dcAdvertHeader { display: none !important; } .deckAd, .deckads, .detail-ads, .detailMpu, .detail_ad, .detail_top_advert, .dfrads, .displayAdSlot, .divAd, .divAdright, .divad1, .divad2, .divad3, .divads, .divider_ad, .dlSponsoredLinks, .dmco_advert_iabrighttitle, .downloadAds, .download_ad, .downloadad { display: none !important; } .dualAds, .dynamic-ads, .dynamic_ad, .e-ad, .ec-ads, .ec-ads-remove-if-empty, .em-ad, .embed-ad, .embeddedAd, .entry-body-ad, .entry_sidebar_ads, .entryad, .ez-clientAd, .f_Ads, .feature_ad, .featuredAds, .featuredadvertising, .firstpost_advert_container, .flagads, .flash-advertisement { display: none !important; } .flash_ad, .flash_advert, .flashad, .flexiad, .flipbook_v2_sponsor_ad, .floatad, .floated_right_ad, .floatingAds, .fm-badge-ad, .fns_td_wrap, .footad, .footer-ad, .footerAd, .footerAdModule, .footerAds, .footerAdslot, .footerAdverts, .footerTextAd, .footer_ad, .footer_ad336 { display: none !important; } .footer_ads, .footer_block_ad, .footer_bottomad, .footer_line_ad, .footer_text_ad, .footerad, .forumtopad, .frn_adbox, .frn_cont_adbox, .frontads, .ft-ad, .ftdAdBar, .ftdContentAd, .full_ad_box, .fullbannerad, .g3rtn-ad-site, .gAdRows, .gAdSky, .gAdvertising, .g_ggl_ad { display: none !important; } .ga-ads, .ga-textads-bottom, .ga-textads-top, .gaTeaserAdsBox, .gads, .gads_cb, .gads_container, .gallery_ad, .gam_ad_slot, .gameAd, .gamesPage_ad_content, .gbl_advertisement, .gen_side_ad, .gglAds, .global_banner_ad, .googad, .googads, .google-ad, .google-ad-container, .google-ads { display: none !important; } .google-ads-boxout, .google-ads-slim, .google-right-ad, .google-sponsored-ads, .google-sponsored-link, .google468, .google468_60, .googleAd, .googleAd-content, .googleAd-list, .googleAd300x250_wrapper, .googleAdBox, .googleAdSense, .googleAdSenseModule, .googleAd_body, .googleAds, .googleAds_article_page_above_comments, .googleAdsense, .googleContentAds, .googleProfileAd { display: none !important; } .googleSearchAd_content, .googleSearchAd_sidebar, .google_ad, .google_ad_wide, .google_add_container, .google_ads, .google_ads_bom_title, .google_ads_content, .google_adsense_footer, .googlead, .googleaddiv, .googleaddiv2, .googleads, .googleads_300x250, .googleads_title, .googleadsense, .googleafc, .googley_ads, .gpAdBox, .gpAds { display: none !important; } .gradientAd, .grey-ad-line, .group_ad, .gsAd, .gsfAd, .gt_ad, .gt_ad_300x250, .gt_ad_728x90, .gt_adlabel, .gutter-ad-left, .gutter-ad-right, .gx_ad, .h-ad-728x90-bottom, .h_Ads, .h_ad, .half-ad, .half_ad_box, .hcf-ad-rectangle, .hcf-cms-ad, .hd_advert { display: none !important; } .hdr-ads, .header-ad, .header-advert, .headerAd, .headerAds, .headerAdvert, .headerTextAd, .header_ad, .header_ad_center, .header_ad_div, .header_ads, .header_advertisement, .header_advertisment, .headerad, .headerad-720, .hi5-ad, .highlightsAd, .hm_advertisment, .hn-ads, .home-ad-links { display: none !important; } .homeAd, .homeAd1, .homeAd2, .homeAdBoxA, .homeAdBoxBetweenBlocks, .homeAdBoxInBignews, .homeAdSection, .homeMediumAdGroup, .home_ad_bottom, .home_advertisement, .home_mrec_ad, .homead, .homepage-ad, .homepage300ad, .homepageFlexAdOuter, .homepageMPU, .homepage_middle_right_ad, .homepageinline_adverts, .hor_ad, .horiz_adspace { display: none !important; } .horizontalAd, .horizontal_ad, .horizontal_ads, .horizontaltextadbox, .horizsponsoredlinks, .hortad, .houseAd1, .houseAdsStyle, .housead, .hoverad, .hp-col4-ads, .hp2-adtag, .hp_ad_cont, .hp_ad_text, .hp_t_ad, .hp_w_ad, .hpa-ad1, .html-advertisement, .ic-ads, .ico-adv { display: none !important; } .idMultiAd, .image-advertisement, .imageAd, .imageads, .imgad, .in-page-ad, .in-story-ads, .in-story-text-ad, .inStoryAd-news2, .indEntrySquareAd, .indie-sidead, .indy_googleads, .inhousead, .inline-ad, .inline-mpu, .inline-mpu-left, .inlineSideAd, .inline_ad, .inline_ad_title, .inlinead { display: none !important; } .inlineadsense, .inlineadtitle, .inlist-ad, .inlistAd, .inner-advt-banner-3, .innerAds, .innerad, .inpostad, .insert_advertisement, .insertad, .insideStoryAd, .inteliusAd_image, .interest-based-ad, .internalAdsContainer, .iprom-ad, .is24-adplace, .isAd, .islandAd, .islandAdvert, .islandad { display: none !important; } .itemAdvertise, .jimdoAdDisclaimer, .jp-advertisment-promotional, .js-advert, .kdads-empty, .kdads-link, .kw_advert, .kw_advert_pair, .l_ad_sub, .l_banner.ads_show_if, .labelads, .largeRecAdNewsContainerRight, .largeRectangleAd, .largeUnitAd, .large_ad, .lastRowAd, .lcontentbox_ad, .leaderAdSlot, .leaderAdTop, .leaderAdvert { display: none !important; } .leaderBoardAdHolder, .leaderOverallAdArea, .leader_ad, .leaderboardAd, .leaderboardAdContainerInner, .leaderboard_ad, .leaderboardad, .leaderboardadtop, .left-ad, .leftAd, .leftAdColumn, .leftAds, .left_ad, .left_ad_box, .left_adlink, .left_ads, .left_adsense, .leftad, .leftadtag, .leftbar_ad_160_600 { display: none !important; } .leftbarads, .leftbottomads, .leftnavad, .lgRecAd, .lg_ad, .ligatus, .linead, .link_adslider, .link_advertise, .live-search-list-ad-container, .ljad, .local-ads, .log_ads, .logoAds, .logoad, .logoutAd, .longAd, .longAdBox, .lowerAds, .m-ad-tvguide-box { display: none !important; } .m4-adsbygoogle, .m_banner_ads, .macAd, .macad, .main-ad, .main-advert, .main-tabs-ad-block, .main_ad, .main_ad_bg_div, .main_adbox, .main_intro_ad, .map_media_banner_ad, .marginadsthin, .marketing-ad, .masthead_topad, .matador_sidebar_ad_600, .mdl-ad, .media-advert, .mediaAd, .mediaAdContainer { display: none !important; } .mediaResult_sponsoredSearch, .medium-rectangle-ad, .mediumRectangleAdvert, .medium_ad, .medrect_ad, .member-ads, .menuItemBannerAd, .menueadimg, .messageBoardAd, .mf-ad300-container, .micro_ad, .mid_ad, .midad, .middleAds, .middleads, .min_navi_ad, .mini-ad, .miniad, .mmc-ad, .mmcAd_Iframe { display: none !important; } .mod-ad-lrec, .mod-ad-n, .mod-adopenx, .mod-vertical-ad, .mod_admodule, .module-ad, .module-ad-small, .module-ads, .moduleAd, .moduleAdvertContent, .module_ad, .module_box_ad, .modulegad, .moduletable-advert, .moduletable-googleads, .moduletablesquaread, .mpu, .mpu-ad, .mpu-advert, .mpu-footer { display: none !important; } .mpu-fp, .mpu-title, .mpu-top-left, .mpu-top-left-banner, .mpu-top-right, .mpu01, .mpuAd, .mpuAdSlot, .mpuAdvert, .mpuArea, .mpuBox, .mpuContainer, .mpuHolder, .mpuTextAd, .mpu_ad, .mpu_advert, .mpu_container, .mpu_gold, .mpu_holder, .mpu_platinum { display: none !important; } .mpu_side, .mpu_text_ad, .mpuad, .mpuholderportalpage, .mrec_advert, .ms-ads-link, .msfg-shopping-mpu, .mvw_onPageAd1, .mwaads, .my-ad250x300, .nSponsoredLcContent, .nSponsoredLcTopic, .nadvt300, .narrow_ad_unit, .narrow_ads, .navAdsBanner, .navBads, .nav_ad, .navadbox, .navi_ad300 { display: none !important; } .naviad, .nba300Ad, .nbaT3Ad160, .nbaTVPodAd, .nbaTwo130Ads, .nbc_ad_carousel_wrp, .newPex_forumads, .newTopAdContainer, .newad, .newsAd, .news_article_ad_google, .newsviewAdBoxInNews, .nf-adbox, .nn-mpu, .noAdForLead, .normalAds, .nrAds, .nsAdRow, .nu2ad, .oas-ad { display: none !important; } .oas-bottom-ads, .oas_advertisement, .offer_sponsoredlinks, .oio-banner-zone, .oio-link-sidebar, .oio-zone-position, .on_single_ad_box, .onethirdadholder, .openads, .openadstext_after, .openx, .openx-ad, .openx_ad, .osan-ads, .other_adv2, .outermainadtd1, .ovAdPromo, .ovAdSky, .ovAdartikel, .ov_spns { display: none !important; } .pageAds, .pageBottomGoogleAd, .pageGoogleAd, .pageGoogleAdFlat, .pageGoogleAdSubcontent, .pageGoogleAds, .pageGoogleAdsContainer, .pageLeaderAd, .page_content_right_ad, .pagead, .pagenavindexcontentad, .paneladvert, .partner-ad, .partner-ads-container, .partnersTextLinks, .pencil_ad, .player_ad_box, .player_hover_ad, .player_page_ad_box, .plista_inimg_box { display: none !important; } .pnp_ad, .pod-ad-300, .podRelatedAdLinksWidget, .podSponsoredLink, .portalCenterContentAdBottom, .portalCenterContentAdMiddle, .portalCenterContentAdTop, .portal_searchresultssponsoredlist, .portalcontentad, .post-ad, .postAd, .post_ad, .post_ads, .post_sponsor_unit, .postbit_adbit_register, .postbit_adcode, .postgroup-ads, .postgroup-ads-middle, .prebodyads, .premium_ad_container { display: none !important; } .promoAd, .promoAds, .promo_ad, .ps-ligatus_placeholder, .pub_300x250, .pub_300x250m, .pub_728x90, .publication-ad, .publicidad, .puff-advertorials, .qa_ad_left, .qm-ad-content, .qm-ad-content-news, .quigo-ad, .qzvAdDiv, .r_ad_1, .r_ad_box, .r_ads, .rad_container, .rect_ad_module { display: none !important; } .rectad, .rectangle-ad, .rectangleAd, .rectanglead, .redads_cont, .regular_728_ad, .regularad, .relatedAds, .related_post_google_ad, .remads, .resourceImagetAd, .result_ad, .reviewMidAdvertAlign, .rght300x250, .rhads, .rhs-ad, .rhs-ads-panel, .rhs-advert-container, .rhs-advert-link, .rhs-advert-title { display: none !important; } .right-ad, .right-ad-holder, .right-ad2, .right-ads, .right-ads2, .right-sidebar-box-ad, .rightAd, .rightAdBox, .rightAdverts, .rightColAd, .rightColumnRectAd, .rightRailAd, .right_ad, .right_ad_160, .right_ad_box, .right_ad_common_block, .right_ad_text, .right_ad_top, .right_ads, .right_ads_column { display: none !important; } .right_col_ad, .right_hand_advert_column, .right_side-partyad, .rightad, .rightad_1, .rightad_2, .rightadbox1, .rightads, .rightadunit, .rightcol_boxad, .rightcoladvert, .rightcoltowerad, .rnav_ad, .rngtAd, .roundedCornersAd, .roundingrayboxads, .rt_ad1_300x90, .rt_ad_300x250, .rt_ad_call, .s2k_ad { display: none !important; } .savvyad_unit, .sb-ad-sq-bg, .sbAd, .sbAdUnitContainer, .sb_ad_holder, .sb_adsN, .sb_adsNv2, .sb_adsW, .sb_adsWv2, .scanAd, .scc_advert, .sci-ad-main, .sci-ad-sub, .search-ad, .search-results-ad, .search-sponsor, .search-sponsored, .searchAd, .searchAds, .searchSponsoredResultsBox { display: none !important; } .searchSponsoredResultsList, .search_column_results_sponsored, .search_results_sponsored_top, .section-ad2, .section_mpu_wrapper, .section_mpu_wrapper_wrapper, .selfServeAds, .sepContentAd, .serp_sponsored, .servsponserLinks, .shoppingGoogleAdSense, .showAd_No, .showAd_Yes, .showcaseAd, .sidbaread, .side-ad, .side-ads, .side-sky-banner-160, .sideAd, .sideBoxAd { display: none !important; } .side_ad, .side_ad2, .side_ad_1, .side_ad_2, .side_ad_3, .sidead, .sideads, .sideadsbox, .sideadvert, .sidebar-ad, .sidebar-ads, .sidebar-text-ad, .sidebarAd, .sidebarAdUnit, .sidebarAdvert, .sidebar_ad, .sidebar_ad_300_250, .sidebar_ads, .sidebar_ads_336, .sidebar_adsense { display: none !important; } .sidebar_box_ad, .sidebarad, .sidebarad_bottom, .sidebaradbox, .sidebarads, .sidebarboxad, .sideheadnarrowad, .sideheadsponsorsad, .singleAd, .singleAdsContainer, .singlead, .singleadstopcstm2, .site_ad_120_600, .site_ad_300x250, .sitesponsor, .skinAd, .skin_ad_638, .sky-ad, .skyAd, .skyAdd { display: none !important; } .skyAdvert, .skyAdvert2, .sky_ad, .sky_scraper_ad, .skyad, .skyjobsadtext, .skyscraper-ad, .skyscraper_ad, .skyscraper_bannerAdHome, .sleekadbubble, .slideshow-ad, .slpBigSlimAdUnit, .slpSquareAdUnit, .sm_ad, .smallSkyAd1, .smallSkyAd2, .small_ad, .small_ads, .smallad-left, .smallads { display: none !important; } .smallsponsorad, .smart_ads_bom_title, .specialAd175x90, .speedyads, .sphereAdContainer, .spl-ads, .spl_ad, .spl_ad2, .spl_ad_plus, .splitAd, .splitAdResultsPane, .sponlinkbox, .spons-link, .spons_links, .sponslink, .sponsor-ad, .sponsor-link, .sponsor-links, .sponsor-services, .sponsorPanel { display: none !important; } .sponsorPost, .sponsorPostWrap, .sponsorStrip, .sponsor_ad_area, .sponsor_columns, .sponsor_footer, .sponsor_line, .sponsor_links, .sponsor_logo, .sponsoradtitle, .sponsored-ads, .sponsored-chunk, .sponsored-editorial, .sponsored-features, .sponsored-links, .sponsored-links-alt-b, .sponsored-links-holder, .sponsored-links-right, .sponsored-post, .sponsored-post_ad { display: none !important; } .sponsored-results, .sponsored-right-border, .sponsored-text, .sponsoredBox, .sponsoredInfo, .sponsoredInner, .sponsoredLabel, .sponsoredLink, .sponsoredLinks, .sponsoredLinks2, .sponsoredLinksHeader, .sponsoredProduct, .sponsoredResults, .sponsoredSideInner, .sponsored_ads, .sponsored_box, .sponsored_box_search, .sponsored_by, .sponsored_links, .sponsored_links_title_container { display: none !important; } .sponsored_links_title_container_top, .sponsored_links_top, .sponsored_result, .sponsored_results, .sponsored_well, .sponsoredibbox, .sponsoredlink, .sponsoredlinks, .sponsoredlinkscontainer, .sponsoredresults, .sponsoredtextlink_container_ovt, .sponsoring_link, .sponsorlink, .sponsorlink2, .sponsormsg, .sport-mpu-box, .spotlightAd, .squareAd, .square_ad, .square_banner_ad { display: none !important; } .squared_ad, .ss-ad-mpu, .standard-ad, .start__newest__big_game_container_body_games_advertising, .staticAd, .stickyAdLink, .stock-ticker-ad-tag, .stocks-ad-tag, .store-ads, .story_AD, .story_ad_div, .story_right_adv, .storyad, .subad, .subadimg, .subcontent-ad, .subtitle-ad-container, .sugarad, .super-ad, .supercommentad_left { display: none !important; } .supercommentad_right, .supp-ads, .supportAdItem, .surveyad, .t10ad, .tab_ad, .tab_ad_area, .tablebordersponsor, .tadsanzeige, .tadsbanner, .tadselement, .tallad, .tblTopAds, .tbl_ad, .tbox_ad, .td-Adholder, .teaser-sponsor, .teaserAdContainer, .teaser_adtiles, .text-ad { display: none !important; } .text-ad-links, .text-ads, .text-advertisement, .text-g-advertisement, .text-g-group-short-rec-ad, .text-g-net-grp-google-ads-article-page, .textAd, .textAdBox, .textAds, .text_ad, .text_ads, .textad, .textadContainer, .textad_headline, .textadbox, .textadheadline, .textadlink, .textads, .textadsds, .textadsfoot { display: none !important; } .textadtext, .textlink-ads, .textlinkads, .tf_page_ad_search, .thirdage_ads_300x250, .thirdage_ads_728x90, .thisIsAd, .thisIsAnAd, .ticket-ad, .tileAds, .tips_advertisement, .title-ad, .title_adbig, .tncms-region-ads, .toolad, .toolbar-ad, .top-ad, .top-ad-space, .top-ads, .top-banner-ad { display: none !important; } .top-menu-ads, .topAd, .topAdWrap, .topAds, .topAdvertisement, .topAdverts, .topBannerAd, .topLeaderboardAd, .top_Ad, .top_ad, .top_ad_728, .top_ad_728_90, .top_ad_disclaimer, .top_ad_div, .top_ad_post, .top_ad_wrapper, .top_ads, .top_advert, .top_advertising_lb, .top_bar_ad { display: none !important; } .top_container_ad, .topad, .topad-bar, .topadbox, .topads, .topadspot, .topadvertisementsegment, .topboardads, .topcontentadvertisement, .topic_inad, .topstoriesad, .toptenAdBoxA, .tourFeatureAd, .tower-ad, .towerAd, .towerAdLeft, .towerAds, .tower_ad, .tower_ad_disclaimer, .towerad { display: none !important; } .tr-ad-adtech-placement, .tribal-ad, .ts-ad_unit_bigbox, .ts-banner_ad, .ttlAdsensel, .tto-sponsored-element, .tucadtext, .tvs-mpu, .twoColumnAd, .twoadcoll, .twoadcolr, .tx_smartadserver_pi1, .txt-ads, .txtAd, .txtAds, .txt_ads, .txtadvertise, .type_adscontainer, .type_miniad, .type_promoads { display: none !important; } .ukAds, .ukn-banner-ads, .undertimyads, .unit-ad, .universalboxADVBOX01, .universalboxADVBOX03, .universalboxADVBOX04a, .usenext, .v5rc_336x280ad, .vert-ads, .vert-adsBlock, .vertad, .vertical-adsense, .vidadtext, .videoAd, .videoBoxAd, .video_ad, .view-promo-mpu-right, .view_rig_ad, .virgin-mpu { display: none !important; } .wa_adsbottom, .wantads, .wide-ad, .wide-skyscraper-ad, .wideAd, .wideAdTable, .wide_ad, .wide_ad_unit_top, .wide_ads, .wide_google_ads, .widget-ad, .widget-ad300x250, .widget-entry-ads-160, .widgetYahooAds, .widget_ad, .widget_ad_rotator, .widget_econaabachoadswidget, .widget_island_ad, .widget_maxbannerads, .widget_sdac_bottom_ad_widget { display: none !important; } .widget_sdac_footer_ads_widget, .widget_sdac_skyscraper_ad_widget, .wikia-ad, .wikia_ad_placeholder, .wingadblock, .withAds, .wl-ad, .wnMultiAd, .wp125_write_ads_widget, .wp125ad, .wp125ad_2, .wpn_ad_content, .wrap-ads, .wrapper-ad, .wrapper-ad-sidecol, .wsSponsoredLinksRight, .wsTopSposoredLinks, .x03-adunit, .x04-adunit, .x81_ad_detail { display: none !important; } .xads-blk-top-hld, .xads-blk2, .xads-ojedn, .y-ads, .y-ads-wide, .y7-advertisement, .yahoo-sponsored, .yahoo-sponsored-links, .yahooAds, .yahoo_ads, .yahooad, .yahooad-image, .yahooad-urlline, .yan-sponsored, .ygrp-ad, .yom-ad, .youradhere, .yrail_ad_wrap, .yrail_ads, .ysmsponsor { display: none !important; } .ysponsor, .yw-ad, .zRightAdNote, a[href^="http://ad-emea.doubleclick.net/"], a[href^="http://ad.doubleclick.net/"], a[href^="http://adserving.liveuniversenetwork.com/"], a[href^="http://galleries.pinballpublishernetwork.com/"], a[href^="http://galleries.securewebsiteaccess.com/"], a[href^="http://install.securewebsiteaccess.com/"], a[href^="http://latestdownloads.net/download.php?"], a[href^="http://secure.signup-page.com/"], a[href^="http://secure.signup-way.com/"], a[href^="http://www.FriendlyDuck.com/AF_"], a[href^="http://www.adbrite.com/mb/commerce/purchase_form.php?"], a[href^="http://www.firstload.de/affiliate/"], a[href^="http://www.friendlyduck.com/AF_"], a[href^="http://www.google.com/aclk?"], a[href^="http://www.liutilities.com/aff"], a[href^="http://www.liutilities.com/products/campaigns/adv/"], a[href^="http://www.my-dirty-hobby.com/?sub="] { display: none !important; } a[href^="http://www.ringtonematcher.com/"], #mbEnd[cellspacing="0"][style], #mclip_container:last-child, #rtpl.c[style="margin-top: 11px; padding: 5px 5px 5px 2px;"], #ssmiwdiv[jsdisplay], #tads.c, #tadsb.c, .ch[onclick="ga(this,event)"], .ra[align="left"][width="30%"], .ra[align="right"][width="30%"], .ts[style="margin:0 0 12px;height:92px;width:100%"], iframe[name^="AdbriteFrame"] { display: none !important; }</style></html>
