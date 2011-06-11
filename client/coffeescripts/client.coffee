@@ -1,3 +1,28 @@
+Crafty.c 'CollisionInfo'
+  init: ->
+    @requires('2D, Collision')
+
+  collision_info_for_collider: (collider) ->
+    left_self: @x
+    left_collider: collider.x
+    right_self: @x + @w
+    right_collider: collider.x + collider.width
+    top_self: @y
+    top_collider: collider.y
+    bottom_self: @y + @h
+    bottom_collider: collider.y + collider.height
+
+    collider_is_to_bottom = bottom_self < top_collider
+    collider_is_to_top = top_self > bottom_collider
+    collider_is_to_right = right_self < left_collider
+    collider_is_to_left = left_self > right_collider
+
+    { collider_is_to_bottom: collider_is_to_bottom
+      collider_is_to_top: collider_is_to_top
+      collider_is_to_right: collider_is_to_right
+      collider_is_to_left: collider_is_to_left }
+
+
 Crafty.c "WASD"
   init: ->
     @requires("controls")
@@ -12,12 +37,10 @@ Crafty.c "WASD"
       y = @y + @speed if (this.isDown("DOWN_ARROW") || this.isDown("S"))
 
       if ((typeof x != 'undefined' || typeof y != 'undefined') && (x != @x || y != @y))
-        location_message = client.set_location_message(@x, @y)
-        client.send(location_message)
-        @x = x if x?
-        @y = y if y?
+        @move_to(x, y)
 
     return this
+
 
 Crafty.c 'damageable'
   init: ->
@@ -45,12 +68,21 @@ Crafty.c "player"
 
     console.log 'Player inited!'
 
+  move_to: (x, y) ->
+    location_message = client.set_location_message(x, y)
+    client.send(location_message)
+    @prev_x = @x
+    @prev_y = @y
+    @x = x if x?
+    @y = y if y?
+
+
 
 
 Crafty.c 'monster'
   init: ->
     @strength = 1
-    @addComponent("2D, DOM, Collide")
+    @addComponent("2D, DOM, Collision")
     @origin("center")
     @attr
       x: 200
@@ -101,6 +133,15 @@ window.client =
       floor_brown: [12,1]
 
     @player = window.Crafty.e("player, player_green, WASD").wasd(3)
+    @player.onHit 'wall', (hit_data) =>
+      for collision in hit_data
+        collider = collision.obj
+        if collider.__c['wall']
+          ''
+          #collider is a wall, move the player
+          #@player.dxy(x: 1, y: 1
+
+
     Crafty.viewport.x = @player.x
     Crafty.viewport.y = @player.y
 
