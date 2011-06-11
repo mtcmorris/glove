@@ -158,24 +158,31 @@
       });
       this.player = window.Crafty.e("player, player_green, WASD").wasd(3);
       this.player.onHit('wall', __bind(function(hit_data) {
-        var c_info, collider, collision, dx, dy, _i, _len, _results;
+        var c_info, collider, collision, dx, dy, moved_down, moved_left, moved_right, moved_up, _i, _len, _results;
         _results = [];
         for (_i = 0, _len = hit_data.length; _i < _len; _i++) {
           collision = hit_data[_i];
+          if (!this.player.hit('wall')) {
+            break;
+          }
           collider = collision.obj;
           c_info = this.player.collision_info_for_collider(collider);
           dx = null;
           dy = null;
-          if (c_info.collider_is_to_right) {
+          moved_left = this.player.prev_x > this.player.x;
+          moved_right = this.player.prev_x < this.player.x;
+          moved_up = this.player.prev_y > this.player.y;
+          moved_down = this.player.prev_y < this.player.y;
+          if (moved_right && c_info.collider_is_to_right) {
             dx = -1 * this.player.speed;
           }
-          if (c_info.collider_is_to_left) {
+          if (moved_left && c_info.collider_is_to_left) {
             dx = 1 * this.player.speed;
           }
-          if (c_info.collider_is_to_bottom) {
+          if (moved_down && c_info.collider_is_to_bottom) {
             dy = -1 * this.player.speed;
           }
-          if (c_info.collider_is_to_top) {
+          if (moved_up && c_info.collider_is_to_top) {
             dy = 1 * this.player.speed;
           }
           _results.push(this.player.dxy(dx, dy));

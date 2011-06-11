@@ -142,14 +142,23 @@ window.client =
     @player = window.Crafty.e("player, player_green, WASD").wasd(3)
     @player.onHit 'wall', (hit_data) =>
       for collision in hit_data
+        #bail early if we've resolved this collision
+        break if not @player.hit('wall')
+
         collider = collision.obj
         c_info = @player.collision_info_for_collider(collider)
         dx = null
         dy = null
-        dx = -1 * @player.speed if c_info.collider_is_to_right
-        dx = 1 * @player.speed if c_info.collider_is_to_left
-        dy = -1 * @player.speed if c_info.collider_is_to_bottom
-        dy = 1 * @player.speed if c_info.collider_is_to_top
+
+        moved_left = @player.prev_x > @player.x
+        moved_right = @player.prev_x < @player.x
+        moved_up = @player.prev_y > @player.y
+        moved_down = @player.prev_y < @player.y
+
+        dx = -1 * @player.speed if moved_right and c_info.collider_is_to_right
+        dx = 1 * @player.speed if moved_left and c_info.collider_is_to_left
+        dy = -1 * @player.speed if moved_down and c_info.collider_is_to_bottom
+        dy = 1 * @player.speed if moved_up and c_info.collider_is_to_top
         @player.dxy(dx, dy)
 
 
