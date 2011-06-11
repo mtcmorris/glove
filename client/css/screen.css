@@ -137,7 +137,10 @@ body, html {
     /* firefox */
     background: -webkit-gradient(linear, left top, left bottom, color-stop(0%, #df5353), color-stop(60%, #bf0d00));
     /* webkit */
-    height: 20px; }
+    height: 20px;
+    -webkit-transition: all 450ms ease-in-out;
+    -moz-transition: all 450ms ease-in-out;
+    transition: all 450ms ease-in-out; }
 
 #cr-stage {
   border: 10px solid #fff;
