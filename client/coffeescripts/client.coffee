@@ -19,11 +19,18 @@ Crafty.c "WASD"
 
     return this
 
+Crafty.c 'damageable'
+  init: ->
+    @health = 10
+
+  take_damage: (damage) ->
+    @health -= damage
+    window.client.log "Entity #{this[0]} took #{damage} damage"
 
 
 Crafty.c "player"
   init: ->
-    @addComponent("2D, DOM, Collision")
+    @requires("2D, DOM, Collision")
     @origin("center")
     @css
       border: '1px solid white'
@@ -32,7 +39,36 @@ Crafty.c "player"
       y: 100
       w: 40
       h: 40
+    @bind 'enterframe', ->
+      debugger if window.debug #ghetto!
+
     console.log 'Player inited!'
+
+
+
+Crafty.c 'monster'
+  init: ->
+    @strength = 1
+    @addComponent("2D, DOM, Collide")
+    @origin("center")
+    @attr
+      x: 200
+      y: 200
+      w: 40
+      h: 40
+
+    @onHit 'player', (hit_data) ->
+      for collision in hit_data
+        #is the collider a player? if so, hurt the player unless the player attacked in the last X milliseconds
+        collider = collision.obj
+        if collider.__c['player']
+          #send a message telling the player he got hurt
+          window.client.send window.client.take_damage_mesage(collider[0], @strength)
+
+
+    console.log 'Monster inited!'
+
+
 
 
 
@@ -74,6 +110,13 @@ window.client =
       x: x
       y: y
 
+  take_damage_message: (entity_id, damage) ->
+    type 'take_damage'
+    body:
+      entity_id: entity_id
+      damage: damage
+
+
 
   send: (message) ->
     @log 'sending: ' + $.toJSON(message)
@@ -103,6 +146,10 @@ window.client =
 
       when 'setName'
         ''
+
+      when 'take_damage'
+        entity = Crafty(message.body.entity_id)
+        entity.take_damage(message.body.damage) if entity
 
 
 

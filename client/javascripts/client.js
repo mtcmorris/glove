@@ -37,9 +37,18 @@
       return this;
     }
   });
+  Crafty.c('damageable', {
+    init: function() {
+      return this.health = 10;
+    },
+    take_damage: function(damage) {
+      this.health -= damage;
+      return window.client.log("Entity " + this[0] + " took " + damage + " damage");
+    }
+  });
   Crafty.c("player", {
     init: function() {
-      this.addComponent("2D, DOM, Collision");
+      this.requires("2D, DOM, Collision");
       this.origin("center");
       this.css({
         border: '1px solid white'
@@ -50,7 +59,36 @@
         w: 40,
         h: 40
       });
+      this.bind('enterframe', function() {
+        if (window.debug) {
+          debugger;
+        }
+      });
       return console.log('Player inited!');
+    }
+  });
+  Crafty.c('monster', {
+    init: function() {
+      this.strength = 1;
+      this.addComponent("2D, DOM, Collide");
+      this.origin("center");
+      this.attr({
+        x: 200,
+        y: 200,
+        w: 40,
+        h: 40
+      });
+      this.onHit('player', function(hit_data) {
+        var collider, collision, _i, _len, _results;
+        _results = [];
+        for (_i = 0, _len = hit_data.length; _i < _len; _i++) {
+          collision = hit_data[_i];
+          collider = collision.obj;
+          _results.push(collider.__c['player'] ? window.client.send(window.client.take_damage_mesage(collider[0], this.strength)) : void 0);
+        }
+        return _results;
+      });
+      return console.log('Monster inited!');
     }
   });
   window.client = {
@@ -97,12 +135,21 @@
         }
       };
     },
+    take_damage_message: function(entity_id, damage) {
+      type('take_damage');
+      return {
+        body: {
+          entity_id: entity_id,
+          damage: damage
+        }
+      };
+    },
     send: function(message) {
       this.log('sending: ' + $.toJSON(message));
       return this.socket.send(message);
     },
     receive: function(message) {
-      var player;
+      var entity, player;
       this.log('IN: ' + $.toJSON(message));
       this.dir(message);
       switch (message.type) {
@@ -127,6 +174,11 @@
           return this.log(message.client + ' ' + player.x + ' ' + player.y);
         case 'setName':
           return '';
+        case 'take_damage':
+          entity = Crafty(message.body.entity_id);
+          if (entity) {
+            return entity.take_damage(message.body.damage);
+          }
       }
     }
   };
