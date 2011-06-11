@@ -5,28 +5,26 @@
       return this.requires('2D, Collision');
     },
     collision_info_for_collider: function(collider) {
-      var collider_is_to_bottom, collider_is_to_left, collider_is_to_right, collider_is_to_top;
-      ({
-        left_self: this.x,
-        left_collider: collider.x,
-        right_self: this.x + this.w,
-        right_collider: collider.x + collider.width,
-        top_self: this.y,
-        top_collider: collider.y,
-        bottom_self: this.y + this.h,
-        bottom_collider: collider.y + collider.height
-      });
-      collider_is_to_bottom = bottom_self < top_collider;
-      collider_is_to_top = top_self > bottom_collider;
-      collider_is_to_right = right_self < left_collider;
-      collider_is_to_left = left_self > right_collider;
-      return {
-        collider_is_to_bottom: collider_is_to_bottom({
-          collider_is_to_top: collider_is_to_top,
-          collider_is_to_right: collider_is_to_right,
-          collider_is_to_left: collider_is_to_left
-        })
+      var bottom_collider, bottom_self, c_info, collider_is_to_bottom, collider_is_to_left, collider_is_to_right, collider_is_to_top, left_collider, left_self, right_collider, right_self, top_collider, top_self;
+      left_self = this.x;
+      left_collider = collider.x;
+      right_self = this.x + this.w;
+      right_collider = collider.x + collider.w;
+      top_self = this.y;
+      top_collider = collider.y;
+      bottom_self = this.y + this.h;
+      bottom_collider = collider.y + collider.h;
+      collider_is_to_bottom = bottom_self > top_collider;
+      collider_is_to_top = top_self < bottom_collider;
+      collider_is_to_right = right_self > left_collider;
+      collider_is_to_left = left_self < right_collider;
+      c_info = {
+        collider_is_to_bottom: collider_is_to_bottom,
+        collider_is_to_top: collider_is_to_top,
+        collider_is_to_right: collider_is_to_right,
+        collider_is_to_left: collider_is_to_left
       };
+      return c_info;
     }
   });
   Crafty.c("WASD", {
@@ -76,7 +74,7 @@
   });
   Crafty.c("player", {
     init: function() {
-      this.requires("2D, DOM, Collision");
+      this.requires("2D, DOM, Collision, CollisionInfo");
       this.origin("center");
       this.attr({
         x: 100,
@@ -85,6 +83,9 @@
         h: 40
       });
       return console.log('Player inited!');
+    },
+    dxy: function(dx, dy) {
+      return this.move_to(this.x + dx, this.y + dy);
     },
     move_to: function(x, y) {
       var location_message;
@@ -103,7 +104,7 @@
   Crafty.c('monster', {
     init: function() {
       this.strength = 1;
-      this.addComponent("2D, DOM, Collision");
+      this.addComponent("2D, DOM, Collision, CollisionInfo");
       this.origin("center");
       this.attr({
         x: 200,
@@ -157,12 +158,27 @@
       });
       this.player = window.Crafty.e("player, player_green, WASD").wasd(3);
       this.player.onHit('wall', __bind(function(hit_data) {
-        var collider, collision, _i, _len, _results;
+        var c_info, collider, collision, dx, dy, _i, _len, _results;
         _results = [];
         for (_i = 0, _len = hit_data.length; _i < _len; _i++) {
           collision = hit_data[_i];
           collider = collision.obj;
-          _results.push(collider.__c['wall'] ? '' : void 0);
+          c_info = this.player.collision_info_for_collider(collider);
+          dx = null;
+          dy = null;
+          if (c_info.collider_is_to_right) {
+            dx = -1 * this.player.speed;
+          }
+          if (c_info.collider_is_to_left) {
+            dx = 1 * this.player.speed;
+          }
+          if (c_info.collider_is_to_bottom) {
+            dy = -1 * this.player.speed;
+          }
+          if (c_info.collider_is_to_top) {
+            dy = 1 * this.player.speed;
+          }
+          _results.push(this.player.dxy(dx, dy));
         }
         return _results;
       }, this));

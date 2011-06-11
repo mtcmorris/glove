@@ -3,24 +3,28 @@ Crafty.c 'CollisionInfo'
     @requires('2D, Collision')
 
   collision_info_for_collider: (collider) ->
-    left_self: @x
-    left_collider: collider.x
-    right_self: @x + @w
-    right_collider: collider.x + collider.width
-    top_self: @y
-    top_collider: collider.y
-    bottom_self: @y + @h
-    bottom_collider: collider.y + collider.height
+    left_self = @x
+    left_collider = collider.x
+    right_self = @x + @w
+    right_collider = collider.x + collider.w
+    top_self = @y
+    top_collider = collider.y
+    bottom_self = @y + @h
+    bottom_collider = collider.y + collider.h
 
-    collider_is_to_bottom = bottom_self < top_collider
-    collider_is_to_top = top_self > bottom_collider
-    collider_is_to_right = right_self < left_collider
-    collider_is_to_left = left_self > right_collider
+    collider_is_to_bottom = bottom_self > top_collider
+    collider_is_to_top = top_self < bottom_collider
+    collider_is_to_right = right_self > left_collider
+    collider_is_to_left = left_self < right_collider
 
-    { collider_is_to_bottom: collider_is_to_bottom
+
+    c_info =
+      collider_is_to_bottom: collider_is_to_bottom
       collider_is_to_top: collider_is_to_top
       collider_is_to_right: collider_is_to_right
-      collider_is_to_left: collider_is_to_left }
+      collider_is_to_left: collider_is_to_left
+
+    return c_info
 
 
 Crafty.c "WASD"
@@ -56,7 +60,7 @@ Crafty.c 'damageable'
 
 Crafty.c "player"
   init: ->
-    @requires("2D, DOM, Collision")
+    @requires("2D, DOM, Collision, CollisionInfo")
     @origin("center")
     # @css
     #   border: '1px solid white'
@@ -67,6 +71,9 @@ Crafty.c "player"
       h: 40
 
     console.log 'Player inited!'
+
+  dxy: (dx, dy) ->
+    @move_to(@x + dx, @y + dy)
 
   move_to: (x, y) ->
     location_message = client.set_location_message(x, y)
@@ -82,7 +89,7 @@ Crafty.c "player"
 Crafty.c 'monster'
   init: ->
     @strength = 1
-    @addComponent("2D, DOM, Collision")
+    @addComponent("2D, DOM, Collision, CollisionInfo")
     @origin("center")
     @attr
       x: 200
@@ -136,10 +143,14 @@ window.client =
     @player.onHit 'wall', (hit_data) =>
       for collision in hit_data
         collider = collision.obj
-        if collider.__c['wall']
-          ''
-          #collider is a wall, move the player
-          #@player.dxy(x: 1, y: 1
+        c_info = @player.collision_info_for_collider(collider)
+        dx = null
+        dy = null
+        dx = -1 * @player.speed if c_info.collider_is_to_right
+        dx = 1 * @player.speed if c_info.collider_is_to_left
+        dy = -1 * @player.speed if c_info.collider_is_to_bottom
+        dy = 1 * @player.speed if c_info.collider_is_to_top
+        @player.dxy(dx, dy)
 
 
     Crafty.viewport.x = @player.x
