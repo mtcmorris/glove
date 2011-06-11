@@ -92,12 +92,12 @@ Crafty.c "player"
     @move_to(@x + dx, @y + dy)
 
   move_to: (x, y) ->
-    location_message = client.set_location_message(x, y)
-    client.send(location_message)
     @prev_x = @x
     @prev_y = @y
     @x = x if x?
     @y = y if y?
+    location_message = client.set_location_message(@x, @y)
+    client.send(location_message)
 
   die: ->
     console.log "You're dead"
