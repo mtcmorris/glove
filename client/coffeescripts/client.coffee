@@ -91,6 +91,8 @@ Crafty.c 'monster'
     @strength = 1
     @addComponent("2D, DOM, Collision, CollisionInfo")
     @origin("center")
+    
+    @target = false
     @attr
       x: 200
       y: 200
@@ -105,9 +107,70 @@ Crafty.c 'monster'
           #send a message telling the player he got hurt
           window.client.send window.client.take_damage_mesage(collider[0], @strength)
 
+    @speed = 1
+    @state = false
 
+    @bind "enterframe", ->
+      @state = @state.tick() if @state
+      if @target
+        impulse = this.getImpulse(@target)
+
+        @x = @x + @speed if impulse[0] < 0
+        @x = @x - @speed if impulse[0] > 0
+        @y = @y - @speed if impulse[1] > 0
+        @y = @y + @speed if impulse[1] < 0
+      console.log "Monster coords is #{@x}, #{@y}"
+    # Possible future tree:
+    # sleeping
+    #   attacking
+    #   retreating
+    #   beserking
+    behaviour = {
+      identifier: "sleep", strategy: "sequential",
+      children: [
+        { identifier: "attack" }
+      ]
+    }
+    
+
+    @state = window.client.machine.generateTree(behaviour, this)
     console.log 'Monster inited!'
+  onHit: (hit_data) ->
 
+  sleep: ->
+    console.log "sleeping"
+
+  canAttack: ->
+    closest_player = this.closestPlayer()
+    if closest_player && this.distanceFrom(closest_player) < 300
+      @target = closest_player
+      true
+    else
+      @target = false
+      false
+    # Check if a player is close
+  attack: ->
+    if @target
+      @action = "attacking"
+    console.log "attacking!"
+    # RAWWWWWW
+  
+  getImpulse: (obj) ->
+    if obj
+      [Math.floor(@x - obj.x), Math.floor(@y - obj.y)]
+    else
+      [0,0]
+  
+  closestPlayer: ->
+    closest_distance = this.distanceFrom(window.client.player)
+    closest_player = window.client.player
+    for key, player of window.client.players_by_connection_id
+      if player && this.distanceFrom(player) < closest_distance
+        closest_player = player
+    closest_player
+    
+  distanceFrom: (player) ->
+    Math.sqrt(Math.pow(@x - player.x, 2) + Math.pow(@y - player.y, 2))
 
 Crafty.c 'tile'
   init: ->
@@ -135,6 +198,7 @@ window.client =
     Crafty.sprite 40, "images/lofi_char.png",
       player_green: [0,0],
       player_gray: [1,0],
+      goblin_green: [0,5],
     Crafty.sprite 40, "images/lofi_environment.png",
       wall_gray: [0,0],
       floor_brown: [12,1]
@@ -188,6 +252,12 @@ window.client =
 
     @game = new window.Game
     @players_by_connection_id = {}
+    @monsters = []
+    
+    @machine = new Machine();
+    monster = window.Crafty.e("monster", "goblin_green")
+
+    @monsters.push monster
 
 
   log: (msg) -> console.log msg if console?.log?

@@ -103,9 +103,11 @@
   });
   Crafty.c('monster', {
     init: function() {
+      var behaviour;
       this.strength = 1;
       this.addComponent("2D, DOM, Collision, CollisionInfo");
       this.origin("center");
+      this.target = false;
       this.attr({
         x: 200,
         y: 200,
@@ -122,7 +124,85 @@
         }
         return _results;
       });
+      this.speed = 1;
+      this.state = false;
+      this.bind("enterframe", function() {
+        var impulse;
+        if (this.state) {
+          this.state = this.state.tick();
+        }
+        if (this.target) {
+          impulse = this.getImpulse(this.target);
+          if (impulse[0] < 0) {
+            this.x = this.x + this.speed;
+          }
+          if (impulse[0] > 0) {
+            this.x = this.x - this.speed;
+          }
+          if (impulse[1] > 0) {
+            this.y = this.y - this.speed;
+          }
+          if (impulse[1] < 0) {
+            this.y = this.y + this.speed;
+          }
+        }
+        return console.log("Monster coords is " + this.x + ", " + this.y);
+      });
+      behaviour = {
+        identifier: "sleep",
+        strategy: "sequential",
+        children: [
+          {
+            identifier: "attack"
+          }
+        ]
+      };
+      this.state = window.client.machine.generateTree(behaviour, this);
       return console.log('Monster inited!');
+    },
+    onHit: function(hit_data) {},
+    sleep: function() {
+      return console.log("sleeping");
+    },
+    canAttack: function() {
+      var closest_player;
+      closest_player = this.closestPlayer();
+      if (closest_player && this.distanceFrom(closest_player) < 300) {
+        this.target = closest_player;
+        return true;
+      } else {
+        this.target = false;
+        return false;
+      }
+    },
+    attack: function() {
+      if (this.target) {
+        this.action = "attacking";
+      }
+      return console.log("attacking!");
+    },
+    getImpulse: function(obj) {
+      if (obj) {
+        return [Math.floor(this.x - obj.x), Math.floor(this.y - obj.y)];
+      } else {
+        return [0, 0];
+      }
+    },
+    closestPlayer: function() {
+      var closest_distance, closest_player, key, player, _ref;
+      closest_distance = this.distanceFrom(window.client.player);
+      closest_player = window.client.player;
+      _ref = window.client.players_by_connection_id;
+      for (key in _ref) {
+        player = _ref[key];
+        if (player && this.distanceFrom(player) < closest_distance) {
+          closest_player = player;
+        }
+      }
+      return closest_player;
+    },
+    distanceFrom: function(player) {
+      return Math.sqrt(Math.pow(this.x - player.x, 2) + Math.pow(this.y - player.y, 2));
     }
   });
   Crafty.c('tile', {
@@ -146,11 +226,13 @@
   });
   window.client = {
     init: function() {
+      var monster;
       Crafty.init(600, 300);
       Crafty.background("#000");
       Crafty.sprite(40, "images/lofi_char.png", {
         player_green: [0, 0],
-        player_gray: [1, 0]
+        player_gray: [1, 0],
+        goblin_green: [0, 5]
       });
       Crafty.sprite(40, "images/lofi_environment.png", {
         wall_gray: [0, 0],
@@ -214,15 +296,19 @@
         body: $("#player-name").innerHTML
       });
       this.game = new window.Game;
-      return this.players_by_connection_id = {};
+      this.players_by_connection_id = {};
+      this.monsters = [];
+      this.machine = new Machine();
+      monster = window.Crafty.e("monster", "goblin_green");
+      return this.monsters.push(monster);
     },
     log: function(msg) {
-      if ((typeof console !== "undefined" && console !== null ? console.log : void 0) != null) {
+      if ((typeof console != "undefined" && console !== null ? console.log : void 0) != null) {
         return console.log(msg);
       }
     },
     dir: function(msg) {
-      if ((typeof console !== "undefined" && console !== null ? console.dir : void 0) != null) {
+      if ((typeof console != "undefined" && console !== null ? console.dir : void 0) != null) {
         return console.dir(msg);
       }
     },
