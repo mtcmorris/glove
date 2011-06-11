@@ -103,9 +103,9 @@ Crafty.c 'monster'
       for collision in hit_data
         #is the collider a player? if so, hurt the player unless the player attacked in the last X milliseconds
         collider = collision.obj
-        if collider.__c['player']
+        # if collider.__c['player']
           #send a message telling the player he got hurt
-          window.client.send window.client.take_damage_mesage(collider[0], @strength)
+          # window.client.send window.client.take_damage_mesage(collider[0], @strength)
 
     @speed = 1
     @state = false
@@ -119,7 +119,6 @@ Crafty.c 'monster'
         @x = @x - @speed if impulse[0] > 0
         @y = @y - @speed if impulse[1] > 0
         @y = @y + @speed if impulse[1] < 0
-      console.log "Monster coords is #{@x}, #{@y}"
     # Possible future tree:
     # sleeping
     #   attacking
@@ -152,8 +151,6 @@ Crafty.c 'monster'
   attack: ->
     if @target
       @action = "attacking"
-    console.log "attacking!"
-    # RAWWWWWW
   
   getImpulse: (obj) ->
     if obj
@@ -326,7 +323,7 @@ window.client =
 
       when 'take_damage'
         entity = Crafty(message.body.entity_id)
-        entity.take_damage(message.body.damage) if entity
+        # entity.take_damage(message.body.damage) if entity
 
 
 
