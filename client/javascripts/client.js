@@ -50,9 +50,6 @@
     init: function() {
       this.requires("2D, DOM, Collision");
       this.origin("center");
-      this.css({
-        border: '1px solid white'
-      });
       this.attr({
         x: 100,
         y: 100,

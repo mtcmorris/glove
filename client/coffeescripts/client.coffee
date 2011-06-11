@@ -32,8 +32,8 @@ Crafty.c "player"
   init: ->
     @requires("2D, DOM, Collision")
     @origin("center")
-    @css
-      border: '1px solid white'
+    # @css
+    #   border: '1px solid white'
     @attr
       x: 100
       y: 100
