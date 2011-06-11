@@ -61,6 +61,7 @@
   });
   Crafty.c('monster', {
     init: function() {
+      var behaviour;
       this.strength = 1;
       this.addComponent("2D, DOM, Collide");
       this.origin("center");
@@ -80,10 +81,7 @@
         }
         return _results;
       });
-      return console.log('Monster inited!');
-    },
-    behaviour: function() {
-      return {
+      behaviour = {
         identifier: "sleep",
         strategy: "sequential",
         children: [
@@ -92,9 +90,42 @@
           }
         ]
       };
+      this.state = window.client.machine.generateTree(behaviour, this);
+      return console.log('Monster inited!');
     },
-    canAttack: function() {},
-    attack: function() {}
+    onHit: function(hit_data) {},
+    sleep: function() {
+      return console.log("sleeping");
+    },
+    canAttack: function() {
+      var closest_player;
+      closest_player = this.closestPlayer();
+      console.log("Closest is " + closest_player);
+      if (closest_player && this.distanceFrom(closest_player) < 200) {
+        return true;
+      } else {
+        return false;
+      }
+    },
+    attack: function() {
+      return console.log("attacking!");
+    },
+    closestPlayer: function() {
+      var closest_distance, closest_player, key, player, _ref;
+      closest_distance = this.distanceFrom(window.client.player);
+      closest_player = window.client.player;
+      _ref = window.client.players_by_connection_id;
+      for (key in _ref) {
+        player = _ref[key];
+        if (player && this.distanceFrom(player) < closest_distance) {
+          closest_player = player;
+        }
+      }
+      return closest_player;
+    },
+    distanceFrom: function(player) {
+      return Math.sqrt(Math.pow(this.x - player.x, 2) + Math.pow(this.y - player.y, 2));
+    }
   });
   Crafty.c('tile', {
     init: function() {
@@ -117,11 +148,13 @@
   });
   window.client = {
     init: function() {
+      var monster;
       Crafty.init(600, 300);
       Crafty.background("#000");
       Crafty.sprite(40, "images/lofi_char.png", {
         player_green: [0, 0],
-        player_gray: [1, 0]
+        player_gray: [1, 0],
+        goblin_green: [0, 5]
       });
       Crafty.sprite(40, "images/lofi_environment.png", {
         wall_gray: [0, 0],
@@ -154,17 +187,20 @@
       });
       this.game = new window.Game;
       this.players_by_connection_id = {};
-      return this.monsters = [];
+      this.monsters = [];
+      this.machine = new Machine();
+      monster = window.Crafty.e("monster", "goblin_green");
+      this.monsters.push(monster);
+      return setTimeout("window.client.tick()", 1000);
     },
     tick: function() {
-      var monster, _i, _len, _ref, _results;
+      var monster, _i, _len, _ref;
       _ref = this.monsters;
-      _results = [];
       for (_i = 0, _len = _ref.length; _i < _len; _i++) {
         monster = _ref[_i];
-        _results.push(monster.state = monster.state.tick());
+        monster.state = monster.state.tick();
       }
-      return _results;
+      return setTimeout("window.client.tick()", 1000);
     },
     log: function(msg) {
       if ((typeof console != "undefined" && console !== null ? console.log : void 0) != null) {

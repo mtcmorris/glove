@@ -63,27 +63,47 @@ Crafty.c 'monster'
           #send a message telling the player he got hurt
           window.client.send window.client.take_damage_mesage(collider[0], @strength)
 
-
-    console.log 'Monster inited!'
-
-  behaviour: ->
     # Possible future tree:
     # sleeping
     #   attacking
     #   retreating
     #   beserking
-    
-    {
+    behaviour = {
       identifier: "sleep", strategy: "sequential",
       children: [
         { identifier: "attack" }
       ]
     }
+    
+    @state = window.client.machine.generateTree(behaviour, this)
+    console.log 'Monster inited!'
+  onHit: (hit_data) ->
+
+  sleep: ->
+    console.log "sleeping"
+
   canAttack: ->
+    closest_player = this.closestPlayer()
+    console.log "Closest is #{closest_player}"
+    if closest_player && this.distanceFrom(closest_player) < 200
+      true
+    else
+      false
     # Check if a player is close
   attack: ->
+    console.log "attacking!"
     # RAWWWWWW
-
+    
+  closestPlayer: ->
+    closest_distance = this.distanceFrom(window.client.player)
+    closest_player = window.client.player
+    for key, player of window.client.players_by_connection_id
+      if player && this.distanceFrom(player) < closest_distance
+        closest_player = player
+    closest_player
+    
+  distanceFrom: (player) ->
+    Math.sqrt(Math.pow(@x - player.x, 2) + Math.pow(@y - player.y, 2))
 
 Crafty.c 'tile'
   init: ->
@@ -111,6 +131,7 @@ window.client =
     Crafty.sprite 40, "images/lofi_char.png",
       player_green: [0,0],
       player_gray: [1,0],
+      goblin_green: [0,5],
     Crafty.sprite 40, "images/lofi_environment.png",
       wall_gray: [0,0],
       floor_brown: [12,1]
@@ -144,9 +165,16 @@ window.client =
     @players_by_connection_id = {}
     @monsters = []
     
+    @machine = new Machine();
+    monster = window.Crafty.e("monster", "goblin_green")
+
+    @monsters.push monster
+    setTimeout("window.client.tick()", 1000)
+    
   tick: ->
     for monster in @monsters
       monster.state = monster.state.tick()
+    setTimeout("window.client.tick()", 1000)
 
 
   log: (msg) -> console.log msg if console?.log?
