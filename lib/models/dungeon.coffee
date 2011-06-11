@@ -14,5 +14,11 @@ root.Dungeon = class Dungeon
     
   generate: ->
     map = new Mapper(@xsize, @ysize, @room_templates)
-    map.generate_coords()
+    generated = false
+    while(!generated)
+      try
+        map.generate_coords()
+        generated = true
+      catch error
+        # Yeah ok - it fails some times - clunge it
     map.toText()
