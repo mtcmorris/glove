@@ -8,7 +8,7 @@ dungeon = require('../lib/models/dungeon')
 path    = require('path')
 sys     = require('sys')
 
-dungeon = new Dungeon(30, 40)
+dungeon = new Dungeon(100, 100)
 
 themap = dungeon.generate()
 sys.puts "map is: #{themap}"
