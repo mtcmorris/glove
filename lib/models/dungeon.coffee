@@ -21,4 +21,5 @@ root.Dungeon = class Dungeon
         generated = true
       catch error
         # Yeah ok - it fails some times - clunge it
-    map.toText()
+    map.coded_coords #return as array
+    #Return as text: # map.toText()
