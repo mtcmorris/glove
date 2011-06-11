@@ -7,11 +7,16 @@ glove   = require('../lib/glove')
 dungeon = require('../lib/models/dungeon')
 path    = require('path')
 sys     = require('sys')
+_     = require('../lib/vendor/underscore.js')
 
 dungeon = new Dungeon(50, 50)
 
 themap = dungeon.generate()
-sys.puts "map is: #{themap}"
+
+sys.puts 'THE MAP'
+_.each themap, (row, y) ->
+  sys.puts row
+  
 HOSTNAME    = 'localhost'
 PORT    = 9000
 WEBROOT = path.join(path.dirname(__filename), '..')
@@ -48,6 +53,7 @@ socket.on 'connection', (client) ->
     client.broadcast(client: id, type: "connection", you: you)
 
   notify(id) for id, client of socket.clientsIndex
+  client.send(type: 'map', body: { map: themap })
 
 
   client.on 'disconnect', ->
@@ -56,8 +62,27 @@ socket.on 'connection', (client) ->
   
 
   client.on 'message', (message) ->
+    # #handle the message if it's a system command, otherwise just broadcast it to everyone
+    # handle_message = (message) ->
+    #   switch message.type
+    #     when 'who'
+    #       sys.puts 'All clients connected:'
+    #       notify = (id) ->
+    #         sys.puts '- ' + id
+    #         you = if id == client.sessionId then true else false
+    #         client.send(client: id, type: "connection", you: you)
+    #       notify(id) for id, client of socket.clientsIndex
+    #       return true
+    #     else
+    #       return false
+
+    # return if handle_message(message)
+
+
     # sys.puts "==================="
     # sys.puts JSON.stringify(message)
+
+
     #pass this on to all the clients
     try
       # sys.puts "msg received from #{id}, rebroadcasting: " + JSON.stringify(message)

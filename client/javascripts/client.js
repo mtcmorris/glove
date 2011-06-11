@@ -91,13 +91,23 @@
       return console.log('Monster inited!');
     }
   });
-  Crafty.c('wall', {
+  Crafty.c('tile', {
     init: function() {
-      this.requires('2D, DOM, wall_gray');
+      this.requires('2D, DOM');
       return this.attr({
         w: 40,
         h: 40
       });
+    }
+  });
+  Crafty.c('wall', {
+    init: function() {
+      return this.requires('tile, wall_gray');
+    }
+  });
+  Crafty.c('floor', {
+    init: function() {
+      return this.requires('tile, floor_gray');
     }
   });
   window.client = {
@@ -157,12 +167,33 @@
         }
       };
     },
+    add_map_tiles: function(map) {
+      return _.each(map, function(row, y) {
+        return _.each(row, function(cell, x) {
+          var tile;
+          tile = null;
+          switch (cell) {
+            case 'W':
+              tile = Crafty.e('wall');
+              break;
+            case 'f':
+              tile = Crafty.e('floor');
+          }
+          if (tile) {
+            return tile.attr({
+              x: x * tile.w,
+              y: y * tile.h
+            });
+          }
+        });
+      });
+    },
     send: function(message) {
       this.log('sending: ' + $.toJSON(message));
       return this.socket.send(message);
     },
     receive: function(message) {
-      var entity, player;
+      var entity, map, player;
       this.log('IN: ' + $.toJSON(message));
       this.dir(message);
       switch (message.type) {
@@ -173,6 +204,9 @@
           return player.attr({
             clientid: message.client
           });
+        case 'map':
+          map = message.body.map;
+          return this.add_map_tiles(map);
         case 'disconnection':
           this.log('disconnected: ' + message.client);
           player = this.players_by_connection_id[message.client];

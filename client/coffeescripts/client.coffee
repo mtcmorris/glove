@@ -69,12 +69,20 @@ Crafty.c 'monster'
     console.log 'Monster inited!'
 
 
-Crafty.c 'wall'
+Crafty.c 'tile'
   init: ->
-    @requires('2D, DOM, wall_gray')
+    @requires('2D, DOM')
     @attr
       w: 40
       h: 40
+
+Crafty.c 'wall'
+  init: ->
+    @requires('tile, wall_gray')
+
+Crafty.c 'floor'
+  init: ->
+    @requires('tile, floor_gray')
 
 
 
@@ -128,6 +136,17 @@ window.client =
       damage: damage
 
 
+  add_map_tiles: (map) ->
+    _.each map, (row, y) ->
+      _.each row, (cell, x) ->
+        tile = null
+        switch cell
+          when 'W'
+            tile = Crafty.e('wall')
+          when 'f'
+            tile = Crafty.e('floor')
+        tile.attr(x: x * tile.w, y: y * tile.h) if tile
+
 
   send: (message) ->
     @log 'sending: ' + $.toJSON(message)
@@ -143,6 +162,12 @@ window.client =
         player = @players_by_connection_id[message.client] || Crafty.e('player, player_gray')
         @players_by_connection_id[message.client] = player
         player.attr(clientid: message.client)
+
+      when 'map'
+        #Oh snap, it's the map!
+        map = message.body.map
+        @add_map_tiles(map)
+
 
       when 'disconnection'
         @log 'disconnected: ' + message.client
