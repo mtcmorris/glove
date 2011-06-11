@@ -67,8 +67,10 @@ Crafty.c "player"
     @attr
       x: 100
       y: 100
-      w: 40
-      h: 40
+      w: 32
+      h: 32
+    @collision (new Crafty.polygon([0,0], [30,0], [30,30], [0, 30]).shift(5, 5))
+      
 
     console.log 'Player inited!'
 
@@ -105,7 +107,7 @@ Crafty.c 'monster'
         collider = collision.obj
         # if collider.__c['player']
           #send a message telling the player he got hurt
-          # window.client.send window.client.take_damage_mesage(collider[0], @strength)
+          window.client.send window.client.take_damage_message(collider[0], @strength)
 
     @speed = 1
     @state = false
@@ -192,7 +194,7 @@ window.client =
   init: ->
     Crafty.init(600, 300)
     Crafty.background("#000")
-    Crafty.sprite 40, "images/lofi_char.png",
+    Crafty.sprite 32, "images/lofi_char_32x32.png",
       player_green: [0,0],
       player_gray: [1,0],
       goblin_green: [0,5],
@@ -251,7 +253,7 @@ window.client =
     @players_by_connection_id = {}
     @monsters = []
     
-    @machine = new Machine();
+    @machine = new Machine()
     monster = window.Crafty.e("monster", "goblin_green")
 
     @monsters.push monster
@@ -268,7 +270,7 @@ window.client =
       y: y
 
   take_damage_message: (entity_id, damage) ->
-    type 'take_damage'
+    type: 'take_damage'
     body:
       entity_id: entity_id
       damage: damage
