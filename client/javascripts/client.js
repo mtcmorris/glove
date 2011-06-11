@@ -59,28 +59,35 @@
   });
   Crafty.c('damageable', {
     init: function() {
-      this.health = 10;
+      this.health = 100;
       return this.max_health = 100;
     },
     take_damage: function(damage) {
       var health_percentage;
       this.health -= damage;
       window.client.log("Entity " + this[0] + " took " + damage + " damage");
-      health_percentage = this.max_health / this.health;
+      health_percentage = ((this.health * 1.0) / (this.max_health * 1.0)) * 100;
       return $("#player-health-bar").css({
-        width: health_percentage + '%'
+        width: parseInt(health_percentage).toString() + '%'
       });
     }
   });
   Crafty.c("player", {
     init: function() {
-      this.requires("2D, DOM, Collision, CollisionInfo");
+      this.requires("2D, DOM, Collision, CollisionInfo, damageable");
       this.origin("center");
       this.attr({
+<<<<<<< HEAD
         x: 100,
         y: 100,
         w: 32,
         h: 32
+=======
+        x: 500,
+        y: 500,
+        w: 40,
+        h: 40
+>>>>>>> 6a65af1... Health!
       });
       this.collision(new Crafty.polygon([0, 0], [30, 0], [30, 30], [0, 30]).shift(5, 5));
       return console.log('Player inited!');
@@ -106,26 +113,33 @@
     init: function() {
       var behaviour;
       this.strength = 1;
+      this.requires("damageable");
       this.addComponent("2D, DOM, Collision, CollisionInfo");
       this.origin("center");
       this.target = false;
       this.attr({
-        x: 200,
-        y: 200,
+        x: 500,
+        y: 500,
         w: 40,
         h: 40
       });
+      this.miss_rate = 0.9;
       this.onHit('player', function(hit_data) {
         var collider, collision, _i, _len, _results;
         _results = [];
         for (_i = 0, _len = hit_data.length; _i < _len; _i++) {
           collision = hit_data[_i];
 <<<<<<< HEAD
+<<<<<<< HEAD
           collider = collision.obj;
           _results.push(collider.__c['player'] ? window.client.send(window.client.take_damage_message(collider[0], this.strength)) : void 0);
 =======
           _results.push(collider = collision.obj);
 >>>>>>> e190153... Disable take damage message for now
+=======
+          collider = collision.obj;
+          _results.push(collider.__c['player'] ? Math.random() > this.miss_rate ? collider.take_damage(this.strength) : void 0 : void 0);
+>>>>>>> 6a65af1... Health!
         }
         return _results;
       });
@@ -392,7 +406,10 @@
         case 'setName':
           return '';
         case 'take_damage':
-          return entity = Crafty(message.body.entity_id);
+          entity = Crafty(message.body.entity_id);
+          if (entity) {
+            return entity.take_damage(message.body.damage);
+          }
       }
     }
   };
