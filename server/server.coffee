@@ -4,9 +4,14 @@ url     = require('url')
 fs      = require('fs')
 io      = require('socket.io')
 glove   = require('../lib/glove')
+dungeon = require('../lib/models/dungeon')
 path    = require('path')
 sys     = require('sys')
 
+dungeon = new Dungeon(30, 40)
+
+themap = dungeon.generate()
+sys.puts "map is: #{themap}"
 HOSTNAME    = 'localhost'
 PORT    = 9000
 WEBROOT = path.join(path.dirname(__filename), '..')
