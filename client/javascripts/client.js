@@ -59,11 +59,6 @@
         w: 40,
         h: 40
       });
-      this.bind('enterframe', function() {
-        if (window.debug) {
-          debugger;
-        }
-      });
       return console.log('Player inited!');
     }
   });
@@ -112,7 +107,7 @@
   });
   window.client = {
     init: function() {
-      Crafty.init(600, 600);
+      Crafty.init(600, 300);
       Crafty.background("#000");
       Crafty.sprite(40, "images/lofi_char.png", {
         player_green: [0, 0],
@@ -123,6 +118,17 @@
         floor_brown: [12, 1]
       });
       this.player = window.Crafty.e("player, player_green, WASD").wasd(3);
+      Crafty.viewport.x = this.player.x;
+      Crafty.viewport.y = this.player.y;
+      this.player.bind('enterframe', function() {
+        if (this.x && this.y) {
+          Crafty.viewport.x = (this.x * -1) + Crafty.viewport.width / 2;
+          Crafty.viewport.y = (this.y * -1) + Crafty.viewport.height / 2;
+        }
+        if (window.debug) {
+          debugger;
+        }
+      });
       this.socket = new io.Socket(null, {
         port: 9000,
         rememberTransport: false
@@ -168,7 +174,7 @@
       };
     },
     add_map_tiles: function(map) {
-      return _.each(map, function(row, y) {
+      _.each(map, function(row, y) {
         return _.each(row, function(cell, x) {
           var tile;
           tile = null;
@@ -187,15 +193,19 @@
           }
         });
       });
+      return this.log('Map loaded!');
     },
     send: function(message) {
-      this.log('sending: ' + $.toJSON(message));
+      if (window.log_out) {
+        this.log('sending: ' + $.toJSON(message));
+      }
       return this.socket.send(message);
     },
     receive: function(message) {
       var entity, map, player;
-      this.log('IN: ' + $.toJSON(message));
-      this.dir(message);
+      if (window.log_in) {
+        this.log('IN: ' + $.toJSON(message));
+      }
       switch (message.type) {
         case 'connection':
           this.log('connected: ' + message.client);
