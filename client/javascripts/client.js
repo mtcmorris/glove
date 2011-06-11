@@ -63,13 +63,12 @@
       return this.max_health = 100;
     },
     take_damage: function(damage) {
-      var health_percentage;
       this.health -= damage;
       window.client.log("Entity " + this[0] + " took " + damage + " damage");
-      health_percentage = ((this.health * 1.0) / (this.max_health * 1.0)) * 100;
-      return $("#player-health-bar").css({
-        width: parseInt(health_percentage).toString() + '%'
-      });
+      if (this.health < 0) {
+        this.die();
+      }
+      return this.updateHealth();
     }
   });
   Crafty.c("player", {
@@ -77,20 +76,25 @@
       this.requires("2D, DOM, Collision, CollisionInfo, damageable");
       this.origin("center");
       this.attr({
-<<<<<<< HEAD
         x: 100,
         y: 100,
         w: 32,
         h: 32
-=======
-        x: 500,
-        y: 500,
-        w: 40,
-        h: 40
->>>>>>> 6a65af1... Health!
       });
       this.collision(new Crafty.polygon([0, 0], [30, 0], [30, 30], [0, 30]).shift(5, 5));
-      return console.log('Player inited!');
+      this.miss_rate = 0.4;
+      this.strength = 5;
+      console.log('Player inited!');
+      return this.onHit('monster', function(hit_data) {
+        var collider, collision, _i, _len, _results;
+        _results = [];
+        for (_i = 0, _len = hit_data.length; _i < _len; _i++) {
+          collision = hit_data[_i];
+          collider = collision.obj;
+          _results.push(collider.__c['monster'] ? Math.random() > this.miss_rate ? collider.take_damage(this.strength) : void 0 : void 0);
+        }
+        return _results;
+      });
     },
     dxy: function(dx, dy) {
       return this.move_to(this.x + dx, this.y + dy);
@@ -107,6 +111,16 @@
       if (y != null) {
         return this.y = y;
       }
+    },
+    die: function() {
+      return console.log("You're dead");
+    },
+    updateHealth: function() {
+      var health_percentage;
+      health_percentage = ((this.health * 1.0) / (this.max_health * 1.0)) * 100;
+      return $("#player-health-bar").css({
+        width: parseInt(health_percentage).toString() + '%'
+      });
     }
   });
   Crafty.c('monster', {
@@ -116,6 +130,7 @@
       this.requires("damageable");
       this.addComponent("2D, DOM, Collision, CollisionInfo");
       this.origin("center");
+      this.alive = true;
       this.target = false;
       this.attr({
         x: 500,
@@ -129,17 +144,8 @@
         _results = [];
         for (_i = 0, _len = hit_data.length; _i < _len; _i++) {
           collision = hit_data[_i];
-<<<<<<< HEAD
-<<<<<<< HEAD
-          collider = collision.obj;
-          _results.push(collider.__c['player'] ? window.client.send(window.client.take_damage_message(collider[0], this.strength)) : void 0);
-=======
-          _results.push(collider = collision.obj);
->>>>>>> e190153... Disable take damage message for now
-=======
           collider = collision.obj;
           _results.push(collider.__c['player'] ? Math.random() > this.miss_rate ? collider.take_damage(this.strength) : void 0 : void 0);
->>>>>>> 6a65af1... Health!
         }
         return _results;
       });
@@ -177,6 +183,14 @@
       };
       this.state = window.client.machine.generateTree(behaviour, this);
       return console.log('Monster inited!');
+    },
+    die: function() {
+      this.alive = false;
+      return $(this._element).animate({
+        opacity: 0
+      }, 400, __bind(function() {
+        return this.destroy();
+      }, this));
     },
     onHit: function(hit_data) {},
     sleep: function() {
@@ -220,7 +234,8 @@
     },
     distanceFrom: function(player) {
       return Math.sqrt(Math.pow(this.x - player.x, 2) + Math.pow(this.y - player.y, 2));
-    }
+    },
+    updateHealth: function() {}
   });
   Crafty.c('tile', {
     init: function() {
@@ -320,12 +335,12 @@
       return this.monsters.push(monster);
     },
     log: function(msg) {
-      if ((typeof console !== "undefined" && console !== null ? console.log : void 0) != null) {
+      if ((typeof console != "undefined" && console !== null ? console.log : void 0) != null) {
         return console.log(msg);
       }
     },
     dir: function(msg) {
-      if ((typeof console !== "undefined" && console !== null ? console.dir : void 0) != null) {
+      if ((typeof console != "undefined" && console !== null ? console.dir : void 0) != null) {
         return console.dir(msg);
       }
     },
