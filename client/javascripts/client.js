@@ -120,7 +120,7 @@
         for (_i = 0, _len = hit_data.length; _i < _len; _i++) {
           collision = hit_data[_i];
           collider = collision.obj;
-          _results.push(collider.__c['player'] ? window.client.send(window.client.take_damage_mesage(collider[0], this.strength)) : void 0);
+          _results.push(collider.__c['player'] ? window.client.send(window.client.take_damage_message(collider[0], this.strength)) : void 0);
         }
         return _results;
       });
@@ -303,12 +303,12 @@
       return this.monsters.push(monster);
     },
     log: function(msg) {
-      if ((typeof console != "undefined" && console !== null ? console.log : void 0) != null) {
+      if ((typeof console !== "undefined" && console !== null ? console.log : void 0) != null) {
         return console.log(msg);
       }
     },
     dir: function(msg) {
-      if ((typeof console != "undefined" && console !== null ? console.dir : void 0) != null) {
+      if ((typeof console !== "undefined" && console !== null ? console.dir : void 0) != null) {
         return console.dir(msg);
       }
     },
@@ -322,8 +322,8 @@
       };
     },
     take_damage_message: function(entity_id, damage) {
-      type('take_damage');
       return {
+        type: 'take_damage',
         body: {
           entity_id: entity_id,
           damage: damage

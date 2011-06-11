@@ -105,7 +105,7 @@ Crafty.c 'monster'
         collider = collision.obj
         if collider.__c['player']
           #send a message telling the player he got hurt
-          window.client.send window.client.take_damage_mesage(collider[0], @strength)
+          window.client.send window.client.take_damage_message(collider[0], @strength)
 
     @speed = 1
     @state = false
@@ -254,7 +254,7 @@ window.client =
     @players_by_connection_id = {}
     @monsters = []
     
-    @machine = new Machine();
+    @machine = new Machine()
     monster = window.Crafty.e("monster", "goblin_green")
 
     @monsters.push monster
@@ -271,7 +271,7 @@ window.client =
       y: y
 
   take_damage_message: (entity_id, damage) ->
-    type 'take_damage'
+    type: 'take_damage'
     body:
       entity_id: entity_id
       damage: damage
