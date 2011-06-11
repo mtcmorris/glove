@@ -39,11 +39,17 @@
   });
   Crafty.c('damageable', {
     init: function() {
-      return this.health = 10;
+      this.health = 10;
+      return this.max_health = 100;
     },
     take_damage: function(damage) {
+      var health_percentage;
       this.health -= damage;
-      return window.client.log("Entity " + this[0] + " took " + damage + " damage");
+      window.client.log("Entity " + this[0] + " took " + damage + " damage");
+      health_percentage = this.max_health / this.health;
+      return $("#player-health-bar").css({
+        width: health_percentage + '%'
+      });
     }
   });
   Crafty.c("player", {

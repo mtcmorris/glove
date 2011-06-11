@@ -2,9 +2,37 @@
 @import "constants";
 
 header {
-   height: $baseline;
-   font-size: 0.8em;
-   p {
-     float: left;
-   }
+  height: $baseline;
+  font-size: 0.8em;
+  width: 600px;
+  margin: 0 auto;
+  position: relative;
+}
+
+#player-name {
+  position: absolute;
+  top: 33px;
+  left: 10px;
+  color: #fff;
+  z-index: 90;
+}
+
+#player-health {
+  position: absolute;
+  right: 10px;
+  height: 20px;
+  top: 35px;
+  z-index: 99;
+  width: 100px;
+  border: 1px solid #666;
+  background: -moz-linear-gradient(top, #666 0%, #ddd 60%); /* firefox */
+  background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,#666), color-stop(60%,#ddd)); /* webkit */
+  
+  #player-health-bar {
+    position: relative;
+    z-index: 90;
+    background: -moz-linear-gradient(top, #2F0000 0%, #8F0000 60%); /* firefox */
+    background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,#2F0000), color-stop(60%,#8F0000)); /* webkit */
+    height: 20px;
+  }
 }

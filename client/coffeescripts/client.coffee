@@ -22,10 +22,13 @@ Crafty.c "WASD"
 Crafty.c 'damageable'
   init: ->
     @health = 10
+    @max_health = 100
 
   take_damage: (damage) ->
     @health -= damage
     window.client.log "Entity #{this[0]} took #{damage} damage"
+    health_percentage = @max_health / @health
+    $("#player-health-bar").css({ width: health_percentage + '%'})
 
 
 Crafty.c "player"
@@ -136,7 +139,7 @@ window.client =
   receive: (message) ->
     @log 'IN: ' + $.toJSON(message)
     @dir message
-
+    
     switch message.type
       when 'connection'
         @log 'connected: ' + message.client
