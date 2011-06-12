@@ -147,7 +147,9 @@ Crafty.c "player"
     
   shoot: (dx, dy) ->
     bullet = window.Crafty.e("bullet, bullet_icon")
-    window.Crafty.audio.play("shoot1")
+    audio_file = "shoot#{parseInt(Math.random() * 5)}"
+    console.log "Playing #{audio_file}"
+    window.Crafty.audio.play("shoot#{parseInt(Math.random() * 5)}")
     bullet.setOrigin(this, dx, dy)
 
   move_to: (x, y) ->
@@ -317,12 +319,15 @@ window.client =
     Crafty.sprite 16, "images/lofi_interface_16x16.png",
       bullet_icon: [8,0]
 
-
-    Crafty.audio.add {
-        shoot1: "sounds/pew1.mp3", 
-        shoot2: "sounds/pew2.mp3", 
-        join:   "sounds/bugle.mp3"
-    }
+    for num in [1..5]
+      do (num) ->
+        console.log "Registering shoot#{num - 1} as sounds/pew#{num}.mp3"
+        window.Crafty.audio.add("shoot#{num - 1}", "sounds/pew#{num}.mp3")
+    #     shoot1: "sounds/pew1.mp3", 
+    #     shoot2: "sounds/pew2.mp3", 
+    #     join:   "sounds/bugle.mp3"
+    # }
+    window.Crafty.audio.add("join", "sounds/bugle.mp3")
     
     @player = window.Crafty.e("player, player_green, WASD").wasd(3)
     @player.name = prompt "What is your name?"
@@ -358,6 +363,8 @@ window.client =
 
     Crafty.viewport.x = @player.x
     Crafty.viewport.y = @player.y
+    
+    Crafty.audio.MAX_CHANNELS = 20
 
     @player.bind 'enterframe', ->
       if @x and @y
@@ -444,6 +451,7 @@ window.client =
     @log 'IN: ' + $.toJSON(message) if window.log_in
     switch message.type
       when 'connection'
+        Crafty.audio.play("join")
         @log 'connected: ' + message.client
         player = @players_by_connection_id[message.client] || Crafty.e('player, player_gray')
         @players_by_connection_id[message.client] = player

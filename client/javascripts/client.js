@@ -159,9 +159,11 @@
       return this.move_to(this.x + dx, this.y + dy);
     },
     shoot: function(dx, dy) {
-      var bullet;
+      var audio_file, bullet;
       bullet = window.Crafty.e("bullet, bullet_icon");
-      window.Crafty.audio.play("shoot1");
+      audio_file = "shoot" + (parseInt(Math.random() * 5));
+      console.log("Playing " + audio_file);
+      window.Crafty.audio.play("shoot" + (parseInt(Math.random() * 5)));
       return bullet.setOrigin(this, dx, dy);
     },
     move_to: function(x, y) {
@@ -337,7 +339,7 @@
   });
   window.client = {
     init: function() {
-      var name, num, _results;
+      var name, num, _fn, _results;
       Crafty.init(600, 300);
       Crafty.background("#000");
       Crafty.sprite(32, "images/lofi_char_32x32.png", {
@@ -362,11 +364,14 @@
       Crafty.sprite(16, "images/lofi_interface_16x16.png", {
         bullet_icon: [8, 0]
       });
-      Crafty.audio.add({
-        shoot1: "sounds/pew1.mp3",
-        shoot2: "sounds/pew2.mp3",
-        join: "sounds/bugle.mp3"
-      });
+      _fn = function(num) {
+        console.log("Registering shoot" + (num - 1) + " as sounds/pew" + num + ".mp3");
+        return window.Crafty.audio.add("shoot" + (num - 1), "sounds/pew" + num + ".mp3");
+      };
+      for (num = 1; num <= 5; num++) {
+        _fn(num);
+      }
+      window.Crafty.audio.add("join", "sounds/bugle.mp3");
       this.player = window.Crafty.e("player, player_green, WASD").wasd(3);
       this.player.name = prompt("What is your name?");
       $("#player-name").html(this.player.name);
@@ -410,6 +415,7 @@
       }, this));
       Crafty.viewport.x = this.player.x;
       Crafty.viewport.y = this.player.y;
+      Crafty.audio.MAX_CHANNELS = 20;
       this.player.bind('enterframe', function() {
         if (this.x && this.y) {
           Crafty.viewport.x = (this.x * -1) + Crafty.viewport.width / 2;
@@ -523,6 +529,7 @@
       }
       switch (message.type) {
         case 'connection':
+          Crafty.audio.play("join");
           this.log('connected: ' + message.client);
           player = this.players_by_connection_id[message.client] || Crafty.e('player, player_gray');
           this.players_by_connection_id[message.client] = player;
