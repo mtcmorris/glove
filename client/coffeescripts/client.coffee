@@ -218,7 +218,7 @@ Crafty.c 'monster'
           @x = @x - @speed if impulse[0] > 0
           @y = @y - @speed if impulse[1] > 0
           @y = @y + @speed if impulse[1] < 0
-        client.send(this.monster_status())
+          client.send(this.monster_status())
 
     # Possible future tree:
     # sleeping
@@ -240,6 +240,7 @@ Crafty.c 'monster'
     {
       type: "monster_status"
       body: {
+        id: @id,
         x: @x,
         y: @y,
         health: @health,
@@ -533,12 +534,11 @@ window.client =
 
       when 'monster_status'
         if !window.client.host
-          console.log "Got monster update"
-          console.log message.body
           updated_existing = false
           i = 0
           while i< @monsters.length
-            if monster.id == message.body.id
+            monster = @monster[i]
+            if monster && monster.id == message.body.id
               monster.update(message.body)
               updated_existing = true
               break

@@ -93,7 +93,8 @@ socket.on 'connection', (client) ->
 
 
     # sys.puts "==================="
-
+    if message.type == "monster_status"
+      sys.puts JSON.stringify(message)
     #pass this on to all the clients
     try
       # sys.puts "msg received from #{id}, rebroadcasting: " + JSON.stringify(message)

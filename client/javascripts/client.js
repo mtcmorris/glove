@@ -264,8 +264,8 @@
             if (impulse[1] < 0) {
               this.y = this.y + this.speed;
             }
+            return client.send(this.monster_status());
           }
-          return client.send(this.monster_status());
         }
       });
       behaviour = {
@@ -284,6 +284,7 @@
       return {
         type: "monster_status",
         body: {
+          id: this.id,
           x: this.x,
           y: this.y,
           health: this.health,
@@ -629,12 +630,11 @@
           break;
         case 'monster_status':
           if (!window.client.host) {
-            console.log("Got monster update");
-            console.log(message.body);
             updated_existing = false;
             i = 0;
             while (i < this.monsters.length) {
-              if (monster.id === message.body.id) {
+              monster = this.monster[i];
+              if (monster && monster.id === message.body.id) {
                 monster.update(message.body);
                 updated_existing = true;
                 break;
