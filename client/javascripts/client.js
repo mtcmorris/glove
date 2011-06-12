@@ -176,16 +176,16 @@
     },
     move_to: function(x, y) {
       var location_message;
-      location_message = client.set_location_message(x, y);
-      client.send(location_message);
       this.prev_x = this.x;
       this.prev_y = this.y;
       if (x != null) {
         this.x = x;
       }
       if (y != null) {
-        return this.y = y;
+        this.y = y;
       }
+      location_message = client.set_location_message(this.x, this.y);
+      return client.send(location_message);
     },
     die: function() {
       return console.log("You're dead");
@@ -490,12 +490,12 @@
       return this.monster_lair = new MonsterLair();
     },
     log: function(msg) {
-      if ((typeof console != "undefined" && console !== null ? console.log : void 0) != null) {
+      if ((typeof console !== "undefined" && console !== null ? console.log : void 0) != null) {
         return console.log(msg);
       }
     },
     dir: function(msg) {
-      if ((typeof console != "undefined" && console !== null ? console.dir : void 0) != null) {
+      if ((typeof console !== "undefined" && console !== null ? console.dir : void 0) != null) {
         return console.dir(msg);
       }
     },
