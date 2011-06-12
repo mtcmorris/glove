@@ -218,7 +218,7 @@ Crafty.c 'monster'
           @x = @x - @speed if impulse[0] > 0
           @y = @y - @speed if impulse[1] > 0
           @y = @y + @speed if impulse[1] < 0
-        client.send(this)
+        client.send(this.monster_status())
 
     # Possible future tree:
     # sleeping
@@ -296,6 +296,12 @@ Crafty.c 'monster'
     
   updateHealth: ->
     # this._element is the dom element of the monster - lets do something awesome
+    
+  update: (attributes) ->
+    @x      = attributes.x
+    @y      = attributes.y
+    @health = attributes.health
+    @speed  = attributes.speed
 
 Crafty.c 'tile'
   init: ->
@@ -511,11 +517,13 @@ window.client =
         bullet.setOrigin({x: message.body.x, y: message.body.y, client: message.client}, message.body.dx, message.body.dy)
       
       when 'you_are_the_host'
+        console.log "I'm the host - spawning monsters"
         window.client.host = true
         for num in [1..10]
           do (num) =>
             attributes = @monster_lair.generate()
             monster = window.Crafty.e("monster", attributes.sprite).attr(z: 3)
+            monster.id       = num
             monster.strength = attributes.strength
             monster.health   = attributes.health
             monster.speed    = attributes.speed
@@ -523,6 +531,24 @@ window.client =
             monster.y        = parseInt(Math.random() * 1000)
             @monsters.push monster
 
+      when 'monster_status'
+        if !window.client.host
+          console.log "Got monster update"
+          console.log message.body
+          updated_existing = false
+          i = 0
+          while i< @monsters.length
+            if monster.id == message.body.id
+              monster.update(message.body)
+              updated_existing = true
+              break
+            i++
+            
+          if !updated_existing
+            monster = window.Crafty.e("monster", message.body.sprite).attr(z: 3)
+            monster.update(message.body)
+            @monsters.push monster
+                  
 
 
 $ -> 

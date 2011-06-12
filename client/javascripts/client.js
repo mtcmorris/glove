@@ -265,7 +265,7 @@
               this.y = this.y + this.speed;
             }
           }
-          return client.send(this);
+          return client.send(this.monster_status());
         }
       });
       behaviour = {
@@ -344,7 +344,13 @@
     distanceFrom: function(player) {
       return Math.sqrt(Math.pow(this.x - player.x, 2) + Math.pow(this.y - player.y, 2));
     },
-    updateHealth: function() {}
+    updateHealth: function() {},
+    update: function(attributes) {
+      this.x = attributes.x;
+      this.y = attributes.y;
+      this.health = attributes.health;
+      return this.speed = attributes.speed;
+    }
   });
   Crafty.c('tile', {
     init: function() {
@@ -539,7 +545,7 @@
       return this.socket.send(message);
     },
     receive: function(message) {
-      var bullet, entity, map, num, player, _results;
+      var bullet, entity, i, map, monster, num, player, updated_existing, _results;
       if (window.log_in) {
         this.log('IN: ' + $.toJSON(message));
       }
@@ -600,6 +606,7 @@
             client: message.client
           }, message.body.dx, message.body.dy);
         case 'you_are_the_host':
+          console.log("I'm the host - spawning monsters");
           window.client.host = true;
           _results = [];
           for (num = 1; num <= 10; num++) {
@@ -609,6 +616,7 @@
               monster = window.Crafty.e("monster", attributes.sprite).attr({
                 z: 3
               });
+              monster.id = num;
               monster.strength = attributes.strength;
               monster.health = attributes.health;
               monster.speed = attributes.speed;
@@ -618,6 +626,29 @@
             }, this)(num));
           }
           return _results;
+          break;
+        case 'monster_status':
+          if (!window.client.host) {
+            console.log("Got monster update");
+            console.log(message.body);
+            updated_existing = false;
+            i = 0;
+            while (i < this.monsters.length) {
+              if (monster.id === message.body.id) {
+                monster.update(message.body);
+                updated_existing = true;
+                break;
+              }
+              i++;
+            }
+            if (!updated_existing) {
+              monster = window.Crafty.e("monster", message.body.sprite).attr({
+                z: 3
+              });
+              monster.update(message.body);
+              return this.monsters.push(monster);
+            }
+          }
       }
     }
   };

@@ -43,18 +43,19 @@ server.listen(PORT, HOSTNAME)
 #socket.io, I choose you
 socket = io.listen(server)
 
-clientHost = null
+clientHost = false
 
 
 socket.on 'connection', (client) ->
   #game.connect(client.sessionId) if client.sessionId?
   #other_client_ids = (clientid for clientid in socket.clients when clientid != client.sessionId)
 
-  ensureHost = ->
+  ensureHost = (candidate) ->
     # TODO: Handle disconnect of the server
-    if !clientHost || socket.clientsIndex[clientHost]
-      client.send(type: 'you_are_the_host', client: client.sessionId)
-      clientHost = client.sessionId
+    if !clientHost || !socket.clientsIndex[clientHost]
+      sys.puts "Picked #{candidate.sessionId} to host"
+      candidate.send(type: 'you_are_the_host', client: candidate.sessionId)
+      clientHost = candidate.sessionId
 
   notify = (id) ->
     sys.puts 'All clients connected: ' + id
@@ -64,7 +65,7 @@ socket.on 'connection', (client) ->
   notify(id) for id, client of socket.clientsIndex
   client.send(type: 'map', body: { map: themap })
   
-  ensureHost()
+  ensureHost(client)
 
 
   client.on 'disconnect', ->
@@ -92,9 +93,6 @@ socket.on 'connection', (client) ->
 
 
     # sys.puts "==================="
-    if message.type == "draw_bullet"
-      sys.puts JSON.stringify(message)
-
 
     #pass this on to all the clients
     try
