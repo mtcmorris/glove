@@ -73,6 +73,7 @@ Crafty.c 'bullet'
       y: 0
       w: 16
       h: 16
+      z: 3
     @origin_x = null
     @origin_y = null
     @vector = [1.0, 1.0]
@@ -124,6 +125,7 @@ Crafty.c "player"
       y: 100
       w: 32
       h: 32
+      z: 3
       
     @collision (new Crafty.polygon([0,0], [30,0], [30,30], [0, 30]).shift(5, 5))
             
