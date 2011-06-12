@@ -45,6 +45,7 @@ socket = io.listen(server)
 
 clientHost = false
 
+monsters = []
 
 socket.on 'connection', (client) ->
   #game.connect(client.sessionId) if client.sessionId?
@@ -55,6 +56,7 @@ socket.on 'connection', (client) ->
     if !clientHost || !socket.clientsIndex[clientHost]
       sys.puts "Picked #{candidate.sessionId} to host"
       candidate.send(type: 'you_are_the_host', client: candidate.sessionId)
+      monsters = []
       clientHost = candidate.sessionId
 
   notify = (id) ->
@@ -64,6 +66,9 @@ socket.on 'connection', (client) ->
 
   notify(id) for id, client of socket.clientsIndex
   client.send(type: 'map', body: { map: themap })
+  
+  for monster in monsters
+    client.send monster
   
   ensureHost(client)
 
@@ -90,7 +95,8 @@ socket.on 'connection', (client) ->
     #       return false
 
     # return if handle_message(message)
-
+    
+    monsters.push message if message.type == "entity_created" && message.body.components[0] == "monster"
 
     # sys.puts "==================="
     if message.type == "monster_status"
