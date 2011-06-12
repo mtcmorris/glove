@@ -62,7 +62,6 @@ Crafty.c 'damageable'
     
     this.updateHealth()
 
-<<<<<<< HEAD
 Crafty.c 'bullet'
   init: ->
     @requires("2D, DOM, Collision, CollisionInfo")
@@ -115,8 +114,6 @@ Crafty.c 'bullet'
     this.calculateVector()
     
 
-=======
->>>>>>> 73c29dab209a0dc669789956a53b5ac59328c731
 Crafty.c "player"
   init: ->
     @requires("2D, DOM, Collision, CollisionInfo, damageable, name")
@@ -498,5 +495,5 @@ window.client =
 
 
 $ -> 
-  Crafty.load ["images/lofi_char.png", "images/lofi_interface_16x16.png", "sounds/pew1.mp3", "sounds/pew2.mp3"], ->
+  Crafty.load ["images/lofi_char.png", "images/lofi_interface_16x16.png"], ->
     window.client.init()
