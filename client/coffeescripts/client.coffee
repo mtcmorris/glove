@@ -140,13 +140,8 @@ Crafty.c "player"
         collider = collision.obj
         # if collider.__c['monster']
           # console.log 
-<<<<<<< HEAD
           # collider.take_damage(@strength) if Math.random() > @miss_rate
-
-=======
-          collider.take_damage(@strength) if Math.random() > @miss_rate
           
->>>>>>> 73c29dab209a0dc669789956a53b5ac59328c731
   dxy: (dx, dy) ->
     @move_to(@x + dx, @y + dy)
     
@@ -319,8 +314,6 @@ window.client =
       wall_gray: [0,0],
       floor_brown: [12,1]
       
-<<<<<<< HEAD
-      
     Crafty.sprite 16, "images/lofi_interface_16x16.png",
       bullet_icon: [8,0]
 
@@ -330,7 +323,10 @@ window.client =
         shoot2: "sounds/pew2.mp3", 
         join:   "sounds/bugle.mp3"
     }
-    @player = window.Crafty.e("player, player_green, WASD").wasd(3).attr(z: 3)
+    
+    @player = window.Crafty.e("player, player_green, WASD").wasd(3)
+    @player.name = prompt "What is your name?"
+    $("#player-name").html(@player.name)
     
     window.Crafty.addEvent @player, window.Crafty.stage.elem, "click", (mouseEvent)->
       # Treat player as [0,0] for the purposes of bullets
@@ -338,12 +334,6 @@ window.client =
       clicky = ((mouseEvent.y - Crafty.viewport.height/2 - parseInt($("#cr-stage").offset().top))* -1 ) 
       this.shoot clickx, clicky
 
-=======
-    @player = window.Crafty.e("player, player_green, WASD").wasd(3)
-    @player.name = prompt "What is your name?"
-    $("#player-name").html(@player.name)
-    
->>>>>>> 73c29dab209a0dc669789956a53b5ac59328c731
     @player.onHit 'wall', (hit_data) =>
       for collision in hit_data
         #bail early if we've resolved this collision

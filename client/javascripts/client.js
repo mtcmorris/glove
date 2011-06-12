@@ -337,11 +337,7 @@
   });
   window.client = {
     init: function() {
-<<<<<<< HEAD
-      var num, _results;
-=======
-      var monster, name;
->>>>>>> 73c29dab209a0dc669789956a53b5ac59328c731
+      var name, num, _results;
       Crafty.init(600, 300);
       Crafty.background("#000");
       Crafty.sprite(32, "images/lofi_char_32x32.png", {
@@ -363,7 +359,6 @@
         wall_gray: [0, 0],
         floor_brown: [12, 1]
       });
-<<<<<<< HEAD
       Crafty.sprite(16, "images/lofi_interface_16x16.png", {
         bullet_icon: [8, 0]
       });
@@ -372,20 +367,15 @@
         shoot2: "sounds/pew2.mp3",
         join: "sounds/bugle.mp3"
       });
-      this.player = window.Crafty.e("player, player_green, WASD").wasd(3).attr({
-        z: 3
-      });
+      this.player = window.Crafty.e("player, player_green, WASD").wasd(3);
+      this.player.name = prompt("What is your name?");
+      $("#player-name").html(this.player.name);
       window.Crafty.addEvent(this.player, window.Crafty.stage.elem, "click", function(mouseEvent) {
         var clickx, clicky;
         clickx = (mouseEvent.x - Crafty.viewport.width / 2) - parseInt($("#cr-stage").offset().left);
         clicky = (mouseEvent.y - Crafty.viewport.height / 2 - parseInt($("#cr-stage").offset().top)) * -1;
         return this.shoot(clickx, clicky);
       });
-=======
-      this.player = window.Crafty.e("player, player_green, WASD").wasd(3);
-      this.player.name = prompt("What is your name?");
-      $("#player-name").html(this.player.name);
->>>>>>> 73c29dab209a0dc669789956a53b5ac59328c731
       this.player.onHit('wall', __bind(function(hit_data) {
         var c_info, collider, collision, dx, dy, moved_down, moved_left, moved_right, moved_up, _i, _len, _results;
         _results = [];
@@ -553,14 +543,10 @@
           break;
         case 'set_location':
           player = this.players_by_connection_id[message.client];
-          return player.attr({
+          player.attr({
             x: message.body.x,
             y: message.body.y
           });
-<<<<<<< HEAD
-        case 'setName':
-          return '';
-=======
           if (player.name_label) {
             player.name_label.attr({
               x: message.body.x,
@@ -576,7 +562,6 @@
             type: "set_name",
             body: this.player.name
           });
->>>>>>> 73c29dab209a0dc669789956a53b5ac59328c731
         case 'take_damage':
           entity = Crafty(message.body.entity_id);
           if (entity) {
@@ -586,7 +571,7 @@
     }
   };
   $(function() {
-    return Crafty.load(["images/lofi_char.png", "images/lofi_interface_16x16.png", "sounds/pew1.mp3", "sounds/pew2.mp3"], function() {
+    return Crafty.load(["images/lofi_char.png", "images/lofi_interface_16x16.png"], function() {
       return window.client.init();
     });
   });
