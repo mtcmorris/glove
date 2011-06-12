@@ -73,6 +73,52 @@
       return this.updateHealth();
     }
   });
+  Crafty.c('bullet', {
+    init: function() {
+      this.requires("2D, DOM, Collision, CollisionInfo");
+      this.speed = 1;
+      this.damage = 5;
+      this.attr({
+        x: 0,
+        y: 0,
+        w: 16,
+        h: 16
+      });
+      this.origin_x = null;
+      this.origin_y = null;
+      this.vector = [1.0, 1.0];
+      this.bind('enterframe', function() {
+        this.x = this.x + (this.speed * this.vector[0]);
+        return this.y = this.y + (this.speed * this.vector[1] * -1);
+      });
+      return this.onHit('monster', function(hit_data) {
+        var collider, collision, _i, _len, _results;
+        _results = [];
+        for (_i = 0, _len = hit_data.length; _i < _len; _i++) {
+          collision = hit_data[_i];
+          _results.push(collider = collision.obj);
+        }
+        return _results;
+      });
+    },
+    calculateVector: function() {
+      var angle;
+      console.log("dx,dy is " + this.dx + "," + this.dy + ". Origin x,y is " + this.origin_x + "," + this.origin_y);
+      angle = Math.atan2(this.dy, this.dx);
+      this.vector = [Math.cos(angle), Math.sin(angle)];
+      return console.log("Vector is " + this.vector[0] + ", " + this.vector[1]);
+    },
+    setOrigin: function(player, dx, dy) {
+      this.x = player.x;
+      this.origin_x = player.x;
+      this.y = player.y;
+      this.origin_y = player.y;
+      this.origin = player;
+      this.dx = dx;
+      this.dy = dy;
+      return this.calculateVector();
+    }
+  });
   Crafty.c("player", {
     init: function() {
       this.requires("2D, DOM, Collision, CollisionInfo, damageable");
@@ -100,6 +146,11 @@
     },
     dxy: function(dx, dy) {
       return this.move_to(this.x + dx, this.y + dy);
+    },
+    shoot: function(dx, dy) {
+      var bullet;
+      bullet = window.Crafty.e("bullet, player_green");
+      return bullet.setOrigin(this, dx, dy);
     },
     move_to: function(x, y) {
       var location_message;
@@ -283,6 +334,12 @@
         floor_brown: [12, 1]
       });
       this.player = window.Crafty.e("player, player_green, WASD").wasd(3);
+      window.Crafty.addEvent(this.player, window.Crafty.stage.elem, "click", function(mouseEvent) {
+        var clickx, clicky;
+        clickx = mouseEvent.x - Crafty.viewport.width / 2;
+        clicky = (mouseEvent.y - Crafty.viewport.height / 2 - 60) * -1;
+        return this.shoot(clickx, clicky);
+      });
       this.player.onHit('wall', __bind(function(hit_data) {
         var c_info, collider, collision, dx, dy, moved_down, moved_left, moved_right, moved_up, _i, _len, _results;
         _results = [];

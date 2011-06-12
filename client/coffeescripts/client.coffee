@@ -62,6 +62,49 @@ Crafty.c 'damageable'
     
     this.updateHealth()
 
+Crafty.c 'bullet'
+  init: ->
+    @requires("2D, DOM, Collision, CollisionInfo")
+    @speed = 1
+    @damage = 5
+    
+    @attr
+      x: 0
+      y: 0
+      w: 16
+      h: 16
+    @origin_x = null
+    @origin_y = null
+    @vector = [1.0, 1.0]
+    
+    @bind 'enterframe', ->
+      @x = @x + (@speed * @vector[0])
+      @y = @y + (@speed * @vector[1] * -1)
+    
+    @onHit 'monster', (hit_data) ->
+      for collision in hit_data
+        collider = collision.obj
+        # if collider.__c['monster'] || collider.__c['player']
+          # console.log 
+          # collider.take_damage(@damage)
+  calculateVector: ->
+    console.log "dx,dy is #{@dx},#{@dy}. Origin x,y is #{@origin_x},#{@origin_y}"
+    angle = Math.atan2(@dy,@dx)
+    # console.log "Angle is #{angle}"
+    @vector = [Math.cos(angle),Math.sin(angle) ]
+    console.log "Vector is #{@vector[0]}, #{@vector[1]}"
+    
+  setOrigin: (player, dx, dy) ->
+    @x        = player.x
+    @origin_x = player.x
+    @y        = player.y
+    @origin_y = player.y
+    @origin   = player
+    @dx       = dx
+    @dy       = dy
+
+    this.calculateVector()
+    
 
 Crafty.c "player"
   init: ->
@@ -92,6 +135,10 @@ Crafty.c "player"
 
   dxy: (dx, dy) ->
     @move_to(@x + dx, @y + dy)
+    
+  shoot: (dx, dy) ->
+    bullet = window.Crafty.e("bullet, player_green")
+    bullet.setOrigin(this, dx, dy)
 
   move_to: (x, y) ->
     location_message = client.set_location_message(x, y)
@@ -254,6 +301,13 @@ window.client =
       floor_brown: [12,1]
 
     @player = window.Crafty.e("player, player_green, WASD").wasd(3)
+    
+    window.Crafty.addEvent @player, window.Crafty.stage.elem, "click", (mouseEvent)->
+      # Treat player as [0,0] for the purposes of bullets
+      clickx = mouseEvent.x - Crafty.viewport.width/2
+      clicky = ((mouseEvent.y - Crafty.viewport.height/2 - 60)* -1 ) 
+      this.shoot clickx, clicky
+
     @player.onHit 'wall', (hit_data) =>
       for collision in hit_data
         #bail early if we've resolved this collision
@@ -324,7 +378,10 @@ window.client =
 
   log: (msg) -> console.log msg if console?.log?
   dir: (msg) -> console.dir msg if console?.dir?
-
+  
+  # # Returns a translated x/y for a spawn point
+  # getSpawnPoint: ->
+  #   
 
   set_location_message: (x, y) ->
     type: 'set_location'
