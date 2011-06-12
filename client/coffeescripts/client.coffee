@@ -62,10 +62,9 @@ Crafty.c 'damageable'
     
     this.updateHealth()
 
-
 Crafty.c "player"
   init: ->
-    @requires("2D, DOM, Collision, CollisionInfo, damageable")
+    @requires("2D, DOM, Collision, CollisionInfo, damageable, name")
     @origin("center")
     # @css
     #   border: '1px solid white'
@@ -79,7 +78,6 @@ Crafty.c "player"
     @miss_rate = 0.4
     @strength = 5
 
-
     console.log 'Player inited!'
 
     @onHit 'monster', (hit_data) ->
@@ -89,7 +87,7 @@ Crafty.c "player"
         if collider.__c['monster']
           # console.log 
           collider.take_damage(@strength) if Math.random() > @miss_rate
-
+          
   dxy: (dx, dy) ->
     @move_to(@x + dx, @y + dy)
 
@@ -107,8 +105,12 @@ Crafty.c "player"
   updateHealth: ->
     health_percentage = ((@health * 1.0) / (@max_health * 1.0))* 100
     $("#player-health-bar").css({ width: parseInt(health_percentage).toString() + '%'})
-
-
+    
+  set_name: (name) ->
+    unless @name
+      @name = name
+      @name_label = Crafty.e("2D, DOM, text")
+      @name_label.attr({w: 100, h: 20, x: @x, y: @y + 30}).text(@name).css('font-size': '10px');
 
 Crafty.c 'monster'
   init: ->
@@ -242,8 +244,11 @@ window.client =
     Crafty.sprite 40, "images/lofi_environment.png",
       wall_gray: [0,0],
       floor_brown: [12,1]
-
+      
     @player = window.Crafty.e("player, player_green, WASD").wasd(3)
+    @player.name = prompt "What is your name?"
+    $("#player-name").html(@player.name)
+    
     @player.onHit 'wall', (hit_data) =>
       for collision in hit_data
         #bail early if we've resolved this collision
@@ -282,13 +287,14 @@ window.client =
     })
 
     @socket.connect()
-
+    
+    name = @player.name
     @socket.on 'connect', ->
-
+      @send type: "set_name", body: name
+      @send type: "request_name"
+      
     @socket.on 'message', (message) =>
       @receive(message)
-
-    @socket.send type: "setName", body: $("#player-name").innerHTML
 
     @game = new window.Game
     @players_by_connection_id = {}
@@ -336,7 +342,6 @@ window.client =
 
   receive: (message) ->
     @log 'IN: ' + $.toJSON(message) if window.log_in
-
     switch message.type
       when 'connection'
         @log 'connected: ' + message.client
@@ -355,14 +360,22 @@ window.client =
         player = @players_by_connection_id[message.client]
         delete @players_by_connection_id[message.client]
         player.destroy()
+        if player.name_label
+          player.name_label.destroy()
 
       when 'set_location'
         player = @players_by_connection_id[message.client]
         player.attr({x: message.body.x, y: message.body.y})
+        if player.name_label
+          player.name_label.attr({x: message.body.x, y: message.body.y + 30})
         @log message.client + ' ' + player.x + ' ' + player.y
 
-      when 'setName'
-        ''
+      when 'set_name'
+        player = @players_by_connection_id[message.client]
+        player.set_name message.body
+        
+      when 'request_name'
+        @socket.send type: "set_name", body: @player.name
 
       when 'take_damage'
         entity = Crafty(message.body.entity_id)
