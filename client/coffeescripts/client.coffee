@@ -206,16 +206,20 @@ Crafty.c 'monster'
     @speed = 1
     @state = false
 
+    
     @bind "enterframe", ->
-      @state = @state.tick() if @state
-      if @target
-        # Impulse in [x,y]
-        impulse = this.getImpulse(@target)
+      if window.client.host
+        @state = @state.tick() if @state
+        if @target
+          # Impulse in [x,y]
+          impulse = this.getImpulse(@target)
 
-        @x = @x + @speed if impulse[0] < 0
-        @x = @x - @speed if impulse[0] > 0
-        @y = @y - @speed if impulse[1] > 0
-        @y = @y + @speed if impulse[1] < 0
+          @x = @x + @speed if impulse[0] < 0
+          @x = @x - @speed if impulse[0] > 0
+          @y = @y - @speed if impulse[1] > 0
+          @y = @y + @speed if impulse[1] < 0
+        client.send(this)
+
     # Possible future tree:
     # sleeping
     #   attacking
@@ -231,6 +235,19 @@ Crafty.c 'monster'
 
     @state = window.client.machine.generateTree(behaviour, this)
     console.log 'Monster inited!'
+    
+  monster_status: ->
+    {
+      type: "monster_status"
+      body: {
+        x: @x,
+        y: @y,
+        health: @health,
+        speed: @speed,
+        sprite: @sprite,
+        strength: @strength
+      }
+    }
     
   die: ->
     # MONSTER DOWN!!!!!!
@@ -404,17 +421,6 @@ window.client =
     
     @monsters = []
     @monster_lair = new MonsterLair()
-    
-    for num in [1..10]
-      do (num) =>
-        attributes = @monster_lair.generate()
-        monster = window.Crafty.e("monster", attributes.sprite).attr(z: 3)
-        monster.strength = attributes.strength
-        monster.health   = attributes.health
-        monster.speed    = attributes.speed
-        monster.x        = parseInt(Math.random() * 1000)
-        monster.y        = parseInt(Math.random() * 1000)
-        @monsters.push monster
 
 
 
@@ -503,6 +509,19 @@ window.client =
         bullet = Crafty.e("bullet, bullet_icon")
         bullet.damage = 0
         bullet.setOrigin({x: message.body.x, y: message.body.y, client: message.client}, message.body.dx, message.body.dy)
+      
+      when 'you_are_the_host'
+        window.client.host = true
+        for num in [1..10]
+          do (num) =>
+            attributes = @monster_lair.generate()
+            monster = window.Crafty.e("monster", attributes.sprite).attr(z: 3)
+            monster.strength = attributes.strength
+            monster.health   = attributes.health
+            monster.speed    = attributes.speed
+            monster.x        = parseInt(Math.random() * 1000)
+            monster.y        = parseInt(Math.random() * 1000)
+            @monsters.push monster
 
 
 

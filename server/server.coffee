@@ -43,9 +43,18 @@ server.listen(PORT, HOSTNAME)
 #socket.io, I choose you
 socket = io.listen(server)
 
+clientHost = null
+
+
 socket.on 'connection', (client) ->
   #game.connect(client.sessionId) if client.sessionId?
   #other_client_ids = (clientid for clientid in socket.clients when clientid != client.sessionId)
+
+  ensureHost = ->
+    # TODO: Handle disconnect of the server
+    if !clientHost || socket.clientsIndex[clientHost]
+      client.send(type: 'you_are_the_host', client: client.sessionId)
+      clientHost = client.sessionId
 
   notify = (id) ->
     sys.puts 'All clients connected: ' + id
@@ -54,11 +63,14 @@ socket.on 'connection', (client) ->
 
   notify(id) for id, client of socket.clientsIndex
   client.send(type: 'map', body: { map: themap })
+  
+  ensureHost()
 
 
   client.on 'disconnect', ->
     sys.puts 'discon: ' + client.sessionId
     client.broadcast(type: 'disconnection', client: client.sessionId)
+    ensureHost()
   
 
   client.on 'message', (message) ->

@@ -246,23 +246,26 @@
       this.state = false;
       this.bind("enterframe", function() {
         var impulse;
-        if (this.state) {
-          this.state = this.state.tick();
-        }
-        if (this.target) {
-          impulse = this.getImpulse(this.target);
-          if (impulse[0] < 0) {
-            this.x = this.x + this.speed;
+        if (window.client.host) {
+          if (this.state) {
+            this.state = this.state.tick();
           }
-          if (impulse[0] > 0) {
-            this.x = this.x - this.speed;
+          if (this.target) {
+            impulse = this.getImpulse(this.target);
+            if (impulse[0] < 0) {
+              this.x = this.x + this.speed;
+            }
+            if (impulse[0] > 0) {
+              this.x = this.x - this.speed;
+            }
+            if (impulse[1] > 0) {
+              this.y = this.y - this.speed;
+            }
+            if (impulse[1] < 0) {
+              this.y = this.y + this.speed;
+            }
           }
-          if (impulse[1] > 0) {
-            this.y = this.y - this.speed;
-          }
-          if (impulse[1] < 0) {
-            return this.y = this.y + this.speed;
-          }
+          return client.send(this);
         }
       });
       behaviour = {
@@ -276,6 +279,19 @@
       };
       this.state = window.client.machine.generateTree(behaviour, this);
       return console.log('Monster inited!');
+    },
+    monster_status: function() {
+      return {
+        type: "monster_status",
+        body: {
+          x: this.x,
+          y: this.y,
+          health: this.health,
+          speed: this.speed,
+          sprite: this.sprite,
+          strength: this.strength
+        }
+      };
     },
     die: function() {
       this.alive = false;
@@ -351,7 +367,7 @@
   });
   window.client = {
     init: function() {
-      var name, num, _fn, _results;
+      var name, num, _fn;
       Crafty.init(600, 300);
       Crafty.background("#000");
       Crafty.sprite(32, "images/lofi_char_32x32.png", {
@@ -464,24 +480,7 @@
       this.players_by_connection_id = {};
       this.machine = new Machine();
       this.monsters = [];
-      this.monster_lair = new MonsterLair();
-      _results = [];
-      for (num = 1; num <= 10; num++) {
-        _results.push(__bind(function(num) {
-          var attributes, monster;
-          attributes = this.monster_lair.generate();
-          monster = window.Crafty.e("monster", attributes.sprite).attr({
-            z: 3
-          });
-          monster.strength = attributes.strength;
-          monster.health = attributes.health;
-          monster.speed = attributes.speed;
-          monster.x = parseInt(Math.random() * 1000);
-          monster.y = parseInt(Math.random() * 1000);
-          return this.monsters.push(monster);
-        }, this)(num));
-      }
-      return _results;
+      return this.monster_lair = new MonsterLair();
     },
     log: function(msg) {
       if ((typeof console != "undefined" && console !== null ? console.log : void 0) != null) {
@@ -540,7 +539,7 @@
       return this.socket.send(message);
     },
     receive: function(message) {
-      var bullet, entity, map, player;
+      var bullet, entity, map, num, player, _results;
       if (window.log_in) {
         this.log('IN: ' + $.toJSON(message));
       }
@@ -600,6 +599,25 @@
             y: message.body.y,
             client: message.client
           }, message.body.dx, message.body.dy);
+        case 'you_are_the_host':
+          window.client.host = true;
+          _results = [];
+          for (num = 1; num <= 10; num++) {
+            _results.push(__bind(function(num) {
+              var attributes, monster;
+              attributes = this.monster_lair.generate();
+              monster = window.Crafty.e("monster", attributes.sprite).attr({
+                z: 3
+              });
+              monster.strength = attributes.strength;
+              monster.health = attributes.health;
+              monster.speed = attributes.speed;
+              monster.x = parseInt(Math.random() * 1000);
+              monster.y = parseInt(Math.random() * 1000);
+              return this.monsters.push(monster);
+            }, this)(num));
+          }
+          return _results;
       }
     }
   };
