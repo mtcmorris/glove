@@ -142,6 +142,7 @@
       this.health = 100;
       return this.max_health = 100;
     },
+    send_take_damage: function() {},
     damageable_attrs: function() {
       return {
         health: this.health,
@@ -149,9 +150,20 @@
       };
     },
     take_damage: function(damage) {
+      var take_damage_message;
       this.health -= damage;
       if (window.log != null) {
         window.client.log("Entity " + this[0] + " took " + damage + " damage");
+      }
+      take_damage_message = {
+        type: 'take_damage',
+        body: {
+          entity_uuid: this.uuid,
+          damage: damage
+        }
+      };
+      if (window.client.host != null) {
+        window.client.send(take_damage_message);
       }
       if (this.health < 0) {
         this.die();
@@ -602,12 +614,12 @@
       return this.monster_lair = new MonsterLair();
     },
     log: function(msg) {
-      if ((typeof console != "undefined" && console !== null ? console.log : void 0) != null) {
+      if ((typeof console !== "undefined" && console !== null ? console.log : void 0) != null) {
         return console.log(msg);
       }
     },
     dir: function(msg) {
-      if ((typeof console != "undefined" && console !== null ? console.dir : void 0) != null) {
+      if ((typeof console !== "undefined" && console !== null ? console.dir : void 0) != null) {
         return console.dir(msg);
       }
     },
@@ -690,6 +702,9 @@
           return player.attr({
             clientid: message.client
           });
+        case 'take_damage':
+          entity = this.entities_by_uuid[message.body.entity_uuid];
+          return entity.take_damage(message.body.damage);
         case 'map':
           map = message.body.map;
           this.add_map_tiles(map);

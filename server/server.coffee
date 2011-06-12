@@ -18,6 +18,7 @@ _.each themap, (row, y) ->
   sys.puts row
   
 HOSTNAME    = null
+HOSTNAME    = 'enterprise-g.local'
 PORT    = 9000
 WEBROOT = path.join(path.dirname(__filename), '..')
 

@@ -114,18 +114,29 @@ Crafty.c 'damageable'
     @health = 100
     @max_health = 100
 
+  send_take_damage: ->
+
   damageable_attrs: ->
     health: @health 
     max_health: @max_health
 
   take_damage: (damage) ->
     @health -= damage
+
     window.client.log "Entity #{this[0]} took #{damage} damage" if window.log?
+
+    take_damage_message = 
+      type: 'take_damage'
+      body:
+        entity_uuid: @uuid
+        damage: damage
+    window.client.send take_damage_message if window.client.host?
     
     if @health < 0
       this.die()
     
     this.updateHealth()
+
 
 Crafty.c 'bullet'
   init: ->
@@ -185,6 +196,7 @@ Crafty.c 'bullet'
     @dy       = dy
 
     this.calculateVector()
+
 
 Crafty.c "player"
   init: ->
@@ -559,11 +571,9 @@ window.client =
         
         for key,val of message.body
           entity[key] = val unless key == "components"
-        
 
         entity.addComponent(message.body.sprite) if message.body.sprite
           
-        
         @entities_by_uuid[entity.uuid] = entity
 
       when 'connection'
@@ -572,6 +582,10 @@ window.client =
         player = @players_by_connection_id[message.client] || Crafty.e('player, player_gray')
         @players_by_connection_id[message.client] = player
         player.attr(clientid: message.client)
+
+      when 'take_damage'
+        entity = @entities_by_uuid[message.body.entity_uuid]
+        entity.take_damage(message.body.damage)
 
       when 'map'
         #Oh snap, it's the map!
