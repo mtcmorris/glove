@@ -345,7 +345,9 @@
       Crafty.sprite(16, "images/lofi_interface_16x16.png", {
         bullet_icon: [8, 0]
       });
-      this.player = window.Crafty.e("player, player_green, WASD").wasd(3);
+      this.player = window.Crafty.e("player, player_green, WASD").wasd(3).attr({
+        z: 3
+      });
       window.Crafty.addEvent(this.player, window.Crafty.stage.elem, "click", function(mouseEvent) {
         var clickx, clicky;
         clickx = (mouseEvent.x - Crafty.viewport.width / 2) - parseInt($("#cr-stage").offset().left);
@@ -418,7 +420,9 @@
         _results.push(__bind(function(num) {
           var attributes, monster;
           attributes = this.monster_lair.generate();
-          monster = window.Crafty.e("monster", attributes.sprite);
+          monster = window.Crafty.e("monster", attributes.sprite).attr({
+            z: 3
+          });
           monster.strength = attributes.strength;
           monster.health = attributes.health;
           monster.speed = attributes.speed;
@@ -467,7 +471,7 @@
               tile = Crafty.e('wall');
               break;
             case 'f':
-              tile = Crafty.e('floor');
+              tile = Crafty.e('floor', 'floor_brown');
           }
           if (tile) {
             return tile.attr({

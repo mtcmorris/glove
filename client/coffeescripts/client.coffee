@@ -311,7 +311,7 @@ window.client =
     Crafty.sprite 16, "images/lofi_interface_16x16.png",
       bullet_icon: [8,0]
 
-    @player = window.Crafty.e("player, player_green, WASD").wasd(3)
+    @player = window.Crafty.e("player, player_green, WASD").wasd(3).attr(z: 3)
     
     window.Crafty.addEvent @player, window.Crafty.stage.elem, "click", (mouseEvent)->
       # Treat player as [0,0] for the purposes of bullets
@@ -376,7 +376,7 @@ window.client =
     for num in [1..10]
       do (num) =>
         attributes = @monster_lair.generate()
-        monster = window.Crafty.e("monster", attributes.sprite)
+        monster = window.Crafty.e("monster", attributes.sprite).attr(z: 3)
         monster.strength = attributes.strength
         monster.health   = attributes.health
         monster.speed    = attributes.speed
@@ -415,7 +415,7 @@ window.client =
           when 'W'
             tile = Crafty.e('wall')
           when 'f'
-            tile = Crafty.e('floor')
+            tile = Crafty.e('floor', 'floor_brown')
         tile.attr(x: x * tile.w, y: y * tile.h) if tile
     @log 'Map loaded!'
 
