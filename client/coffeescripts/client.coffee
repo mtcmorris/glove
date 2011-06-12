@@ -148,6 +148,7 @@ Crafty.c "player"
     
   shoot: (dx, dy) ->
     bullet = window.Crafty.e("bullet, bullet_icon")
+    window.Crafty.audio.play("shoot1")
     bullet.setOrigin(this, dx, dy)
 
   move_to: (x, y) ->
@@ -310,9 +311,16 @@ window.client =
       wall_gray: [0,0],
       floor_brown: [12,1]
       
+      
     Crafty.sprite 16, "images/lofi_interface_16x16.png",
       bullet_icon: [8,0]
 
+
+    Crafty.audio.add {
+        shoot1: "sounds/pew1.mp3", 
+        shoot2: "sounds/pew2.mp3", 
+        join:   "sounds/bugle.mp3"
+    }
     @player = window.Crafty.e("player, player_green, WASD").wasd(3).attr(z: 3)
     
     window.Crafty.addEvent @player, window.Crafty.stage.elem, "click", (mouseEvent)->
@@ -463,5 +471,5 @@ window.client =
 
 
 $ -> 
-  Crafty.load ["images/lofi_char.png", "images/lofi_interface_16x16.png"], ->
+  Crafty.load ["images/lofi_char.png", "images/lofi_interface_16x16.png", "sounds/pew1.mp3", "sounds/pew2.mp3"], ->
     window.client.init()

@@ -82,7 +82,8 @@
         x: 0,
         y: 0,
         w: 16,
-        h: 16
+        h: 16,
+        z: 3
       });
       this.origin_x = null;
       this.origin_y = null;
@@ -137,7 +138,8 @@
         x: 100,
         y: 100,
         w: 32,
-        h: 32
+        h: 32,
+        z: 3
       });
       this.collision(new Crafty.polygon([0, 0], [30, 0], [30, 30], [0, 30]).shift(5, 5));
       this.miss_rate = 0.4;
@@ -159,6 +161,7 @@
     shoot: function(dx, dy) {
       var bullet;
       bullet = window.Crafty.e("bullet, bullet_icon");
+      window.Crafty.audio.play("shoot1");
       return bullet.setOrigin(this, dx, dy);
     },
     move_to: function(x, y) {
@@ -345,6 +348,11 @@
       Crafty.sprite(16, "images/lofi_interface_16x16.png", {
         bullet_icon: [8, 0]
       });
+      Crafty.audio.add({
+        shoot1: "sounds/pew1.mp3",
+        shoot2: "sounds/pew2.mp3",
+        join: "sounds/bugle.mp3"
+      });
       this.player = window.Crafty.e("player, player_green, WASD").wasd(3).attr({
         z: 3
       });
@@ -527,7 +535,7 @@
     }
   };
   $(function() {
-    return Crafty.load(["images/lofi_char.png", "images/lofi_interface_16x16.png"], function() {
+    return Crafty.load(["images/lofi_char.png", "images/lofi_interface_16x16.png", "sounds/pew1.mp3", "sounds/pew2.mp3"], function() {
       return window.client.init();
     });
   });
