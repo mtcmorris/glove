@@ -260,13 +260,23 @@
   });
   window.client = {
     init: function() {
-      var monster;
+      var num, _results;
       Crafty.init(600, 300);
       Crafty.background("#000");
       Crafty.sprite(32, "images/lofi_char_32x32.png", {
         player_green: [0, 0],
         player_gray: [1, 0],
-        goblin_green: [0, 5]
+        goblin: [0, 5],
+        goblin_warrior: [2, 5],
+        goblin_princess: [3, 5],
+        skeleton: [0, 6],
+        skeleton_warrior: [1, 6],
+        skeleton_warrior_2: [2, 6],
+        skeleton_princess: [3, 6],
+        imp: [0, 9],
+        flying_imp: [1, 9],
+        red_imp: [2, 9],
+        red_imp_warrior: [3, 9]
       });
       Crafty.sprite(40, "images/lofi_environment.png", {
         wall_gray: [0, 0],
@@ -331,18 +341,32 @@
       });
       this.game = new window.Game;
       this.players_by_connection_id = {};
-      this.monsters = [];
       this.machine = new Machine();
-      monster = window.Crafty.e("monster", "goblin_green");
-      return this.monsters.push(monster);
+      this.monsters = [];
+      this.monster_lair = new MonsterLair();
+      _results = [];
+      for (num = 1; num <= 10; num++) {
+        _results.push(__bind(function(num) {
+          var attributes, monster;
+          attributes = this.monster_lair.generate();
+          monster = window.Crafty.e("monster", attributes.sprite);
+          monster.strength = attributes.strength;
+          monster.health = attributes.health;
+          monster.speed = attributes.speed;
+          monster.x = parseInt(Math.random() * 1000);
+          monster.y = parseInt(Math.random() * 1000);
+          return this.monsters.push(monster);
+        }, this)(num));
+      }
+      return _results;
     },
     log: function(msg) {
-      if ((typeof console !== "undefined" && console !== null ? console.log : void 0) != null) {
+      if ((typeof console != "undefined" && console !== null ? console.log : void 0) != null) {
         return console.log(msg);
       }
     },
     dir: function(msg) {
-      if ((typeof console !== "undefined" && console !== null ? console.dir : void 0) != null) {
+      if ((typeof console != "undefined" && console !== null ? console.dir : void 0) != null) {
         return console.dir(msg);
       }
     },
@@ -415,11 +439,10 @@
           return player.destroy();
         case 'set_location':
           player = this.players_by_connection_id[message.client];
-          player.attr({
+          return player.attr({
             x: message.body.x,
             y: message.body.y
           });
-          return this.log(message.client + ' ' + player.x + ' ' + player.y);
         case 'setName':
           return '';
         case 'take_damage':

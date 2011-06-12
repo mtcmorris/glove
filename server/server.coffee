@@ -17,7 +17,7 @@ sys.puts 'THE MAP'
 _.each themap, (row, y) ->
   sys.puts row
   
-HOSTNAME    = 'localhost'
+HOSTNAME    = null
 PORT    = 9000
 WEBROOT = path.join(path.dirname(__filename), '..')
 

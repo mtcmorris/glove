@@ -238,7 +238,17 @@ window.client =
     Crafty.sprite 32, "images/lofi_char_32x32.png",
       player_green: [0,0],
       player_gray: [1,0],
-      goblin_green: [0,5],
+      goblin: [0,5],
+      goblin_warrior: [2,5],
+      goblin_princess: [3,5],
+      skeleton: [0,6],
+      skeleton_warrior: [1,6],
+      skeleton_warrior_2: [2,6],
+      skeleton_princess: [3,6],
+      imp: [0,9],
+      flying_imp: [1,9],
+      red_imp: [2,9],
+      red_imp_warrior: [3,9],
     Crafty.sprite 40, "images/lofi_environment.png",
       wall_gray: [0,0],
       floor_brown: [12,1]
@@ -292,12 +302,24 @@ window.client =
 
     @game = new window.Game
     @players_by_connection_id = {}
-    @monsters = []
     
     @machine = new Machine()
-    monster = window.Crafty.e("monster", "goblin_green")
+    
+    @monsters = []
+    @monster_lair = new MonsterLair()
+    
+    for num in [1..10]
+      do (num) =>
+        attributes = @monster_lair.generate()
+        monster = window.Crafty.e("monster", attributes.sprite)
+        monster.strength = attributes.strength
+        monster.health   = attributes.health
+        monster.speed    = attributes.speed
+        monster.x        = parseInt(Math.random() * 1000)
+        monster.y        = parseInt(Math.random() * 1000)
+        @monsters.push monster
 
-    @monsters.push monster
+
 
 
   log: (msg) -> console.log msg if console?.log?
@@ -359,7 +381,7 @@ window.client =
       when 'set_location'
         player = @players_by_connection_id[message.client]
         player.attr({x: message.body.x, y: message.body.y})
-        @log message.client + ' ' + player.x + ' ' + player.y
+        # @log message.client + ' ' + player.x + ' ' + player.y
 
       when 'setName'
         ''
