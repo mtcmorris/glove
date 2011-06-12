@@ -9,7 +9,7 @@ path    = require('path')
 sys     = require('sys')
 _     = require('../lib/vendor/underscore.js')
 
-dungeon = new Dungeon(50, 50)
+dungeon = new Dungeon(30, 50)
 
 themap = dungeon.generate()
 

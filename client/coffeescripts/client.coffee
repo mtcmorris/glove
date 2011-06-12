@@ -35,6 +35,8 @@ Crafty.c "WASD"
     @speed ||= speed
     @bind "enterframe", ->
       return if (this.disableControls)
+      x = @x
+      y = @y
       x = @x + @speed if (this.isDown("RIGHT_ARROW") || this.isDown("D"))
       x = @x - @speed if (this.isDown("LEFT_ARROW") || this.isDown("A"))
       y = @y - @speed if (this.isDown("UP_ARROW") || this.isDown("W"))
@@ -48,19 +50,22 @@ Crafty.c "WASD"
 
 Crafty.c 'damageable'
   init: ->
-    @health = 10
+    @health = 100
     @max_health = 100
 
   take_damage: (damage) ->
     @health -= damage
     window.client.log "Entity #{this[0]} took #{damage} damage"
-    health_percentage = @max_health / @health
-    $("#player-health-bar").css({ width: health_percentage + '%'})
+    
+    if @health < 0
+      this.die()
+    
+    this.updateHealth()
 
 
 Crafty.c "player"
   init: ->
-    @requires("2D, DOM, Collision, CollisionInfo")
+    @requires("2D, DOM, Collision, CollisionInfo, damageable")
     @origin("center")
     # @css
     #   border: '1px solid white'
@@ -70,9 +75,20 @@ Crafty.c "player"
       w: 32
       h: 32
     @collision (new Crafty.polygon([0,0], [30,0], [30,30], [0, 30]).shift(5, 5))
-      
+            
+    @miss_rate = 0.4
+    @strength = 5
+
 
     console.log 'Player inited!'
+
+    @onHit 'monster', (hit_data) ->
+      for collision in hit_data
+        #is the collider a player? if so, hurt the player unless the player attacked in the last X milliseconds
+        collider = collision.obj
+        if collider.__c['monster']
+          # console.log 
+          collider.take_damage(@strength) if Math.random() > @miss_rate
 
   dxy: (dx, dy) ->
     @move_to(@x + dx, @y + dy)
@@ -85,29 +101,39 @@ Crafty.c "player"
     @x = x if x?
     @y = y if y?
 
+  die: ->
+    console.log "You're dead"
+    
+  updateHealth: ->
+    health_percentage = ((@health * 1.0) / (@max_health * 1.0))* 100
+    $("#player-health-bar").css({ width: parseInt(health_percentage).toString() + '%'})
 
 
 
 Crafty.c 'monster'
   init: ->
     @strength = 1
+    @requires("damageable")
     @addComponent("2D, DOM, Collision, CollisionInfo")
     @origin("center")
+    @alive = true
     
     @target = false
     @attr
-      x: 200
-      y: 200
+      x: 500
+      y: 500
       w: 40
       h: 40
+      
+    @miss_rate = 0.9
 
     @onHit 'player', (hit_data) ->
       for collision in hit_data
         #is the collider a player? if so, hurt the player unless the player attacked in the last X milliseconds
         collider = collision.obj
-        # if collider.__c['player']
-          #send a message telling the player he got hurt
-          window.client.send window.client.take_damage_message(collider[0], @strength)
+        if collider.__c['player']
+          # console.log 
+          collider.take_damage(@strength) if Math.random() > @miss_rate
 
     @speed = 1
     @state = false
@@ -115,6 +141,7 @@ Crafty.c 'monster'
     @bind "enterframe", ->
       @state = @state.tick() if @state
       if @target
+        # Impulse in [x,y]
         impulse = this.getImpulse(@target)
 
         @x = @x + @speed if impulse[0] < 0
@@ -136,6 +163,17 @@ Crafty.c 'monster'
 
     @state = window.client.machine.generateTree(behaviour, this)
     console.log 'Monster inited!'
+    
+  die: ->
+    # MONSTER DOWN!!!!!!
+    @alive = false
+    $(this._element).animate( {
+      opacity: 0
+    }, 400, =>
+      this.destroy()
+    )
+    # 
+    
   onHit: (hit_data) ->
 
   sleep: ->
@@ -170,6 +208,9 @@ Crafty.c 'monster'
     
   distanceFrom: (player) ->
     Math.sqrt(Math.pow(@x - player.x, 2) + Math.pow(@y - player.y, 2))
+    
+  updateHealth: ->
+    # this._element is the dom element of the monster - lets do something awesome
 
 Crafty.c 'tile'
   init: ->
@@ -325,11 +366,7 @@ window.client =
 
       when 'take_damage'
         entity = Crafty(message.body.entity_id)
-        # entity.take_damage(message.body.damage) if entity
-
-
-
-
+        entity.take_damage(message.body.damage) if entity 
 
 
 
