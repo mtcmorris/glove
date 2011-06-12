@@ -330,7 +330,11 @@ window.client =
     window.Crafty.audio.add("join", "sounds/bugle.mp3")
     
     @player = window.Crafty.e("player, player_green, WASD").wasd(3)
-    @player.name = prompt "What is your name?"
+    if $.cookie("name")
+      @player.name = $.cookie("name")
+    else
+      @player.name = prompt "What is your name?"
+      $.cookie("name", @player.name)
     $("#player-name").html(@player.name)
     
     window.Crafty.addEvent @player, window.Crafty.stage.elem, "click", (mouseEvent)->

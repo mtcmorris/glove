@@ -373,7 +373,12 @@
       }
       window.Crafty.audio.add("join", "sounds/bugle.mp3");
       this.player = window.Crafty.e("player, player_green, WASD").wasd(3);
-      this.player.name = prompt("What is your name?");
+      if ($.cookie("name")) {
+        this.player.name = $.cookie("name");
+      } else {
+        this.player.name = prompt("What is your name?");
+        $.cookie("name", this.player.name);
+      }
       $("#player-name").html(this.player.name);
       window.Crafty.addEvent(this.player, window.Crafty.stage.elem, "click", function(mouseEvent) {
         var clickx, clicky;
