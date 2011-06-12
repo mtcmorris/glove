@@ -76,8 +76,8 @@
   Crafty.c('bullet', {
     init: function() {
       this.requires("2D, DOM, Collision, CollisionInfo");
-      this.speed = 1;
-      this.damage = 5;
+      this.speed = 8;
+      this.damage = 20;
       this.attr({
         x: 0,
         y: 0,
@@ -87,26 +87,36 @@
       this.origin_x = null;
       this.origin_y = null;
       this.vector = [1.0, 1.0];
+      this.lifespan = 1000;
       this.bind('enterframe', function() {
+        this.lifespan--;
+        if (this.lifespan < 0) {
+          this.destroy();
+        }
         this.x = this.x + (this.speed * this.vector[0]);
         return this.y = this.y + (this.speed * this.vector[1] * -1);
       });
-      return this.onHit('monster', function(hit_data) {
+      this.onHit('monster', function(hit_data) {
         var collider, collision, _i, _len, _results;
         _results = [];
         for (_i = 0, _len = hit_data.length; _i < _len; _i++) {
           collision = hit_data[_i];
-          _results.push(collider = collision.obj);
+          collider = collision.obj;
+          if (collider.__c['monster'] || (collider.__c['player'] && collider !== window.client.player)) {
+            collider.take_damage(this.damage);
+          }
+          _results.push(this.destroy());
         }
         return _results;
+      });
+      return this.onHit('wall', function() {
+        return this.destroy();
       });
     },
     calculateVector: function() {
       var angle;
-      console.log("dx,dy is " + this.dx + "," + this.dy + ". Origin x,y is " + this.origin_x + "," + this.origin_y);
       angle = Math.atan2(this.dy, this.dx);
-      this.vector = [Math.cos(angle), Math.sin(angle)];
-      return console.log("Vector is " + this.vector[0] + ", " + this.vector[1]);
+      return this.vector = [Math.cos(angle), Math.sin(angle)];
     },
     setOrigin: function(player, dx, dy) {
       this.x = player.x;
@@ -138,8 +148,7 @@
         _results = [];
         for (_i = 0, _len = hit_data.length; _i < _len; _i++) {
           collision = hit_data[_i];
-          collider = collision.obj;
-          _results.push(collider.__c['monster'] ? Math.random() > this.miss_rate ? collider.take_damage(this.strength) : void 0 : void 0);
+          _results.push(collider = collision.obj);
         }
         return _results;
       });
@@ -149,7 +158,7 @@
     },
     shoot: function(dx, dy) {
       var bullet;
-      bullet = window.Crafty.e("bullet, player_green");
+      bullet = window.Crafty.e("bullet, bullet_icon");
       return bullet.setOrigin(this, dx, dy);
     },
     move_to: function(x, y) {
@@ -333,6 +342,9 @@
         wall_gray: [0, 0],
         floor_brown: [12, 1]
       });
+      Crafty.sprite(16, "images/lofi_interface_16x16.png", {
+        bullet_icon: [8, 0]
+      });
       this.player = window.Crafty.e("player, player_green, WASD").wasd(3);
       window.Crafty.addEvent(this.player, window.Crafty.stage.elem, "click", function(mouseEvent) {
         var clickx, clicky;
@@ -511,7 +523,7 @@
     }
   };
   $(function() {
-    return Crafty.load(["images/lofi_char.png"], function() {
+    return Crafty.load(["images/lofi_char.png", "images/lofi_interface_16x16.png"], function() {
       return window.client.init();
     });
   });

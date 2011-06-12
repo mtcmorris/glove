@@ -65,8 +65,8 @@ Crafty.c 'damageable'
 Crafty.c 'bullet'
   init: ->
     @requires("2D, DOM, Collision, CollisionInfo")
-    @speed = 1
-    @damage = 5
+    @speed = 8
+    @damage = 20
     
     @attr
       x: 0
@@ -77,22 +77,29 @@ Crafty.c 'bullet'
     @origin_y = null
     @vector = [1.0, 1.0]
     
+    @lifespan = 1000
+    
     @bind 'enterframe', ->
+      @lifespan--
+      if @lifespan < 0
+        this.destroy()
       @x = @x + (@speed * @vector[0])
       @y = @y + (@speed * @vector[1] * -1)
     
     @onHit 'monster', (hit_data) ->
       for collision in hit_data
         collider = collision.obj
-        # if collider.__c['monster'] || collider.__c['player']
+        if collider.__c['monster'] || (collider.__c['player'] && collider != window.client.player)
           # console.log 
-          # collider.take_damage(@damage)
+          collider.take_damage(@damage)
+        this.destroy()
+    @onHit 'wall', ->
+      this.destroy()
+
   calculateVector: ->
-    console.log "dx,dy is #{@dx},#{@dy}. Origin x,y is #{@origin_x},#{@origin_y}"
     angle = Math.atan2(@dy,@dx)
     # console.log "Angle is #{angle}"
     @vector = [Math.cos(angle),Math.sin(angle) ]
-    console.log "Vector is #{@vector[0]}, #{@vector[1]}"
     
   setOrigin: (player, dx, dy) ->
     @x        = player.x
@@ -117,6 +124,7 @@ Crafty.c "player"
       y: 100
       w: 32
       h: 32
+      
     @collision (new Crafty.polygon([0,0], [30,0], [30,30], [0, 30]).shift(5, 5))
             
     @miss_rate = 0.4
@@ -129,15 +137,15 @@ Crafty.c "player"
       for collision in hit_data
         #is the collider a player? if so, hurt the player unless the player attacked in the last X milliseconds
         collider = collision.obj
-        if collider.__c['monster']
+        # if collider.__c['monster']
           # console.log 
-          collider.take_damage(@strength) if Math.random() > @miss_rate
+          # collider.take_damage(@strength) if Math.random() > @miss_rate
 
   dxy: (dx, dy) ->
     @move_to(@x + dx, @y + dy)
     
   shoot: (dx, dy) ->
-    bullet = window.Crafty.e("bullet, player_green")
+    bullet = window.Crafty.e("bullet, bullet_icon")
     bullet.setOrigin(this, dx, dy)
 
   move_to: (x, y) ->
@@ -299,6 +307,9 @@ window.client =
     Crafty.sprite 40, "images/lofi_environment.png",
       wall_gray: [0,0],
       floor_brown: [12,1]
+      
+    Crafty.sprite 16, "images/lofi_interface_16x16.png",
+      bullet_icon: [8,0]
 
     @player = window.Crafty.e("player, player_green, WASD").wasd(3)
     
@@ -450,5 +461,5 @@ window.client =
 
 
 $ -> 
-  Crafty.load ["images/lofi_char.png"], ->
+  Crafty.load ["images/lofi_char.png", "images/lofi_interface_16x16.png"], ->
     window.client.init()
