@@ -348,8 +348,8 @@
       this.player = window.Crafty.e("player, player_green, WASD").wasd(3);
       window.Crafty.addEvent(this.player, window.Crafty.stage.elem, "click", function(mouseEvent) {
         var clickx, clicky;
-        clickx = mouseEvent.x - Crafty.viewport.width / 2;
-        clicky = (mouseEvent.y - Crafty.viewport.height / 2 - 60) * -1;
+        clickx = (mouseEvent.x - Crafty.viewport.width / 2) - parseInt($("#cr-stage").offset().left);
+        clicky = (mouseEvent.y - Crafty.viewport.height / 2 - parseInt($("#cr-stage").offset().top)) * -1;
         return this.shoot(clickx, clicky);
       });
       this.player.onHit('wall', __bind(function(hit_data) {

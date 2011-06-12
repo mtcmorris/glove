@@ -315,8 +315,8 @@ window.client =
     
     window.Crafty.addEvent @player, window.Crafty.stage.elem, "click", (mouseEvent)->
       # Treat player as [0,0] for the purposes of bullets
-      clickx = mouseEvent.x - Crafty.viewport.width/2
-      clicky = ((mouseEvent.y - Crafty.viewport.height/2 - 60)* -1 ) 
+      clickx = (mouseEvent.x - Crafty.viewport.width/2) - parseInt($("#cr-stage").offset().left)
+      clicky = ((mouseEvent.y - Crafty.viewport.height/2 - parseInt($("#cr-stage").offset().top))* -1 ) 
       this.shoot clickx, clicky
 
     @player.onHit 'wall', (hit_data) =>
