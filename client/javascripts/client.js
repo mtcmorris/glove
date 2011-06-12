@@ -38,6 +38,8 @@
         if (this.disableControls) {
           return;
         }
+        x = this.x;
+        y = this.y;
         if (this.isDown("RIGHT_ARROW") || this.isDown("D")) {
           x = this.x + this.speed;
         }
@@ -71,15 +73,73 @@
       return this.updateHealth();
     }
   });
+  Crafty.c('bullet', {
+    init: function() {
+      this.requires("2D, DOM, Collision, CollisionInfo");
+      this.speed = 8;
+      this.damage = 20;
+      this.attr({
+        x: 0,
+        y: 0,
+        w: 16,
+        h: 16,
+        z: 3
+      });
+      this.origin_x = null;
+      this.origin_y = null;
+      this.vector = [1.0, 1.0];
+      this.lifespan = 1000;
+      this.bind('enterframe', function() {
+        this.lifespan--;
+        if (this.lifespan < 0) {
+          this.destroy();
+        }
+        this.x = this.x + (this.speed * this.vector[0]);
+        return this.y = this.y + (this.speed * this.vector[1] * -1);
+      });
+      this.onHit('monster', function(hit_data) {
+        var collider, collision, _i, _len, _results;
+        _results = [];
+        for (_i = 0, _len = hit_data.length; _i < _len; _i++) {
+          collision = hit_data[_i];
+          collider = collision.obj;
+          if (collider.__c['monster'] || (collider.__c['player'] && collider !== window.client.player)) {
+            collider.take_damage(this.damage);
+          }
+          _results.push(this.destroy());
+        }
+        return _results;
+      });
+      return this.onHit('wall', function() {
+        return this.destroy();
+      });
+    },
+    calculateVector: function() {
+      var angle;
+      angle = Math.atan2(this.dy, this.dx);
+      return this.vector = [Math.cos(angle), Math.sin(angle)];
+    },
+    setOrigin: function(player, dx, dy) {
+      this.x = player.x;
+      this.origin_x = player.x;
+      this.y = player.y;
+      this.origin_y = player.y;
+      this.origin = player;
+      this.dx = dx;
+      this.dy = dy;
+      return this.calculateVector();
+    }
+  });
   Crafty.c("player", {
     init: function() {
-      this.requires("2D, DOM, Collision, CollisionInfo, damageable");
+      this.requires("2D, DOM, Collision, CollisionInfo, damageable, name");
       this.origin("center");
       this.attr({
         x: 100,
         y: 100,
         w: 32,
-        h: 32
+        h: 32,
+        z: 3
       });
       this.collision(new Crafty.polygon([0, 0], [30, 0], [30, 30], [0, 30]).shift(5, 5));
       this.miss_rate = 0.4;
@@ -90,14 +150,21 @@
         _results = [];
         for (_i = 0, _len = hit_data.length; _i < _len; _i++) {
           collision = hit_data[_i];
-          collider = collision.obj;
-          _results.push(collider.__c['monster'] ? Math.random() > this.miss_rate ? collider.take_damage(this.strength) : void 0 : void 0);
+          _results.push(collider = collision.obj);
         }
         return _results;
       });
     },
     dxy: function(dx, dy) {
       return this.move_to(this.x + dx, this.y + dy);
+    },
+    shoot: function(dx, dy) {
+      var audio_file, bullet;
+      bullet = window.Crafty.e("bullet, bullet_icon");
+      audio_file = "shoot" + (parseInt(Math.random() * 5));
+      console.log("Playing " + audio_file);
+      window.Crafty.audio.play("shoot" + (parseInt(Math.random() * 5)));
+      return bullet.setOrigin(this, dx, dy);
     },
     move_to: function(x, y) {
       var location_message;
@@ -121,6 +188,20 @@
       return $("#player-health-bar").css({
         width: parseInt(health_percentage).toString() + '%'
       });
+    },
+    set_name: function(name) {
+      if (!this.name) {
+        this.name = name;
+        this.name_label = Crafty.e("2D, DOM, text");
+        return this.name_label.attr({
+          w: 100,
+          h: 20,
+          x: this.x,
+          y: this.y + 30
+        }).text(this.name).css({
+          'font-size': '10px'
+        });
+      }
     }
   });
   Crafty.c('monster', {
@@ -258,19 +339,53 @@
   });
   window.client = {
     init: function() {
-      var monster;
+      var name, num, _fn, _results;
       Crafty.init(600, 300);
       Crafty.background("#000");
       Crafty.sprite(32, "images/lofi_char_32x32.png", {
         player_green: [0, 0],
         player_gray: [1, 0],
-        goblin_green: [0, 5]
+        goblin: [0, 5],
+        goblin_warrior: [2, 5],
+        goblin_princess: [3, 5],
+        skeleton: [0, 6],
+        skeleton_warrior: [1, 6],
+        skeleton_warrior_2: [2, 6],
+        skeleton_princess: [3, 6],
+        imp: [0, 9],
+        flying_imp: [1, 9],
+        red_imp: [2, 9],
+        red_imp_warrior: [3, 9]
       });
       Crafty.sprite(40, "images/lofi_environment.png", {
         wall_gray: [0, 0],
         floor_brown: [12, 1]
       });
+      Crafty.sprite(16, "images/lofi_interface_16x16.png", {
+        bullet_icon: [8, 0]
+      });
+      _fn = function(num) {
+        console.log("Registering shoot" + (num - 1) + " as sounds/pew" + num + ".mp3");
+        return window.Crafty.audio.add("shoot" + (num - 1), "sounds/pew" + num + ".mp3");
+      };
+      for (num = 1; num <= 5; num++) {
+        _fn(num);
+      }
+      window.Crafty.audio.add("join", "sounds/bugle.mp3");
       this.player = window.Crafty.e("player, player_green, WASD").wasd(3);
+      if ($.cookie("name")) {
+        this.player.name = $.cookie("name");
+      } else {
+        this.player.name = prompt("What is your name?");
+        $.cookie("name", this.player.name);
+      }
+      $("#player-name").html(this.player.name);
+      window.Crafty.addEvent(this.player, window.Crafty.stage.elem, "click", function(mouseEvent) {
+        var clickx, clicky;
+        clickx = (mouseEvent.x - Crafty.viewport.width / 2) - parseInt($("#cr-stage").offset().left);
+        clicky = (mouseEvent.y - Crafty.viewport.height / 2 - parseInt($("#cr-stage").offset().top)) * -1;
+        return this.shoot(clickx, clicky);
+      });
       this.player.onHit('wall', __bind(function(hit_data) {
         var c_info, collider, collision, dx, dy, moved_down, moved_left, moved_right, moved_up, _i, _len, _results;
         _results = [];
@@ -305,6 +420,7 @@
       }, this));
       Crafty.viewport.x = this.player.x;
       Crafty.viewport.y = this.player.y;
+      Crafty.audio.MAX_CHANNELS = 20;
       this.player.bind('enterframe', function() {
         if (this.x && this.y) {
           Crafty.viewport.x = (this.x * -1) + Crafty.viewport.width / 2;
@@ -319,20 +435,41 @@
         rememberTransport: false
       });
       this.socket.connect();
-      this.socket.on('connect', function() {});
+      name = this.player.name;
+      this.socket.on('connect', function() {
+        this.send({
+          type: "set_name",
+          body: name
+        });
+        return this.send({
+          type: "request_name"
+        });
+      });
       this.socket.on('message', __bind(function(message) {
         return this.receive(message);
       }, this));
-      this.socket.send({
-        type: "setName",
-        body: $("#player-name").innerHTML
-      });
       this.game = new window.Game;
       this.players_by_connection_id = {};
-      this.monsters = [];
       this.machine = new Machine();
-      monster = window.Crafty.e("monster", "goblin_green");
-      return this.monsters.push(monster);
+      this.monsters = [];
+      this.monster_lair = new MonsterLair();
+      _results = [];
+      for (num = 1; num <= 10; num++) {
+        _results.push(__bind(function(num) {
+          var attributes, monster;
+          attributes = this.monster_lair.generate();
+          monster = window.Crafty.e("monster", attributes.sprite).attr({
+            z: 3
+          });
+          monster.strength = attributes.strength;
+          monster.health = attributes.health;
+          monster.speed = attributes.speed;
+          monster.x = parseInt(Math.random() * 1000);
+          monster.y = parseInt(Math.random() * 1000);
+          return this.monsters.push(monster);
+        }, this)(num));
+      }
+      return _results;
     },
     log: function(msg) {
       if ((typeof console !== "undefined" && console !== null ? console.log : void 0) != null) {
@@ -372,7 +509,7 @@
               tile = Crafty.e('wall');
               break;
             case 'f':
-              tile = Crafty.e('floor');
+              tile = Crafty.e('floor', 'floor_brown');
           }
           if (tile) {
             return tile.attr({
@@ -397,6 +534,7 @@
       }
       switch (message.type) {
         case 'connection':
+          Crafty.audio.play("join");
           this.log('connected: ' + message.client);
           player = this.players_by_connection_id[message.client] || Crafty.e('player, player_gray');
           this.players_by_connection_id[message.client] = player;
@@ -410,16 +548,32 @@
           this.log('disconnected: ' + message.client);
           player = this.players_by_connection_id[message.client];
           delete this.players_by_connection_id[message.client];
-          return player.destroy();
+          player.destroy();
+          if (player.name_label) {
+            return player.name_label.destroy();
+          }
+          break;
         case 'set_location':
           player = this.players_by_connection_id[message.client];
           player.attr({
             x: message.body.x,
             y: message.body.y
           });
+          if (player.name_label) {
+            player.name_label.attr({
+              x: message.body.x,
+              y: message.body.y + 30
+            });
+          }
           return this.log(message.client + ' ' + player.x + ' ' + player.y);
-        case 'setName':
-          return '';
+        case 'set_name':
+          player = this.players_by_connection_id[message.client];
+          return player.set_name(message.body);
+        case 'request_name':
+          return this.socket.send({
+            type: "set_name",
+            body: this.player.name
+          });
         case 'take_damage':
           entity = Crafty(message.body.entity_id);
           if (entity) {
@@ -429,7 +583,7 @@
     }
   };
   $(function() {
-    return Crafty.load(["images/lofi_char.png"], function() {
+    return Crafty.load(["images/lofi_char.png", "images/lofi_interface_16x16.png"], function() {
       return window.client.init();
     });
   });

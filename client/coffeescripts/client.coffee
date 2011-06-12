@@ -35,6 +35,8 @@ Crafty.c "WASD"
     @speed ||= speed
     @bind "enterframe", ->
       return if (this.disableControls)
+      x = @x
+      y = @y
       x = @x + @speed if (this.isDown("RIGHT_ARROW") || this.isDown("D"))
       x = @x - @speed if (this.isDown("LEFT_ARROW") || this.isDown("A"))
       y = @y - @speed if (this.isDown("UP_ARROW") || this.isDown("W"))
@@ -60,10 +62,61 @@ Crafty.c 'damageable'
     
     this.updateHealth()
 
+Crafty.c 'bullet'
+  init: ->
+    @requires("2D, DOM, Collision, CollisionInfo")
+    @speed = 8
+    @damage = 20
+    
+    @attr
+      x: 0
+      y: 0
+      w: 16
+      h: 16
+      z: 3
+    @origin_x = null
+    @origin_y = null
+    @vector = [1.0, 1.0]
+    
+    @lifespan = 1000
+    
+    @bind 'enterframe', ->
+      @lifespan--
+      if @lifespan < 0
+        this.destroy()
+      @x = @x + (@speed * @vector[0])
+      @y = @y + (@speed * @vector[1] * -1)
+    
+    @onHit 'monster', (hit_data) ->
+      for collision in hit_data
+        collider = collision.obj
+        if collider.__c['monster'] || (collider.__c['player'] && collider != window.client.player)
+          # console.log 
+          collider.take_damage(@damage)
+        this.destroy()
+    @onHit 'wall', ->
+      this.destroy()
+
+  calculateVector: ->
+    angle = Math.atan2(@dy,@dx)
+    # console.log "Angle is #{angle}"
+    @vector = [Math.cos(angle),Math.sin(angle) ]
+    
+  setOrigin: (player, dx, dy) ->
+    @x        = player.x
+    @origin_x = player.x
+    @y        = player.y
+    @origin_y = player.y
+    @origin   = player
+    @dx       = dx
+    @dy       = dy
+
+    this.calculateVector()
+    
 
 Crafty.c "player"
   init: ->
-    @requires("2D, DOM, Collision, CollisionInfo, damageable")
+    @requires("2D, DOM, Collision, CollisionInfo, damageable, name")
     @origin("center")
     # @css
     #   border: '1px solid white'
@@ -72,11 +125,12 @@ Crafty.c "player"
       y: 100
       w: 32
       h: 32
+      z: 3
+      
     @collision (new Crafty.polygon([0,0], [30,0], [30,30], [0, 30]).shift(5, 5))
             
     @miss_rate = 0.4
     @strength = 5
-
 
     console.log 'Player inited!'
 
@@ -84,12 +138,19 @@ Crafty.c "player"
       for collision in hit_data
         #is the collider a player? if so, hurt the player unless the player attacked in the last X milliseconds
         collider = collision.obj
-        if collider.__c['monster']
+        # if collider.__c['monster']
           # console.log 
-          collider.take_damage(@strength) if Math.random() > @miss_rate
-
+          # collider.take_damage(@strength) if Math.random() > @miss_rate
+          
   dxy: (dx, dy) ->
     @move_to(@x + dx, @y + dy)
+    
+  shoot: (dx, dy) ->
+    bullet = window.Crafty.e("bullet, bullet_icon")
+    audio_file = "shoot#{parseInt(Math.random() * 5)}"
+    console.log "Playing #{audio_file}"
+    window.Crafty.audio.play("shoot#{parseInt(Math.random() * 5)}")
+    bullet.setOrigin(this, dx, dy)
 
   move_to: (x, y) ->
     @prev_x = @x
@@ -105,8 +166,12 @@ Crafty.c "player"
   updateHealth: ->
     health_percentage = ((@health * 1.0) / (@max_health * 1.0))* 100
     $("#player-health-bar").css({ width: parseInt(health_percentage).toString() + '%'})
-
-
+    
+  set_name: (name) ->
+    unless @name
+      @name = name
+      @name_label = Crafty.e("2D, DOM, text")
+      @name_label.attr({w: 100, h: 20, x: @x, y: @y + 30}).text(@name).css('font-size': '10px');
 
 Crafty.c 'monster'
   init: ->
@@ -236,12 +301,48 @@ window.client =
     Crafty.sprite 32, "images/lofi_char_32x32.png",
       player_green: [0,0],
       player_gray: [1,0],
-      goblin_green: [0,5],
+      goblin: [0,5],
+      goblin_warrior: [2,5],
+      goblin_princess: [3,5],
+      skeleton: [0,6],
+      skeleton_warrior: [1,6],
+      skeleton_warrior_2: [2,6],
+      skeleton_princess: [3,6],
+      imp: [0,9],
+      flying_imp: [1,9],
+      red_imp: [2,9],
+      red_imp_warrior: [3,9],
     Crafty.sprite 40, "images/lofi_environment.png",
       wall_gray: [0,0],
       floor_brown: [12,1]
+      
+    Crafty.sprite 16, "images/lofi_interface_16x16.png",
+      bullet_icon: [8,0]
 
+    for num in [1..5]
+      do (num) ->
+        console.log "Registering shoot#{num - 1} as sounds/pew#{num}.mp3"
+        window.Crafty.audio.add("shoot#{num - 1}", "sounds/pew#{num}.mp3")
+    #     shoot1: "sounds/pew1.mp3", 
+    #     shoot2: "sounds/pew2.mp3", 
+    #     join:   "sounds/bugle.mp3"
+    # }
+    window.Crafty.audio.add("join", "sounds/bugle.mp3")
+    
     @player = window.Crafty.e("player, player_green, WASD").wasd(3)
+    if $.cookie("name")
+      @player.name = $.cookie("name")
+    else
+      @player.name = prompt "What is your name?"
+      $.cookie("name", @player.name)
+    $("#player-name").html(@player.name)
+    
+    window.Crafty.addEvent @player, window.Crafty.stage.elem, "click", (mouseEvent)->
+      # Treat player as [0,0] for the purposes of bullets
+      clickx = (mouseEvent.x - Crafty.viewport.width/2) - parseInt($("#cr-stage").offset().left)
+      clicky = ((mouseEvent.y - Crafty.viewport.height/2 - parseInt($("#cr-stage").offset().top))* -1 ) 
+      this.shoot clickx, clicky
+
     @player.onHit 'wall', (hit_data) =>
       for collision in hit_data
         #bail early if we've resolved this collision
@@ -266,6 +367,8 @@ window.client =
 
     Crafty.viewport.x = @player.x
     Crafty.viewport.y = @player.y
+    
+    Crafty.audio.MAX_CHANNELS = 20
 
     @player.bind 'enterframe', ->
       if @x and @y
@@ -280,27 +383,43 @@ window.client =
     })
 
     @socket.connect()
-
+    
+    name = @player.name
     @socket.on 'connect', ->
-
+      @send type: "set_name", body: name
+      @send type: "request_name"
+      
     @socket.on 'message', (message) =>
       @receive(message)
 
-    @socket.send type: "setName", body: $("#player-name").innerHTML
-
     @game = new window.Game
     @players_by_connection_id = {}
-    @monsters = []
     
     @machine = new Machine()
-    monster = window.Crafty.e("monster", "goblin_green")
+    
+    @monsters = []
+    @monster_lair = new MonsterLair()
+    
+    for num in [1..10]
+      do (num) =>
+        attributes = @monster_lair.generate()
+        monster = window.Crafty.e("monster", attributes.sprite).attr(z: 3)
+        monster.strength = attributes.strength
+        monster.health   = attributes.health
+        monster.speed    = attributes.speed
+        monster.x        = parseInt(Math.random() * 1000)
+        monster.y        = parseInt(Math.random() * 1000)
+        @monsters.push monster
 
-    @monsters.push monster
+
 
 
   log: (msg) -> console.log msg if console?.log?
   dir: (msg) -> console.dir msg if console?.dir?
-
+  
+  # # Returns a translated x/y for a spawn point
+  # getSpawnPoint: ->
+  #   
 
   set_location_message: (x, y) ->
     type: 'set_location'
@@ -323,7 +442,7 @@ window.client =
           when 'W'
             tile = Crafty.e('wall')
           when 'f'
-            tile = Crafty.e('floor')
+            tile = Crafty.e('floor', 'floor_brown')
         tile.attr(x: x * tile.w, y: y * tile.h) if tile
     @log 'Map loaded!'
 
@@ -334,9 +453,9 @@ window.client =
 
   receive: (message) ->
     @log 'IN: ' + $.toJSON(message) if window.log_in
-
     switch message.type
       when 'connection'
+        Crafty.audio.play("join")
         @log 'connected: ' + message.client
         player = @players_by_connection_id[message.client] || Crafty.e('player, player_gray')
         @players_by_connection_id[message.client] = player
@@ -353,14 +472,23 @@ window.client =
         player = @players_by_connection_id[message.client]
         delete @players_by_connection_id[message.client]
         player.destroy()
+        if player.name_label
+          player.name_label.destroy()
 
       when 'set_location'
         player = @players_by_connection_id[message.client]
         player.attr({x: message.body.x, y: message.body.y})
+        if player.name_label
+          player.name_label.attr({x: message.body.x, y: message.body.y + 30})
         @log message.client + ' ' + player.x + ' ' + player.y
 
-      when 'setName'
-        ''
+
+      when 'set_name'
+        player = @players_by_connection_id[message.client]
+        player.set_name message.body
+        
+      when 'request_name'
+        @socket.send type: "set_name", body: @player.name
 
       when 'take_damage'
         entity = Crafty(message.body.entity_id)
@@ -369,5 +497,5 @@ window.client =
 
 
 $ -> 
-  Crafty.load ["images/lofi_char.png"], ->
+  Crafty.load ["images/lofi_char.png", "images/lofi_interface_16x16.png"], ->
     window.client.init()
