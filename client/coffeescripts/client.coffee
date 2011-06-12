@@ -194,8 +194,8 @@ Crafty.c "player"
     # @css
     #   border: '1px solid white'
     @attr
-      x: 100
-      y: 100
+      x: 250
+      y: 250
       w: 32
       h: 32
       z: 3
@@ -236,6 +236,11 @@ Crafty.c "player"
     client.send(location_message)
 
   die: ->
+    if window.client.player == this
+      if confirm "BOOOM YOU DEAD!!! Respawn?"
+        @health = 100
+        @x = 250
+        @y = 250
     console.log "You're dead" if window.log?
     
   updateHealth: ->
@@ -256,7 +261,6 @@ Crafty.c 'monster'
     @requires("2D, DOM, Collision, CollisionInfo, damageable, Movable, UUID")
     @set_uuid()
     @origin("center")
-    @alive = true
     
     @target = false
     @attr
@@ -317,8 +321,6 @@ Crafty.c 'monster'
     
 
   die: ->
-    # MONSTER DOWN!!!!!!
-    @alive = false
     $(this._element).animate( {
       opacity: 0
     }, 400, =>

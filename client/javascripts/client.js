@@ -231,8 +231,8 @@
       this.set_uuid();
       this.origin("center");
       this.attr({
-        x: 100,
-        y: 100,
+        x: 250,
+        y: 250,
         w: 32,
         h: 32,
         z: 3
@@ -289,6 +289,13 @@
       return client.send(location_message);
     },
     die: function() {
+      if (window.client.player === this) {
+        if (confirm("BOOOM YOU DEAD!!! Respawn?")) {
+          this.health = 100;
+          this.x = 250;
+          this.y = 250;
+        }
+      }
       if (window.log != null) {
         return console.log("You're dead");
       }
@@ -324,7 +331,6 @@
       this.requires("2D, DOM, Collision, CollisionInfo, damageable, Movable, UUID");
       this.set_uuid();
       this.origin("center");
-      this.alive = true;
       this.target = false;
       this.attr({
         x: 500,
@@ -395,7 +401,6 @@
       };
     },
     die: function() {
-      this.alive = false;
       return $(this._element).animate({
         opacity: 0
       }, 400, __bind(function() {
