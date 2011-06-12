@@ -66,7 +66,6 @@
     },
     take_damage: function(damage) {
       this.health -= damage;
-      window.client.log("Entity " + this[0] + " took " + damage + " damage");
       if (this.health < 0) {
         this.die();
       }
@@ -75,6 +74,7 @@
   });
   Crafty.c('bullet', {
     init: function() {
+      var audio_file;
       this.requires("2D, DOM, Collision, CollisionInfo");
       this.speed = 8;
       this.damage = 20;
@@ -89,6 +89,8 @@
       this.origin_y = null;
       this.vector = [1.0, 1.0];
       this.lifespan = 1000;
+      audio_file = "shoot" + (parseInt(Math.random() * 5));
+      window.Crafty.audio.play("shoot" + (parseInt(Math.random() * 5)));
       this.bind('enterframe', function() {
         this.lifespan--;
         if (this.lifespan < 0) {
@@ -103,7 +105,7 @@
         for (_i = 0, _len = hit_data.length; _i < _len; _i++) {
           collision = hit_data[_i];
           collider = collision.obj;
-          if (collider.__c['monster'] || (collider.__c['player'] && collider !== window.client.player)) {
+          if (collider.__c['monster'] || (collider.__c['player'] && collider !== window.client.player) && this.damage > 0) {
             collider.take_damage(this.damage);
           }
           _results.push(this.destroy());
@@ -159,12 +161,18 @@
       return this.move_to(this.x + dx, this.y + dy);
     },
     shoot: function(dx, dy) {
-      var audio_file, bullet;
+      var bullet;
       bullet = window.Crafty.e("bullet, bullet_icon");
-      audio_file = "shoot" + (parseInt(Math.random() * 5));
-      console.log("Playing " + audio_file);
-      window.Crafty.audio.play("shoot" + (parseInt(Math.random() * 5)));
-      return bullet.setOrigin(this, dx, dy);
+      bullet.setOrigin(this, dx, dy);
+      return client.send({
+        type: "draw_bullet",
+        body: {
+          x: this.x,
+          y: this.y,
+          dx: dx,
+          dy: dy
+        }
+      });
     },
     move_to: function(x, y) {
       var location_message;
@@ -184,10 +192,12 @@
     },
     updateHealth: function() {
       var health_percentage;
-      health_percentage = ((this.health * 1.0) / (this.max_health * 1.0)) * 100;
-      return $("#player-health-bar").css({
-        width: parseInt(health_percentage).toString() + '%'
-      });
+      if (this === window.client.player) {
+        health_percentage = ((this.health * 1.0) / (this.max_health * 1.0)) * 100;
+        return $("#player-health-bar").css({
+          width: parseInt(health_percentage).toString() + '%'
+        });
+      }
     },
     set_name: function(name) {
       if (!this.name) {
@@ -206,7 +216,7 @@
   });
   Crafty.c('monster', {
     init: function() {
-      var behaviour;
+      var audio_file, behaviour;
       this.strength = 1;
       this.requires("damageable");
       this.addComponent("2D, DOM, Collision, CollisionInfo");
@@ -220,6 +230,8 @@
         h: 40
       });
       this.miss_rate = 0.9;
+      audio_file = "shoot" + (parseInt(Math.random() * 5));
+      window.Crafty.audio.play("shoot" + (parseInt(Math.random() * 5)));
       this.onHit('player', function(hit_data) {
         var collider, collision, _i, _len, _results;
         _results = [];
@@ -528,7 +540,7 @@
       return this.socket.send(message);
     },
     receive: function(message) {
-      var entity, map, player;
+      var bullet, entity, map, player;
       if (window.log_in) {
         this.log('IN: ' + $.toJSON(message));
       }
@@ -560,12 +572,12 @@
             y: message.body.y
           });
           if (player.name_label) {
-            player.name_label.attr({
+            return player.name_label.attr({
               x: message.body.x,
               y: message.body.y + 30
             });
           }
-          return this.log(message.client + ' ' + player.x + ' ' + player.y);
+          break;
         case 'set_name':
           player = this.players_by_connection_id[message.client];
           return player.set_name(message.body);
@@ -579,6 +591,15 @@
           if (entity) {
             return entity.take_damage(message.body.damage);
           }
+          break;
+        case 'draw_bullet':
+          bullet = Crafty.e("bullet, bullet_icon");
+          bullet.damage = 0;
+          return bullet.setOrigin({
+            x: message.body.x,
+            y: message.body.y,
+            client: message.client
+          }, message.body.dx, message.body.dy);
       }
     }
   };

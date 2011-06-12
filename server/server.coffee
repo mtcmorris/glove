@@ -80,7 +80,8 @@ socket.on 'connection', (client) ->
 
 
     # sys.puts "==================="
-    # sys.puts JSON.stringify(message)
+    if message.type == "draw_bullet"
+      sys.puts JSON.stringify(message)
 
 
     #pass this on to all the clients

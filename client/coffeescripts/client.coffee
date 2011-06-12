@@ -55,7 +55,6 @@ Crafty.c 'damageable'
 
   take_damage: (damage) ->
     @health -= damage
-    window.client.log "Entity #{this[0]} took #{damage} damage"
     
     if @health < 0
       this.die()
@@ -80,6 +79,9 @@ Crafty.c 'bullet'
     
     @lifespan = 1000
     
+    audio_file = "shoot#{parseInt(Math.random() * 5)}"
+    window.Crafty.audio.play("shoot#{parseInt(Math.random() * 5)}")
+    
     @bind 'enterframe', ->
       @lifespan--
       if @lifespan < 0
@@ -90,7 +92,7 @@ Crafty.c 'bullet'
     @onHit 'monster', (hit_data) ->
       for collision in hit_data
         collider = collision.obj
-        if collider.__c['monster'] || (collider.__c['player'] && collider != window.client.player)
+        if collider.__c['monster'] || (collider.__c['player'] && collider != window.client.player) && @damage > 0
           # console.log 
           collider.take_damage(@damage)
         this.destroy()
@@ -112,7 +114,6 @@ Crafty.c 'bullet'
     @dy       = dy
 
     this.calculateVector()
-    
 
 Crafty.c "player"
   init: ->
@@ -147,10 +148,9 @@ Crafty.c "player"
     
   shoot: (dx, dy) ->
     bullet = window.Crafty.e("bullet, bullet_icon")
-    audio_file = "shoot#{parseInt(Math.random() * 5)}"
-    console.log "Playing #{audio_file}"
-    window.Crafty.audio.play("shoot#{parseInt(Math.random() * 5)}")
+
     bullet.setOrigin(this, dx, dy)
+    client.send type: "draw_bullet", body: { x: @x, y: @y, dx: dx, dy: dy}
 
   move_to: (x, y) ->
     location_message = client.set_location_message(x, y)
@@ -164,8 +164,9 @@ Crafty.c "player"
     console.log "You're dead"
     
   updateHealth: ->
-    health_percentage = ((@health * 1.0) / (@max_health * 1.0))* 100
-    $("#player-health-bar").css({ width: parseInt(health_percentage).toString() + '%'})
+    if this == window.client.player
+      health_percentage = ((@health * 1.0) / (@max_health * 1.0))* 100
+      $("#player-health-bar").css({ width: parseInt(health_percentage).toString() + '%'})
     
   set_name: (name) ->
     unless @name
@@ -189,7 +190,11 @@ Crafty.c 'monster'
       h: 40
       
     @miss_rate = 0.9
-
+    
+    audio_file = "shoot#{parseInt(Math.random() * 5)}"
+    window.Crafty.audio.play("shoot#{parseInt(Math.random() * 5)}")
+    
+    
     @onHit 'player', (hit_data) ->
       for collision in hit_data
         #is the collider a player? if so, hurt the player unless the player attacked in the last X milliseconds
@@ -480,7 +485,7 @@ window.client =
         player.attr({x: message.body.x, y: message.body.y})
         if player.name_label
           player.name_label.attr({x: message.body.x, y: message.body.y + 30})
-        @log message.client + ' ' + player.x + ' ' + player.y
+        # @log message.client + ' ' + player.x + ' ' + player.y
 
 
       when 'set_name'
@@ -492,7 +497,12 @@ window.client =
 
       when 'take_damage'
         entity = Crafty(message.body.entity_id)
-        entity.take_damage(message.body.damage) if entity 
+        entity.take_damage(message.body.damage) if entity
+      
+      when 'draw_bullet'
+        bullet = Crafty.e("bullet, bullet_icon")
+        bullet.damage = 0
+        bullet.setOrigin({x: message.body.x, y: message.body.y, client: message.client}, message.body.dx, message.body.dy)
 
 
 
